@@ -188,19 +188,19 @@
                                         <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
                                     </div>
                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                                        <img alt="Pic" src="{{asset('assets/media/avatars/300-11.jpg')}}" />
+                                        <img alt="Pic" src="{{asset('public/assets/media/avatars/300-11.jpg')}}" />
                                     </div>
                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
                                         <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
                                     </div>
                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                                        <img alt="Pic" src="{{asset('assets/media/avatars/300-2.jpg')}}" />
+                                        <img alt="Pic" src="{{asset('public/assets/media/avatars/300-2.jpg')}}" />
                                     </div>
                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
                                         <span class="symbol-label bg-danger text-inverse-danger fw-bold">P</span>
                                     </div>
                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                                        <img alt="Pic" src="{{asset('assets/media/avatars/300-12.jpg')}}" />
+                                        <img alt="Pic" src="{{asset('public/assets/media/avatars/300-12.jpg')}}" />
                                     </div>
                                     <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
                                         <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
@@ -2577,7 +2577,7 @@
                                     <!--begin::Col-->
                                     <div class="col-sm-6 mb-10 mb-sm-0">
                                         <!--begin::Image-->
-                                        <div class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-400px min-h-sm-100 h-100" style="background-size: 100% 100%;background-image:url({{asset('assets/media/stock/600x600/img-33.jpg')}})"></div>
+                                        <div class="bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-400px min-h-sm-100 h-100" style="background-size: 100% 100%;background-image:url({{asset('public/assets/media/stock/600x600/img-33.jpg')}})"></div>
                                         <!--end::Image-->
                                     </div>
                                     <!--end::Col-->
@@ -2604,7 +2604,7 @@
                                                     <div class="d-flex align-items-center me-5 me-xl-13">
                                                         <!--begin::Symbol-->
                                                         <div class="symbol symbol-30px symbol-circle me-3">
-                                                            <img src="{{asset('assets/media/avatars/300-3.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/avatars/300-3.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <!--end::Symbol-->
                                                         <!--begin::Info-->
@@ -2676,10 +2676,10 @@
                                                 <!--begin::Users group-->
                                                 <div class="symbol-group symbol-hover flex-nowrap">
                                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                                                        <img alt="Pic" src="{{asset('assets/media/avatars/300-2.jpg')}}" />
+                                                        <img alt="Pic" src="{{asset('public/assets/media/avatars/300-2.jpg')}}" />
                                                     </div>
                                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                                                        <img alt="Pic" src="{{asset('assets/media/avatars/300-3.jpg')}}" />
+                                                        <img alt="Pic" src="{{asset('public/assets/media/avatars/300-3.jpg')}}" />
                                                     </div>
                                                     <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
                                                         <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
@@ -2781,7 +2781,7 @@
                                     <!--begin::Col-->
                                     <div class="col-5 pt-10">
                                         <!--begin::Illustration-->
-                                        <div class="bgi-no-repeat bgi-size-contain bgi-position-x-end h-225px" style="background-image:url({{asset('assets/media/svg/illustrations/easy/5.svg')}}"></div>
+                                        <div class="bgi-no-repeat bgi-size-contain bgi-position-x-end h-225px" style="background-image:url({{asset('public/assets/media/svg/illustrations/easy/5.svg')}}"></div>
                                         <!--end::Illustration-->
                                     </div>
                                     <!--end::Col-->
@@ -3308,7 +3308,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-49.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-49.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Mivy App</a>
@@ -3344,7 +3344,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-40.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-40.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Avionica</a>
@@ -3380,7 +3380,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-39.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-39.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Charto CRM</a>
@@ -3416,7 +3416,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-47.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-47.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Tower Hill</a>
@@ -3452,7 +3452,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-48.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-48.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">9 Degree</a>
@@ -3514,8 +3514,8 @@
                                     <!--end::Title-->
                                     <!--begin::Illustration-->
                                     <div class="py-10 text-center">
-                                        <img src="{{asset('assets/media/svg/illustrations/easy/2.svg')}}" class="theme-light-show w-200px" alt="" />
-                                        <img src="{{asset('assets/media/svg/illustrations/easy/2-dark.svg')}}" class="theme-dark-show w-200px" alt="" />
+                                        <img src="{{asset('public/assets/media/svg/illustrations/easy/2.svg')}}" class="theme-light-show w-200px" alt="" />
+                                        <img src="{{asset('public/assets/media/svg/illustrations/easy/2-dark.svg')}}" class="theme-dark-show w-200px" alt="" />
                                     </div>
                                     <!--end::Illustration-->
                                 </div>
@@ -3579,7 +3579,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-49.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-49.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Mivy App</a>
@@ -3615,7 +3615,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-40.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-40.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Avionica</a>
@@ -3651,7 +3651,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-39.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-39.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Charto CRM</a>
@@ -3687,7 +3687,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-47.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-47.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">Tower Hill</a>
@@ -3723,7 +3723,7 @@
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="symbol symbol-50px me-3">
-                                                            <img src="{{asset('assets/media/stock/600x600/img-48.jpg')}}" class="" alt="" />
+                                                            <img src="{{asset('public/assets/media/stock/600x600/img-48.jpg')}}" class="" alt="" />
                                                         </div>
                                                         <div class="d-flex justify-content-start flex-column">
                                                             <a href="#" class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">9 Degree</a>
