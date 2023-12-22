@@ -116,8 +116,7 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Input group=-->
 								<div class="fv-row mb-8">
 									<!--begin::Email-->
-									
-                                    <input id="email" type="email" class="form-control bg-transparent @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" autofocus>
+                                    <input id="email" placeholder="Username" type="email" class="form-control bg-transparent @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" autofocus>
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <span>{{ $message }}</span>
@@ -129,7 +128,7 @@ License: For each use you must have a valid license purchased only from above li
 								<div class="fv-row mb-3">
 									<!--begin::Password-->
 
-                                    <input id="password" type="password" class="form-control bg-transparent @error('password') is-invalid @enderror" name="password" required autocomplete="off">
+                                    <input id="password" placeholder="Password" type="password" class="form-control bg-transparent @error('password') is-invalid @enderror" name="password" required autocomplete="off">
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <span>{{ $message }}</span>
