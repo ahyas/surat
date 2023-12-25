@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
+use Auth;
 use DB;
 
-class Admin
+class Staff
 {
     /**
      * Handle an incoming request.
@@ -25,20 +25,20 @@ class Admin
             ->first();
 
             if ($table->id_role == 1) {
-                return $next($request);
+                return redirect()->route('admin');
             }
 
             if ($table->id_role == 6) {
-                return redirect()->route('staff');
+                return $next($request);
             }
     
             if ($table->id_role == 5) {
                 return redirect()->route('operator');
             }
-
         }else{
             return redirect()->route('login');
         }
-                
+
+        //return $next($request);
     }
 }
