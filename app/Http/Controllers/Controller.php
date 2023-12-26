@@ -37,8 +37,9 @@ class Controller extends BaseController
                             'Roles' => '',
                             'Permission' => ''
                         ],
-                        'Pengaturan'=>[
-                            "Klasifikasi surat" => route('admin.klasifikasi_surat')
+                        'Referensi'=>[
+                            "Klasifikasi surat" => route('admin.referensi.klasifikasi_surat'),
+                            'Bidang' => route('admin.referensi.bidang')
                         ]
                     ];
                 //Login as operator
