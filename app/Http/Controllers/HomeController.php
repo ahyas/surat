@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
+use Auth;
 
 class HomeController extends Controller
 {
@@ -11,10 +13,10 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     /**
      * Show the application dashboard.
@@ -23,6 +25,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $table = DB::table("users")
+        ->where("users.id", Auth::user()->id)
+        ->select("permission.id_role","roles.alias")
+        ->join("permission", "users.id","=","permission.id_user")
+        ->join("roles","permission.id_role","=","roles.id")
+        ->first();
+
+        return view('home', compact('table'));
     }
 }

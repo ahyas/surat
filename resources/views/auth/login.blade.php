@@ -62,7 +62,7 @@ License: For each use you must have a valid license purchased only from above li
 						</a>
 						<!--end::Logo-->
 						<!--begin::Title-->
-						<h2 class="text-white fw-normal m-0">Aplikasi Manajemen Persuratan</h2>
+						<h2 class="text-white fw-normal m-0">Aplikasi Manajemen Arsip dan Persuratan</h2>
 						<!--end::Title-->
 					</div>
 					<!--begin::Aside-->

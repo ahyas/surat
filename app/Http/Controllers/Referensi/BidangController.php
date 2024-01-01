@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Referensi;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use DB;
 
 class BidangController extends Controller
 {
     public function index(){
-        return view('admin/bidang/index');
+        return view('bidang/index');
     }
 
     public function getBidang(){

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,6 +11,7 @@ class UserController extends Controller
 {
     public function index(){
         $table=DB::table("roles")
+        ->where('id','!=',1)
         ->select("id","name","keterangan")
         ->get();
 
@@ -18,14 +19,13 @@ class UserController extends Controller
         ->select("id AS id_bidang","nama AS bidang")
         ->get();
 
-        return view("admin/user/index", compact("table","table2"));
+        return view("user/index", compact("table","table2"));
     }
 
     public function getUser(){
         $table=DB::table("users")
-        ->select("users.id AS id_user","users.name AS nama","roles.name AS role","bidang.nama AS bidang","users.email")
-        ->join("permission", "users.id","=","permission.id_user")
-        ->join("roles", "permission.id_role","=","roles.id")
+        ->where("users.id","!=", 1)
+        ->select("users.id AS id_user","users.name AS nama","bidang.nama AS bidang","users.email")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->get();
 
@@ -45,8 +45,7 @@ class UserController extends Controller
 
         DB::table("permission")
         ->insert([
-            "id_user"=>$userId,
-            "id_role"=>$request['user_role'],
+            "id_user"=>$userId
         ]);
 
         return response()->json();
@@ -55,7 +54,7 @@ class UserController extends Controller
     public function edit($id_user){
         $table=DB::table("users")
         ->where("users.id",$id_user)
-        ->select("users.id AS id_user","users.name AS nama","bidang.id AS id_bidang","users.email","permission.id_role")
+        ->select("users.id AS id_user","users.name AS nama","bidang.id AS id_bidang","users.email")
         ->join("permission", "users.id","=","permission.id_user")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->first();
@@ -70,12 +69,6 @@ class UserController extends Controller
             "name"=>$request['name'],
             "email"=>$request['email'],
             "id_bidang"=>$request['bidang']
-        ]);
-
-        DB::table("permission")
-        ->where("id_user", $id_user)
-        ->update([
-            "id_role"=>$request['user_role'],
         ]);
 
         return response()->json();

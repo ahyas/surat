@@ -19,39 +19,57 @@ class Controller extends BaseController
         //user info can be accessed from all views
         $this->middleware(function ($request, $next) {
             if(Auth::check()){
-                $table = DB::table("users")
-                ->where("users.id", Auth::user()->id)
-                ->select("permission.id_role","roles.name AS role")
-                ->join("permission", "users.id","=","permission.id_user")
-                ->join("roles", "permission.id_role","=","roles.id")
-                ->first();
         
-                $role = $table->role;
+                $role = Auth::user()->getRole()->role;
+                $role_name = Auth::user()->getRole()->role_name;
+                switch($role){
+                    //login as super admin
+                    case 'super_admin' :
+                        $menu = 
+                        [
+                            'Manajemen Pengguna'=>[
+                                "Daftar" => route('user.list.index'),
+                                'Roles' => route('user.role.index'),
+                                'Permissions' => route('user.permission.index')
+                            ],
+                            'Referensi'=>[
+                                'Klasifikasi surat' => route('referensi.klasifikasi_surat.index'),
+                                'Bidang' => route('referensi.bidang.index')
+                            ]
+                        ];
+                    break;
+                    //login as operator surat
+                    case 'operator_surat' :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => ''
+                            ],
+                        ];  
+                        break;
+                    //login as admin tata usaha
+                    case 'admin_tata_usaha' :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => ''
+                            ],
+                        ];
+                        
+                        break;
+                    default :
+                        $menu = 
+                        [
+                            'Menu Op'=>'#',
+                            'Menu Op2'=>'#',
+                            'Menu Op3'=>'#'
+                        ];  
 
-                //login as admin
-                if($table->id_role == 1){
-                    $menu = 
-                    [
-                        'Manajemen Pengguna'=>[
-                            "Daftar" => route('admin.user'),
-                            'Roles' => '',
-                            'Permission' => ''
-                        ],
-                        'Referensi'=>[
-                            "Klasifikasi surat" => route('admin.referensi.klasifikasi_surat'),
-                            'Bidang' => route('admin.referensi.bidang')
-                        ]
-                    ];
-                //Login as operator
-                }else{
-                    $menu = [
-                        'Menu Op'=>route('admin'),
-                        'Menu Op2'=>route('operator.user'),
-                        'Menu Op3'=>'url_op_3'
-                    ];  
                 }
 
-                View::share('data', compact('menu', 'role' ));
+                View::share('data', compact('menu', 'role_name' ));
 
                 return $next($request);
             }
