@@ -111,7 +111,7 @@
                             <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
                         </a>
                         <br>
-                        <p>Test {{$table->id_role}} {{$table->alias}}</p>
+                        <p>Test {{Auth::user()->getRole()->role}}</p>
                     </div>
                     <!--end::Users group-->
                 </div>

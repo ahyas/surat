@@ -19,7 +19,7 @@ Route::get('/', function(){
 Auth::routes();
     Route::get('home', 'HomeController@index')->name('home');
 
-    Route::group(['middleware'=>['role: super_admin']], function(){
+    Route::group(['middleware'=>'role: 1'], function(){
         //BEGIN::user list
         Route::get('/user/list', 'Users\UserController@index')->name('user.list.index');
         Route::get('/user/list/get_data','Users\UserController@getUser')->name('user.list.get_data');
@@ -80,7 +80,7 @@ Auth::routes();
         //END::Bidang
     });
    
-    Route::group(['middleware'=>['role: operator_surat, admin_tata_usaha']], function(){
+    Route::group(['middleware'=>'role:5, 6'], function(){
          //Begin::Transaksi surat masuk
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');

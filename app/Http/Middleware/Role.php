@@ -15,17 +15,25 @@ class Role
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, ... $roles)
+    public function handle($request, Closure $next, ...$roles)
     {
         if(Auth::check()){
-            foreach($roles as $role){
-                if(Auth::user()->hasRole($role)){
-                    return $next($request);
+            $table = DB::table("users")
+            ->where("users.id", Auth::user()->id)
+            ->select("permission.id_role")
+            ->join("permission", "users.id","=","permission.id_user")
+            ->first();
+
+            if(is_array($roles)){
+                foreach($roles as $id_role){
+                    if($table->id_role == $id_role){
+                        return $next($request);
+                    }        
                 }
-                    
-                return abort(403);
-                
+
+                abort(403, "Maaf, Anda tidak punya akses untuk halaman ini");
             }
+
         }else{
             return redirect()->route('login');
         }
