@@ -25,6 +25,7 @@ class Role
             ->first();
 
             if(is_array($roles)){
+                //Mencocokan role user saat ini dengan hak akses routes
                 foreach($roles as $id_role){
                     if($table->id_role == $id_role){
                         return $next($request);

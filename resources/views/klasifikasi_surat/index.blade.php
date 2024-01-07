@@ -19,12 +19,10 @@
             <div class="modal fade" id="kt_modal_add_klasifikasi" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
                     <div class="modal-content">
-                        <div class="modal-header" id="kt_modal_add_klasifikasi_header">
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                <i class="ki-duotone ki-cross fs-1">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
+                        <div class="modal-header">
+                            <div id="kt_modal_add_klasifikasi_header"></div>
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                             </div>
                         </div>
                         <div class="modal-body px-5 my-7">
@@ -107,12 +105,10 @@
             <div class="modal fade" id="kt_modal_add_fungsi" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
                     <div class="modal-content">
-                        <div class="modal-header" id="kt_modal_add_fungsi_header">
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                <i class="ki-duotone ki-cross fs-1">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
+                        <div class="modal-header">
+                            <div id="kt_modal_add_fungsi_header"></div>
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                             </div>
                         </div>
                         <div class="modal-body px-5 my-7">
@@ -180,12 +176,10 @@
             <div class="modal fade" id="kt_modal_add_kegiatan" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
                     <div class="modal-content">
-                        <div class="modal-header" id="kt_modal_add_kegiatan_header">
-                            <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                <i class="ki-duotone ki-cross fs-1">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
+                        <div class="modal-header">
+                            <div id="kt_modal_add_kegiatan_header"></div>
+                            <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                             </div>
                         </div>
                         <div class="modal-body px-5 my-7">
@@ -341,6 +335,9 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_klasifikasi", function(){
+        document.getElementById("sub-fungsi").style.display = "none";
+        document.getElementById("sub-kegiatan").style.display = "none";
+        document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("kt_modal_add_klasifikasi_header").innerHTML = `<h2 class="fw-bold">Tambah Klasifikasi</h2>`;
         document.getElementById("update_klasifikasi").style.display = "none";
         document.getElementById("save_klasifikasi").style.display = "inline-block";
@@ -363,6 +360,9 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#edit_klasifikasi",function(){
+        document.getElementById("sub-fungsi").style.display = "none";
+        document.getElementById("sub-kegiatan").style.display = "none";
+        document.getElementById("sub-transaksi").style.display = "none";
         var id_klasifikasi = $(this).data("id_klasifikasi");
         document.getElementById("kt_modal_add_klasifikasi_header").innerHTML = `<h2 class="fw-bold">Edit Klasifikasi</h2>`;
         $("#modal_klasifikasi_surat_form").trigger("reset");
@@ -462,6 +462,8 @@ $(document).ready(function(){
 
     /** Begin::Kode Fungsi */
     $("body").on("click","#add_fungsi", function(){
+        document.getElementById("sub-kegiatan").style.display = "none";
+        document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("update_fungsi").style.display = "none";
         document.getElementById("save_fungsi").style.display = "inline-block";
         document.getElementById("kt_modal_add_fungsi_header").innerHTML = `<h2 class="fw-bold">Tambah Fungsi</h2>`;
@@ -488,6 +490,8 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_fungsi", function(){
         let id_fungsi = $(this).data("id_fungsi");
+        document.getElementById("sub-kegiatan").style.display = "none";
+        document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("update_fungsi").style.display = "inline-block";
         document.getElementById("save_fungsi").style.display = "none";
         document.getElementById("kt_modal_add_fungsi_header").innerHTML = `<h2 class="fw-bold">Edit Fungsi</h2>`;
@@ -586,6 +590,7 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_kegiatan",function(){
+        document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("kt_modal_add_kegiatan_header").innerHTML = `<h2 class="fw-bold">Tambah Kegiatan</h2>`;
         document.getElementById("update_kegiatan").style.display = "none";
         document.getElementById("save_kegiatan").style.display = "inline-block";
@@ -608,12 +613,13 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#edit_kegiatan",function(){
+        document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("kt_modal_add_kegiatan_header").innerHTML = `<h2 class="fw-bold">Edit Kegiatan</h2>`;
         document.getElementById("update_kegiatan").style.display = "inline-block";
         document.getElementById("save_kegiatan").style.display = "none";
         let id_kegiatan = $(this).data("id_kegiatan");
         $.ajax({
-            url:`{{url('admin/referensi/kegiatan_surat/${id_kegiatan}/edit')}}`,
+            url:`{{url('referensi/kegiatan_surat/${id_kegiatan}/edit')}}`,
             type:"GET",
             dataType:"JSON",
             success:function(data){
@@ -756,6 +762,11 @@ $(document).ready(function(){
             url:`{{url('referensi/transaksi_surat/${id_transaksi}/delete')}}`,
             type:"GET",
             success:function(data){
+                console.log(data)
+                if(data>0){
+                    alert("Gagal. Data ini sudah digunakan")
+                    return false;
+                }
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
             }
         });

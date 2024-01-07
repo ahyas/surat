@@ -20,11 +20,12 @@ class Controller extends BaseController
         $this->middleware(function ($request, $next) {
             if(Auth::check()){
         
-                $role = Auth::user()->getRole()->role;
+                $id_role = Auth::user()->getRole()->id_role;
                 $role_name = Auth::user()->getRole()->role_name;
-                switch($role){
+
+                switch($id_role){
                     //login as super admin
-                    case 'super_admin' :
+                    case 1 :
                         $menu = 
                         [
                             'Manajemen Pengguna'=>[
@@ -39,23 +40,25 @@ class Controller extends BaseController
                         ];
                     break;
                     //login as operator surat
-                    case 'operator_surat' :
+                    case 5 :
                         $menu = 
                         [
                             'Transaksi'=>[
-                                'Surat Masuk' => route('transaksi.surat_masuk'),
-                                'Surat Keluar' => ''
+                                'Surat Masuk' => route('transaksi.surat_masuk')
                             ],
                         ];  
                         break;
                     //login as admin tata usaha
-                    case 'admin_tata_usaha' :
+                    case 6 :
                         $menu = 
                         [
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
-                                'Surat Keluar' => ''
+                                'Surat Keluar' => route('transaksi.surat_keluar')
                             ],
+                            'Referensi'=>[
+                                'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
+                            ]
                         ];
                         
                         break;
@@ -69,7 +72,7 @@ class Controller extends BaseController
 
                 }
 
-                View::share('data', compact('menu', 'role_name' ));
+                View::share('data', compact('menu', 'role_name', 'id_role'));
 
                 return $next($request);
             }

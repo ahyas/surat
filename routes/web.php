@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function(){
-    return view('welcome');
+    return redirect()->route('login');
 });
 Auth::routes();
     Route::get('home', 'HomeController@index')->name('home');
@@ -41,16 +41,23 @@ Auth::routes();
         Route::post('/user/permissions/{id_user}/update','Users\PermissionController@update')->name('user.permission.update');
         //END::user permissions
 
-        //BEGIN::klasifikasi surat
-        Route::get('/referensi/klasifikasi_surat', 'Referensi\KlasifikasiSuratController@index')->name('referensi.klasifikasi_surat.index');
-        Route::get('/referensi/klasifikasi_surat/get_data','Referensi\KlasifikasiSuratController@getKlasifikasi')->name('referensi.klasifikasi_surat.get_data');
-        Route::post('/referensi/klasifikasi_surat/save', 'Referensi\KlasifikasiSuratController@save')->name('referensi.klasifikasi_surat.save');
-        Route::get('/referensi/klasifikasi_surat/{id_klasifikasi}/edit', 'Referensi\KlasifikasiSuratController@edit')->name('referensi.klasifikasi_surat.edit');
-        Route::post('/referensi/klasifikasi_surat/{id_klasifikasi}/update', 'Referensi\KlasifikasiSuratController@update')->name('referensi.klasifikasi_surat.update');
-        Route::get('/referensi/klasifikasi_surat/{id_klasifikasi}/delete', 'Referensi\KlasifikasiSuratController@delete')->name('referensi.klasifikasi_surat.delete');
-        //END::klasifikasi surat
+        //BEGIN::Bidang
+        Route::get('/referensi/bidang', 'Referensi\BidangController@index')->name('referensi.bidang.index'); 
+        Route::get('/referensi/bidang/get_data','Referensi\BidangController@getBidang')->name('referensi.bidang.get_data');
+        //END::Bidang
+    });
 
-        //BEGIN::fungsi surat
+    Route::group(['middleware'=>'role: 1, 6'], function(){
+         //BEGIN::klasifikasi surat
+         Route::get('/referensi/klasifikasi_surat', 'Referensi\KlasifikasiSuratController@index')->name('referensi.klasifikasi_surat.index');
+         Route::get('/referensi/klasifikasi_surat/get_data','Referensi\KlasifikasiSuratController@getKlasifikasi')->name('referensi.klasifikasi_surat.get_data');
+         Route::post('/referensi/klasifikasi_surat/save', 'Referensi\KlasifikasiSuratController@save')->name('referensi.klasifikasi_surat.save');
+         Route::get('/referensi/klasifikasi_surat/{id_klasifikasi}/edit', 'Referensi\KlasifikasiSuratController@edit')->name('referensi.klasifikasi_surat.edit');
+         Route::post('/referensi/klasifikasi_surat/{id_klasifikasi}/update', 'Referensi\KlasifikasiSuratController@update')->name('referensi.klasifikasi_surat.update');
+         Route::get('/referensi/klasifikasi_surat/{id_klasifikasi}/delete', 'Referensi\KlasifikasiSuratController@delete')->name('referensi.klasifikasi_surat.delete');
+         //END::klasifikasi surat
+
+         //BEGIN::fungsi surat
         Route::get('/referensi/fungsi_surat/{id_ref_klasifikasi}/detail', 'Referensi\FungsiSuratController@detailFungsiSurat');
         Route::get('/referensi/fungsi_surat/save', 'Referensi\FungsiSuratController@save')->name('referensi.fungsi_surat.save');
         Route::get('/referensi/fungsi_surat/{id_fungsi}/edit', 'Referensi\FungsiSuratController@edit')->name('referensi.fungsi_surat.edit');
@@ -73,11 +80,6 @@ Auth::routes();
         Route::get('/referensi/transaksi_surat/{id_transaksi}/update', 'Referensi\TransaksiSuratController@update')->name('referensi.transaksi_surat.update');
         Route::get('/referensi/transaksi_surat/{id_transaksi}/delete', 'Referensi\TransaksiSuratController@delete')->name('referensi.transaksi_surat.delete');
         //END::transaksi surat
-
-        //BEGIN::Bidang
-        Route::get('/referensi/bidang', 'Referensi\BidangController@index')->name('referensi.bidang.index'); 
-        Route::get('/referensi/bidang/get_data','Referensi\BidangController@getBidang')->name('referensi.bidang.get_data');
-        //END::Bidang
     });
    
     Route::group(['middleware'=>'role:5, 6'], function(){
@@ -85,7 +87,24 @@ Auth::routes();
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');
         Route::post('/transaksi/surat_masuk/save','Transaksi\SuratMasuk\SuratMasukController@save')->name('transaksi.surat_masuk.save');
+        Route::get('/transaksi/surat_masuk/{id}/edit', 'Transaksi\SuratMasuk\SuratMasukController@edit')->name('transaksi.surat_masuk.edit');
+        Route::post('/transaksi/surat_masuk/{id}/update', 'Transaksi\SuratMasuk\SuratMasukController@update')->name('transaksi.surat_masuk.update');
+        Route::get('/transaksi/surat_masuk/{id}/delete', 'Transaksi\SuratMasuk\SuratMasukController@delete')->name('transaksi.surat_masuk.delete');
         //End::Transaksi surat masuk
+    });
+
+    Route::group(['middleware'=>'role:6'], function(){
+        Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
+        Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
+        Route::post('/transaksi/surat_keluar/save', 'Transaksi\SuratKeluar\SuratKeluarController@save')->name('transaksi.surat_keluar.save');
+        Route::get('/transaksi/surat_keluar/{id_surat}/edit', 'Transaksi\SuratKeluar\SuratKeluarController@edit')->name('transaksi.surat_keluar.edit');
+        Route::post('/transaksi/surat_keluar/{id_surat}/update', 'Transaksi\SuratKeluar\SuratKeluarController@update')->name('transaksi.surat_keluar.update');
+        Route::get('/transaksi/surat_keluar/{id_surat}/delete', 'Transaksi\SuratKeluar\SuratKeluarController@delete')->name('transaksi.surat_keluar.delete');
+
+        Route::get('/referensi/{id_ref_klasifikasi}/get_fungsi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getFungsiList')->name('transaksi.surat_keluar.get_fungsi_list');
+        Route::get('/referensi/{id_ref_fungsi}/get_kegiatan_list', 'Transaksi\SuratKeluar\SuratKeluarController@getKegiatanList')->name('transaksi.surat_keluar.get_kegiatan_list');
+        Route::get('/referensi/{id_ref_kegiatan}/get_transaksi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getTransaksiList')->name('transaksi.surat_keluar.get_transaksi_list');
+
     });
     
     

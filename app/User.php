@@ -42,7 +42,7 @@ class User extends Authenticatable
     public function getRole(){
         $table = DB::table("users")
         ->where("users.id", Auth::user()->id)
-        ->select("roles.alias AS role", "roles.name AS role_name","permission.id_role")
+        ->select("roles.name AS role_name","permission.id_role")
         ->join("permission", "users.id","=","permission.id_user")
         ->join("roles", "permission.id_role","=","roles.id")
         ->first();

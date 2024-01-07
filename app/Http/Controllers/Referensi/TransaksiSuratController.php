@@ -53,10 +53,16 @@ class TransaksiSuratController extends Controller
     }
 
     public function delete($id_transaksi){
-        DB::table("ref_transaksi")
-        ->where("id",$id_transaksi)
-        ->delete();
+        $count = DB::table("transaksi_surat_keluar")
+        ->where("id_ref_transaksi", $id_transaksi)
+        ->count();
+        
+        if($count == 0){
+            DB::table("ref_transaksi")
+            ->where("id",$id_transaksi)
+            ->delete();
+        }
 
-        return response()->json();
+        return response()->json($count);
     }
 }
