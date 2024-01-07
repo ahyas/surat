@@ -62,7 +62,7 @@ License: For each use you must have a valid license purchased only from above li
 						</a>
 						<!--end::Logo-->
 						<!--begin::Title-->
-						<h2 class="text-white fw-bold m-0">SIMANSUR</h2> <h2 class="text-white fw-normal m-0">Sistem Informasi Manajemen Persuratan</h2>
+						<h2 class="text-white fw-bold m-0">SIMANSUR</h2> <h4 class="text-white fw-normal">Sistem Informasi Manajemen Persuratan</h4>
 						<!--end::Title-->
 					</div>
 					<!--begin::Aside-->
