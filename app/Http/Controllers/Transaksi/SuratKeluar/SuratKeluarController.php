@@ -264,6 +264,7 @@ class SuratKeluarController extends Controller
                         "tujuan"=>$request["tujuan"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
+                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                         "file"=>$fileName
                     ]
                 );
@@ -274,7 +275,8 @@ class SuratKeluarController extends Controller
                     [
                         "tujuan"=>$request["tujuan"],
                         "perihal"=>$request["perihal"],
-                        "tgl_surat"=>$request["tgl_surat"]
+                        "tgl_surat"=>$request["tgl_surat"],
+                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                     ]
                 );
             }
