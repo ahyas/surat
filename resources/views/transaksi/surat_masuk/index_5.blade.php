@@ -150,9 +150,14 @@ $(document).ready(function(){
         columns     :
         [
             {data:"no_surat", 
-                mRender:function(data){
+                mRender:function(data, type, full){
+                    if(full['rahasia'] !== 'true'){
+                        var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }
+
                     return`<div class="d-flex flex-column">
-                            <div class="text-gray-800 mb-1">${data}</div>                        
+                                <div class="text-gray-800 mb-1">${data}</div>
+                                <span>${a}</span>                   
                             </div>`;
                 }
             },
