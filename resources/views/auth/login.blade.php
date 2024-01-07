@@ -57,12 +57,10 @@ License: For each use you must have a valid license purchased only from above li
 					<!--begin::Aside-->
 					<div class="d-flex flex-center flex-lg-start flex-column">
 						<!--begin::Logo-->
-						<a href="index.html" class="mb-7">
-							<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
-						</a>
+						
 						<!--end::Logo-->
 						<!--begin::Title-->
-						<h2 class="text-white fw-normal m-0">SIMANSUR - Sistem Informasi Manajemen Persuratan</h2>
+						<h2 class="text-white fw-bold m-0">SIMANSUR</h2> <h2 class="text-white fw-normal m-0">Sistem Informasi Manajemen Persuratan</h2>
 						<!--end::Title-->
 					</div>
 					<!--begin::Aside-->
@@ -79,6 +77,9 @@ License: For each use you must have a valid license purchased only from above li
                             @csrf
 								<!--begin::Heading-->
 								<div class="text-center mb-11">
+									<a href="javascript:void(0)" class="mb-7">
+										<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px" style="margin-bottom:20px"/>
+									</a>
 									<!--begin::Title-->
 									<h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
 									<!--end::Title-->
