@@ -6,7 +6,7 @@
     <!--begin::Page title-->
     <div class="page-title d-flex flex-column me-3">
         <!--begin::Title-->
-        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Dashboards</h1>
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Dashboards {{$data['id_role']}}</h1>
         <!--end::Title-->
         <!--begin::Breadcrumb-->
         <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
