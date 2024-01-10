@@ -69,15 +69,10 @@
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
                                         <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
-                                        <button type="submit" class="btn btn-primary" id="save_surat_masuk" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Save</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="submit" class="btn btn-primary save_surat_masuk" id="save_surat_masuk" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" id="update_surat_masuk" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Update</span>
-                                            <span class="indicator-progress">Please wait... 
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
                                         </button>
                                     </div>
                                     <!--end::Actions-->
@@ -178,8 +173,8 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_surat_masuk", function(){
-        document.getElementById("update_surat_masuk").style.display = "none";
-        document.getElementById("save_surat_masuk").style.display = "inline-block";
+        document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
+        document.querySelector(".save_surat_masuk").removeAttribute("disabled");
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add surat masuk</h2>`;
         $("#kt_modal_add_surat_masuk_form").trigger("reset");
         document.getElementById("notification").innerHTML ='';
@@ -189,8 +184,11 @@ $(document).ready(function(){
 
     $("#save_surat_masuk").click(function(e){
         e.preventDefault();
+        var btn = document.querySelector(".save_surat_masuk");
+        btn.setAttribute("data-kt-indicator", "on");
+        btn.setAttribute("disabled","disabled");
+
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));        
-        
         $.ajax({
             url:`{{route('transaksi.surat_masuk.save')}}`,
             type:"POST",
@@ -207,7 +205,10 @@ $(document).ready(function(){
                     let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                     let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";                        
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";
+                    
+                    btn.setAttribute("data-kt-indicator", "off");
+                    btn.removeAttribute("disabled");                  
                 } else {
                     if(confirm("Periksa kembali. Apakah semua data sudah benar?")){
                         $("#tb_surat_masuk").DataTable().ajax.reload(null, false);

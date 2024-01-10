@@ -49,133 +49,78 @@ License: For each use you must have a valid license purchased only from above li
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Page bg image-->
 			<style>body { background-color: #031c45 } [data-bs-theme="dark"] body { background-image: url("{{asset('assets/media/auth/bg4-dark.jpg')}}"); }</style>
-			<!--end::Page bg image-->
-			<!--begin::Authentication - Sign-in -->
 			<div class="d-flex flex-column flex-column-fluid flex-lg-row">
-				<!--begin::Aside-->
 				<div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
-					<!--begin::Aside-->
 					<div class="d-flex flex-center flex-lg-start flex-column">
-						<!--begin::Logo-->
 						<a href="javascript:void(0)" class="mb-7">
 							<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
 						</a>
-						<!--end::Logo-->
-						<!--begin::Title-->
 						<h2 class="text-white fw-bold m-0">SIMANSUR</h2> <h4 class="text-white fw-normal">Sistem Informasi Manajemen Persuratan</h4>
-						<!--end::Title-->
 					</div>
-					<!--begin::Aside-->
 				</div>
-				<!--begin::Aside-->
-				<!--begin::Body-->
 				<div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
-					<!--begin::Card-->
 					<div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
-						<!--begin::Wrapper-->
 						<div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20">
-							<!--begin::Form-->
 							<form method="POST" class="form w-100" id="kt_sign_in_form" action="{{route('login')}}" autocomplete="off">
                             @csrf
-								<!--begin::Heading-->
 								<div class="text-center mb-11">
 									<a href="javascript:void(0)" class="mb-7">
 										<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px" style="margin-bottom:20px"/>
 									</a>
-									<!--begin::Title-->
 									<h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
-									<!--end::Title-->
-									<!--begin::Subtitle-->
-									<div class="text-gray-500 fw-semibold fs-6">Masukan Username dan Password Anda</div>
-									<!--end::Subtitle=-->
+									<div class="text-gray-500 fw-semibold fs-6">Masukan Username dan Password</div>
 								</div>
-								<!--begin::Heading-->
-								
-								<!--begin::Input group=-->
 								<div class="fv-row mb-8">
-									<!--begin::Email-->
                                     <input id="email" placeholder="Username" type="email" class="form-control bg-transparent @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="off" autofocus>
                                     @error('email')
                                         <span class="invalid-feedback" role="alert">
                                             <span>{{ $message }}</span>
                                         </span>
                                     @enderror
-									<!--end::Email-->
 								</div>
-								<!--end::Input group=-->
 								<div class="fv-row mb-3">
-									<!--begin::Password-->
-
                                     <input id="password" placeholder="Password" type="password" class="form-control bg-transparent @error('password') is-invalid @enderror" name="password" required autocomplete="off">
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
                                             <span>{{ $message }}</span>
                                         </span>
                                     @enderror
-									<!--end::Password-->
 								</div>
-								<!--end::Input group=-->
-								<!--begin::Wrapper-->
 								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
 									<div></div>
-									<!--begin::Link-->
-									
-									<!--end::Link-->
 								</div>
-								<!--end::Wrapper-->
-								<!--begin::Submit button-->
 								<div class="d-grid mb-10">
-									<button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-										<!--begin::Indicator label-->
-										<span class="indicator-label">Sign In</span>
-										<!--end::Indicator label-->
-										<!--begin::Indicator progress-->
-										<span class="indicator-progress">Please wait... 
+									<button type="submit" class="btn btn-primary spinner spinner-white spinner-left sign_in" id="sign_in" data-kt-indicator="off">
+										<span class="indicator-progress">
 										<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-										<!--end::Indicator progress-->
+										Sign In
 									</button>
 								</div>
-								<!--end::Submit button-->
-								<!--end::Sign up-->
 							</form>
-							<!--end::Form-->
 						</div>
-						<!--end::Wrapper-->
-						<!--begin::Footer-->
 						<div class="d-flex flex-stack px-lg-10">
-							<!--begin::Languages-->
-							
-							<!--end::Languages-->
-							<!--begin::Links-->
 							<div class="d-flex fw-semibold text-primary fs-base gap-5">
 								<a href="javascript:void(0)" target="_blank">Terms</a>
 								<a href="javascript:void(0)" target="_blank">Plans</a>
 								<a href="javascript:void(0)" target="_blank">Contact Us</a>
 							</div>
-							<!--end::Links-->
 						</div>
-						<!--end::Footer-->
 					</div>
-					<!--end::Card-->
 				</div>
-				<!--end::Body-->
 			</div>
-			<!--end::Authentication - Sign-in-->
 		</div>
-		<!--end::Root-->
-		<!--end::Main-->
-		<!--begin::Javascript-->
 		<script>var hostUrl = "{{asset('public/assets/')}}";</script>
-		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
 		<script src="{{asset('public/assets/plugins/global/plugins.bundle.js')}}"></script>
 		<script src="{{asset('public/assets/js/scripts.bundle.js')}}"></script>
-		<!--end::Global Javascript Bundle-->
-		<!--begin::Custom Javascript(used for this page only)-->
-		
-        <!--<script src="{{asset('assets/js/custom/authentication/sign-in/general.js')}}"></script>-->
-		
-        <!--end::Custom Javascript-->
-		<!--end::Javascript-->
+		<script >
+			$(document).ready(function(){
+				var btn = document.querySelector(".sign_in");
+				$("body").on("click","#sign_in",function(){
+					console.log("Login")
+					btn.setAttribute("data-kt-indicator", "on");
+       				
+				});
+			});
+		</script>
 	</body>
-	<!--end::Body-->
 </html>

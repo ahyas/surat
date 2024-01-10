@@ -104,15 +104,15 @@
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
                                         <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
-                                        <button type="submit" class="btn btn-primary" id="save_surat" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Save</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="submit" class="btn btn-primary save_surat_keluar" id="save_surat" data-kt-indicator="on">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
                                         </button>
-                                        <button type="submit" class="btn btn-primary" id="update_surat" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Update</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="submit" class="btn btn-primary update_surat_keluar" id="update_surat" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
                                         </button>
                                     </div>
                                     <!--end::Actions-->
@@ -429,6 +429,8 @@ $(document).ready(function(){
     $("body").on("click","#add_surat_keluar", function(){
         disabledAll();
         disabledList();
+        document.querySelector(".save_surat_keluar").setAttribute("data-kt-indicator", "off");
+        document.querySelector(".save_surat_keluar").removeAttribute("disabled");
         document.getElementById("update_surat").style.display = "none";
         document.getElementById("save_surat").style.display = "inline-block";
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Surat Keluar</h2>`;
@@ -441,7 +443,9 @@ $(document).ready(function(){
 
     $("#save_surat").click(function(e){
         e.preventDefault();
-    
+        var btn = document.querySelector(".save_surat_keluar");
+        btn.setAttribute("data-kt-indicator", "on");
+        btn.setAttribute("disabled","disabled");
         var formData = new FormData(document.getElementById("kt_modal_add_surat_keluar_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_keluar.save')}}`,
@@ -458,8 +462,9 @@ $(document).ready(function(){
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
-                        
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        btn.setAttribute("data-kt-indicator", "off");
+                        btn.removeAttribute("disabled");
                     } else {
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
@@ -471,6 +476,8 @@ $(document).ready(function(){
     $("body").on("click", "#edit_surat_keluar", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Surat Keluar</h2>`;
         document.getElementById("update_surat").style.display = "inline-block";
+        document.querySelector(".update_surat_keluar").setAttribute("data-kt-indicator", "off");
+        document.querySelector(".update_surat_keluar").removeAttribute("disabled");
         document.getElementById("save_surat").style.display = "none";
         document.getElementById("file").classList.remove("required");
         document.getElementById("file_surat").removeAttribute("required");
@@ -535,7 +542,9 @@ $(document).ready(function(){
         e.preventDefault();
         var formData = new FormData(document.getElementById("kt_modal_add_surat_keluar_form"));   
         let id_surat = $("input[name='id_surat_keluar']").val();
-        console.log($("#kt_modal_add_surat_keluar_form").serialize());
+        var btn = document.querySelector(".update_surat_keluar");
+        btn.setAttribute("data-kt-indicator", "on");
+        btn.setAttribute("disabled","disabled");
         $.ajax({
             url:`{{url('/transaksi/surat_keluar/${id_surat}/update')}}`,
             type:"POST",
@@ -554,7 +563,8 @@ $(document).ready(function(){
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
                         document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
-                        
+                        btn.setAttribute("data-kt-indicator", "off");
+                        btn.removeAttribute("disabled");
                     } else {
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");

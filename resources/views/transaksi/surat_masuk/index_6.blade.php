@@ -3,29 +3,20 @@
 @section('content')
 <!--begin::Post-->
 <div class="content flex-column-fluid" id="kt_content">
-    <!--begin::Card-->
     <div class="card">
-        <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
-            <!--begin::Card title-->
             <div class="card-title">
                 <p>Surat Masuk</p>
             </div>
-            <!--begin::Card title-->
-            <!--begin::Card toolbar-->
             <div class="card-toolbar">
-                <!--begin::Toolbar-->
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    
                     <button type="button" class="btn btn-primary btn-sm" id="add_surat_masuk">
                     <i class="ki-duotone ki-plus fs-2"></i>Add Surat Masuk</button>
-                    <!--end::Add user-->
+                    
                 </div>
 
                 <div class="modal fade" id="kt_modal_add_surat_masuk" tabindex="-1" aria-hidden="true">
-                    <!--begin::Modal dialog-->
                     <div class="modal-dialog modal-dialog-centered mw-650px">
-                        <!--begin::Modal content-->
                         <div class="modal-content">
                             <!--begin::Modal header-->
                             <div class="modal-header" id="kt_modal_add_surat_masuk_header">
@@ -76,15 +67,14 @@
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
                                         <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
-                                        <button type="submit" class="btn btn-primary" id="save_surat_masuk" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Save</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="button" class="btn btn-primary save_surat_masuk" id="save_surat_masuk" data-kt-indicator="off">
+                                            <span class="indicator-progress"> 
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                        </button>
-                                        <button type="submit" class="btn btn-primary" id="update_surat_masuk" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Update</span>
-                                            <span class="indicator-progress">Please wait... 
+                                            Save</button>
+                                        <button type="submit" class="btn btn-primary update_surat_masuk" id="update_surat_masuk" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
                                         </button>
                                     </div>
                                     <!--end::Actions-->
@@ -204,6 +194,9 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_surat_masuk", function(){
+        document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
+        document.querySelector(".save_surat_masuk").removeAttribute("disabled");
+
         document.getElementById("update_surat_masuk").style.display = "none";
         document.getElementById("save_surat_masuk").style.display = "inline-block";
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add surat masuk</h2>`;
@@ -216,7 +209,9 @@ $(document).ready(function(){
 
     $("#save_surat_masuk").click(function(e){
         e.preventDefault();
-
+        var btn = document.querySelector(".save_surat_masuk");
+        btn.setAttribute("data-kt-indicator", "on");
+        btn.setAttribute("disabled","disabled");
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_masuk.save')}}`,
@@ -235,7 +230,9 @@ $(document).ready(function(){
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";                        
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
+                        document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
+                        document.querySelector(".save_surat_masuk").removeAttribute("disabled");                       
                     } else {
                         
                         $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
@@ -248,6 +245,9 @@ $(document).ready(function(){
     $("body").on("click", "#edit_surat_masuk", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit surat masuk</h2>`;
         document.getElementById("update_surat_masuk").style.display = "inline-block";
+        document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
+        document.querySelector(".update_surat_masuk").removeAttribute("disabled");
+
         document.getElementById("save_surat_masuk").style.display = "none";
         document.getElementById("file_surat").className += "required";
         document.getElementById("notification").innerHTML ='';
@@ -274,6 +274,10 @@ $(document).ready(function(){
         e.preventDefault();
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));   
         let id_surat = $("input[name='id_surat_masuk']").val();
+
+        var btn = document.querySelector(".update_surat_masuk");
+        btn.setAttribute("data-kt-indicator", "on");
+        btn.setAttribute("disabled","disabled");
         $.ajax({
             url:`{{url('/transaksi/surat_masuk/${id_surat}/update')}}`,
             type:"POST",
@@ -291,7 +295,9 @@ $(document).ready(function(){
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+"</div></div>";                          
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+"</div></div>"; 
+                        document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
+                        document.querySelector(".update_surat_masuk").removeAttribute("disabled");                         
                     } else {
                         $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_masuk").modal("hide");

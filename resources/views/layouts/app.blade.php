@@ -74,7 +74,7 @@ License: For each use you must have a valid license purchased only from above li
 								
 								<a href="{{route('home')}}">
 									<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
-									
+									<span style="color:white; font-size: 25px">Simansur</span>
 								</a>
 								<!--end::Logo-->
 								<!--begin::Nav-->
@@ -355,7 +355,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin::Menu-->
 									<div class="menu menu-column menu-rounded menu-sub-indention fw-semibold fs-6" id="#kt_aside_menu" data-kt-menu="true">
 										<!--begin:Menu item-->
-										<div data-kt-menu-trigger="click" class="menu-item here show menu-accordion">
+										<div class="menu-item here show menu-accordion">
 											<!--begin:Menu link-->
 											<span class="menu-link">
 												<span class="menu-icon">
@@ -386,7 +386,7 @@ License: For each use you must have a valid license purchased only from above li
 											@foreach($data['menu'] as $key => $node)
 													@if(is_array($node))
 													<!--begin:Menu item-->
-													<div data-kt-menu-trigger="click" class="menu-item menu-accordion" id="menu1">
+													<div class="menu-item show menu-accordion">
 														<!--begin:Menu link -->
 														<span class="menu-link">
 														<span class="menu-icon">
@@ -6649,17 +6649,6 @@ License: For each use you must have a valid license purchased only from above li
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
 		<script src="{{asset('public/assets/plugins/global/plugins.bundle.js')}}"></script>
 		<script src="{{asset('public/assets/js/scripts.bundle.js')}}"></script>
-		<!--<script>
-			$(document).ready(function(){
-				console.log("Testing");
-				const elem = document.getElementById("list_item");
-				if ( elem.classList.contains('active') ){
-
-					$(this).closest('div').attr('menu1');
-					document.getElementById("menu1").className = "menu-item here show menu-accordion";
-				}
-			});
-		</script>-->
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Vendors Javascript(used for this page only)-->
 		<script src="{{asset('public/assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
