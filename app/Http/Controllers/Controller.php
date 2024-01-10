@@ -62,6 +62,17 @@ class Controller extends BaseController
                         ];
                         
                         break;
+                    //login sebagai admin monitoring
+                    case 101 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => route('transaksi.surat_keluar')
+                            ]
+                        ];
+                        
+                        break;
                     default :
                         $menu = 
                         [

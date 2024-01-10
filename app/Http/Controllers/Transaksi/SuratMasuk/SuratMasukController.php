@@ -16,6 +16,10 @@ class SuratMasukController extends Controller
             case 5:
                 return view('transaksi/surat_masuk/index_5');
             break;
+            //login sebagai admin monitoring
+            case 101:
+                return view('transaksi/surat_masuk/index_101');
+            break;
             //login sebagai admin forwarder
             default :
                 return view('transaksi/surat_masuk/index_6');

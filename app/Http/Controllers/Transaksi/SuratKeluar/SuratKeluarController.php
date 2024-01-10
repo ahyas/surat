@@ -5,22 +5,32 @@ namespace App\Http\Controllers\Transaksi\SuratKeluar;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 
 class SuratKeluarController extends Controller
 {
     public function index(){
-        $klasifikasi = DB::table("ref_klasifikasi")
-        ->select(
-            "id AS id_klasifikasi",
-            "kode AS kode_klasifikasi",
-            "deskripsi AS deskripsi_klasifikasi"
-        )->get();
-
-        $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
-        ->select(
-            "id",
-            "nomenklatur"
-        )->get();
+        $id_role = Auth::user()->getRole()->id_role;
+        switch ($id_role){
+            //login sebagai admin monitoring
+            case 101:
+                return view('transaksi.surat_keluar.index_101');
+            break;
+            
+            default :
+                $klasifikasi = DB::table("ref_klasifikasi")
+                ->select(
+                    "id AS id_klasifikasi",
+                    "kode AS kode_klasifikasi",
+                    "deskripsi AS deskripsi_klasifikasi"
+                )->get();
+        
+                $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
+                ->select(
+                    "id",
+                    "nomenklatur"
+                )->get();
+        }
 
         return view("transaksi.surat_keluar.index", compact("klasifikasi","nomenklatur_jabatan"));
     }

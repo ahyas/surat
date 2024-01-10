@@ -18,7 +18,7 @@ Route::get('/', function(){
 });
 Auth::routes();
     Route::get('home', 'HomeController@index')->name('home');
-
+//login sebagai super admin
     Route::group(['middleware'=>'role: 1'], function(){
         //BEGIN::user list
         Route::get('/user/list', 'Users\UserController@index')->name('user.list.index');
@@ -46,7 +46,7 @@ Auth::routes();
         Route::get('/referensi/bidang/get_data','Referensi\BidangController@getBidang')->name('referensi.bidang.get_data');
         //END::Bidang
     });
-
+//login sebagai super admin dan admin tata usaha
     Route::group(['middleware'=>'role: 1, 6'], function(){
          //BEGIN::klasifikasi surat
          Route::get('/referensi/klasifikasi_surat', 'Referensi\KlasifikasiSuratController@index')->name('referensi.klasifikasi_surat.index');
@@ -82,7 +82,7 @@ Auth::routes();
         //END::transaksi surat
     });
    
-    Route::group(['middleware'=>'role:5, 6'], function(){
+    Route::group(['middleware'=>'role:5, 6, 101'], function(){
          //Begin::Transaksi surat masuk
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');
@@ -92,8 +92,8 @@ Auth::routes();
         Route::get('/transaksi/surat_masuk/{id}/delete', 'Transaksi\SuratMasuk\SuratMasukController@delete')->name('transaksi.surat_masuk.delete');
         //End::Transaksi surat masuk
     });
-
-    Route::group(['middleware'=>'role:6'], function(){
+//login sebagai admin tata usaha
+    Route::group(['middleware'=>'role:6, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
         Route::post('/transaksi/surat_keluar/save', 'Transaksi\SuratKeluar\SuratKeluarController@save')->name('transaksi.surat_keluar.save');
