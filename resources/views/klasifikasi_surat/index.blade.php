@@ -411,12 +411,14 @@ $(document).ready(function(){
     });
 
     $("body").on("click", "#detail_klasifikasi",function(){
+        let kode_klasifikasi = $(this).data("show_kode_klasifikasi");
         document.getElementById("sub-fungsi").style.display = "inline-block";
         document.getElementById("sub-kegiatan").style.display = "none";
         document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("sub-title1").innerHTML = "Sub Kode Fungsi";
-        document.getElementById("show_kode_klasifikasi").innerHTML = $(this).data("show_kode_klasifikasi")+" - ";
-        document.getElementById("show_deskripsi_klasifikasi").innerHTML = $(this).data("show_deskripsi_klasifikasi");
+        document.getElementById("show_kode_klasifikasi").innerHTML = $(this).data("show_kode_klasifikasi");
+        document.getElementById("show_deskripsi_klasifikasi").innerHTML = " - "+$(this).data("show_deskripsi_klasifikasi");
+        
         var id_ref_klasifikasi = $(this).data("id_klasifikasi");
         $("input[name='id_ref_klasifikasi']").val(id_ref_klasifikasi);
         $("#tb_fungsi").DataTable().clear().destroy();
@@ -454,7 +456,7 @@ $(document).ready(function(){
                     }
                 }
             ]
-    });
+        });
 
     });
 
@@ -462,12 +464,16 @@ $(document).ready(function(){
 
     /** Begin::Kode Fungsi */
     $("body").on("click","#add_fungsi", function(){
+        let count = $("#tb_fungsi").DataTable().rows( ).count() + 1;
+        let kode_klasifikasi = document.getElementById("show_kode_klasifikasi").innerHTML;
+        
         document.getElementById("sub-kegiatan").style.display = "none";
         document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("update_fungsi").style.display = "none";
         document.getElementById("save_fungsi").style.display = "inline-block";
         document.getElementById("kt_modal_add_fungsi_header").innerHTML = `<h2 class="fw-bold">Tambah Fungsi</h2>`;
         $("#modal_fungsi_surat_form").trigger("reset");
+        $("#kode_fungsi").val(kode_klasifikasi+""+count);
         $("#kt_modal_add_fungsi").modal("show");
     });
 
@@ -546,8 +552,8 @@ $(document).ready(function(){
         document.getElementById("sub-kegiatan").style.display = "inline-block";
         document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("sub-kegiatan-title").innerHTML = "Sub Kode Kegiatan";
-        document.getElementById("show_kode_fungsi").innerHTML = $(this).data("show_kode_fungsi")+" - ";
-        document.getElementById("show_deskripsi_fungsi").innerHTML = $(this).data("show_deskripsi_fungsi");
+        document.getElementById("show_kode_fungsi").innerHTML = $(this).data("show_kode_fungsi");
+        document.getElementById("show_deskripsi_fungsi").innerHTML = " - "+$(this).data("show_deskripsi_fungsi");
         let id_ref_fungsi = $(this).data("id_fungsi");
         $("input[name='id_ref_fungsi']").val(id_ref_fungsi);
         $("#tb_kegiatan").DataTable().clear().destroy();
@@ -590,11 +596,15 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_kegiatan",function(){
+        let count = $("#tb_kegiatan").DataTable().rows( ).count() + 1;
+        let kode_kegiatan = document.getElementById("show_kode_fungsi").innerHTML;
+
         document.getElementById("sub-transaksi").style.display = "none";
         document.getElementById("kt_modal_add_kegiatan_header").innerHTML = `<h2 class="fw-bold">Tambah Kegiatan</h2>`;
         document.getElementById("update_kegiatan").style.display = "none";
         document.getElementById("save_kegiatan").style.display = "inline-block";
         $("#modal_kegiatan_surat_form").trigger("reset");
+        $("#kode_kegiatan").val(kode_kegiatan+"."+count);
         $("#kt_modal_add_kegiatan").modal("show");
     });
 
@@ -665,8 +675,8 @@ $(document).ready(function(){
     $("body").on("click","#detail_kegiatan", function(){
         document.getElementById("sub-transaksi").style.display = "inline-block";
         document.getElementById("sub-transaksi-title").innerHTML = "Sub Kode Transkasi";
-        document.getElementById("show_kode_kegiatan").innerHTML = $(this).data("show_kode_kegiatan")+" - ";
-        document.getElementById("show_deskripsi_kegiatan").innerHTML = $(this).data("show_deskripsi_kegiatan");
+        document.getElementById("show_kode_kegiatan").innerHTML = $(this).data("show_kode_kegiatan");
+        document.getElementById("show_deskripsi_kegiatan").innerHTML = " - "+$(this).data("show_deskripsi_kegiatan");
         var id_ref_kegiatan = $(this).data("id_kegiatan");
         $("input[name='id_ref_kegiatan']").val(id_ref_kegiatan);
         $("#tb_transaksi").DataTable().clear().destroy();
@@ -700,11 +710,14 @@ $(document).ready(function(){
     
     /** BEGIN::Transaksi*/
     $("body").on("click","#add_transaksi",function(){
-        console.log("Testing");
+        let count = $("#tb_transaksi").DataTable().rows( ).count() + 1;
+        let kode_transaksi = document.getElementById("show_kode_kegiatan").innerHTML;
+
         document.getElementById("kt_modal_add_transaksi_header").innerHTML = `<h2 class="fw-bold">Tambah Kode Transaksi</h2>`;
         document.getElementById("update_transaksi").style.display = "none";
         document.getElementById("save_transaksi").style.display = "inline-block";
         $("#modal_transaksi_surat_form").trigger("reset");
+        $("#kode_transaksi").val(kode_transaksi+"."+count);
         $("#kt_modal_add_transaksi").modal("show");
     });
 
