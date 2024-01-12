@@ -24,15 +24,18 @@ class SuratKeluarController extends Controller
                     "kode AS kode_klasifikasi",
                     "deskripsi AS deskripsi_klasifikasi"
                 )->get();
+
+                $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
         
                 $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
                 ->select(
                     "id",
                     "nomenklatur"
                 )->get();
+
+                return view("transaksi.surat_keluar.index", compact("klasifikasi","nomenklatur_jabatan","user"));
         }
 
-        return view("transaksi.surat_keluar.index", compact("klasifikasi","nomenklatur_jabatan"));
     }
 
     public function getFungsiList($id_ref_klasifikasi){
@@ -177,6 +180,24 @@ class SuratKeluarController extends Controller
                 "tgl_surat"=>$request["tgl_surat"],
                 "file"=>$fileName
             ]);
+
+            //detail transaksi surat
+            $tujuan2 = $request["tujuan2"];
+            $data = array();
+            //get last id
+            $id_surat_keluar = DB::table("transaksi_surat_keluar")->max('id');
+            
+            foreach($tujuan2 as $id_pegawai){
+                if(!empty($id_pegawai)){
+                    $data[] = [
+                        "id_surat_keluar"=>$id_surat_keluar,
+                        "id_penerima"=>$id_pegawai,
+                        "internal"=>1
+                    ];
+                }
+            }
+
+            DB::table('detail_transaksi_surat')->insert($data);
         }
 
         return response()->json($data);
@@ -218,7 +239,13 @@ class SuratKeluarController extends Controller
             "deskripsi AS deskripsi_transaksi"
         )->get();
 
+        $penerima_surat = DB::table("detail_transaksi_surat")
+        ->select("id_penerima")
+        ->where("id_surat_keluar", $id_surat)
+        ->get();
+
         return response()->json([
+            "penerima_surat"=>$penerima_surat,
             "surat_keluar"=>$table, 
             "id_klasifikasi"=>$id_klasifikasi,
             "id_fungsi"=>$id_fungsi, 
@@ -278,6 +305,25 @@ class SuratKeluarController extends Controller
                         "file"=>$fileName
                     ]
                 );
+                //replace old data with new data
+                DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id)->delete();
+
+                //detail transaksi surat
+                $tujuan2 = $request["tujuan2"];
+                $value = array();
+                
+                foreach($tujuan2 as $id_pegawai){
+                    if(!empty($id_pegawai)){
+                        $value[] = [
+                            "id_surat_keluar"=>$id,
+                            "id_penerima"=>$id_pegawai,
+                            "internal"=>1
+                        ];
+                    }
+                }
+
+                DB::table('detail_transaksi_surat')->insert($value);
+
             }else{
                 DB::table("transaksi_surat_keluar")
                 ->where("id", $id)
@@ -289,6 +335,25 @@ class SuratKeluarController extends Controller
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                     ]
                 );
+
+                //replace old data with new data
+                DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id)->delete();
+
+                //detail transaksi surat
+                $tujuan2 = $request["tujuan2"];
+                $value = array();
+                
+                foreach($tujuan2 as $id_pegawai){
+                    if(!empty($id_pegawai)){
+                        $value[] = [
+                            "id_surat_keluar"=>$id,
+                            "id_penerima"=>$id_pegawai,
+                            "internal"=>1
+                        ];
+                    }
+                }
+
+                DB::table('detail_transaksi_surat')->insert($value);
             }
     
         }

@@ -85,8 +85,19 @@
                                        
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                            <input type="text" name="tujuan" id="tujuan" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tujuan surat" required disabled/>
+                                            <input type="text" name="tujuan" id="tujuan" class="form-control form-control-sm form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tujuan surat" required disabled/>
                                         </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Tujuan 2</label>
+                                            <select name="tujuan2[]" id="tujuan2" class="form-select form-select-sm form-select-solid" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
+                                            <option></option>
+                                            @foreach($user as $row)
+                                            <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                            @endforeach
+                                        </select>
+
+                                        </div>
+                                        
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
                                             <textarea class="form-control form-control-solid my_input" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required disabled></textarea>
@@ -256,7 +267,6 @@ $(document).ready(function(){
             });
         }
     });
-
 
     function enabledAll(){
         document.querySelectorAll(".my_input").forEach(element=>{
@@ -443,6 +453,7 @@ $(document).ready(function(){
 
     $("#save_surat").click(function(e){
         e.preventDefault();
+        console.log($("#tujuan2").val());
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
@@ -456,6 +467,7 @@ $(document).ready(function(){
                 contentType: false,
                 processData: false,
                 success:function(data){
+                    console.log(data)
                     if (!data.success) {
                         let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
@@ -493,8 +505,15 @@ $(document).ready(function(){
                 success:function(data){
                     enabledAll();
                     disabledList();
+                    console.log(data.penerima_surat);
+                    
+                    let tujuan2 = data.penerima_surat.map(function (obj) {
+                        return obj.id_penerima;
+                    });
+
+                    console.log(tujuan2);
+
                     $("#klasifikasi").val(data.id_klasifikasi);
-                    console.log("id klasifikasi ", data.id_klasifikasi)
                     if(data.ref_fungsi.length>0){
                         document.getElementById("fungsi").removeAttribute("disabled");
                         document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
@@ -530,6 +549,7 @@ $(document).ready(function(){
                     
                     $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
                     $("input[name='tujuan']").val(data.surat_keluar.tujuan);
+                    $("#tujuan2").val(tujuan2).trigger("change");
                     $("#perihal").val(data.surat_keluar.perihal);
                     $("input[name='tgl_surat']").val(data.surat_keluar.tgl_surat);
 
