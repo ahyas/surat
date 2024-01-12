@@ -89,8 +89,8 @@
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Tujuan 2</label>
-                                            <select name="tujuan2[]" id="tujuan2" class="form-select form-select-sm form-select-solid" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple">
-                                            <option></option>
+                                            <select name="tujuan2[]" id="tujuan2" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                            <option>Pilih tujuan surat</option>
                                             @foreach($user as $row)
                                             <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
                                             @endforeach
@@ -148,7 +148,6 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Nomor Surat</th>
-                        <th >Tujuan</th>
                         <th >Perihal/Isi Ringkas</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th>Lampiran</th>
@@ -225,7 +224,6 @@ $(document).ready(function(){
                     </div>`;
                 }
             },
-            {data:"tujuan"},
             {data:"perihal"},
             {data:"tgl_surat"},
             {data:"file",
@@ -278,10 +276,11 @@ $(document).ready(function(){
     }
 
     function disabledAll(){
+        $("#tujuan2").val([]).trigger("change");
         document.querySelectorAll(".my_input").forEach(element=>{
-            element.setAttribute("disabled", "disabled");
             element.value = "";
-        });
+            element.setAttribute("disabled", "disabled");
+        });        
     }
 
     function enabledList(){
@@ -437,8 +436,10 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_surat_keluar", function(){
+        
         disabledAll();
         disabledList();
+        
         document.querySelector(".save_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".save_surat_keluar").removeAttribute("disabled");
         document.getElementById("update_surat").style.display = "none";
@@ -453,7 +454,7 @@ $(document).ready(function(){
 
     $("#save_surat").click(function(e){
         e.preventDefault();
-        console.log($("#tujuan2").val());
+        
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
@@ -469,12 +470,13 @@ $(document).ready(function(){
                 success:function(data){
                     console.log(data)
                     if (!data.success) {
-                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
+                        let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                        let err_tujuan2 = data.errors.tujuan2  ? `<li>${data.errors.tujuan2}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan2+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                     } else {
@@ -577,12 +579,13 @@ $(document).ready(function(){
                 
                     console.log(data);
                     if (!data.success) {
-                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
+                        let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                        let err_tujuan2 = data.errors.tujuan2  ? `<li>${data.errors.tujuan2}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan2+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                     } else {

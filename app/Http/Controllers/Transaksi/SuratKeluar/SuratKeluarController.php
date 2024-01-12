@@ -104,37 +104,39 @@ class SuratKeluarController extends Controller
         $errors = [];
         $data = [];
 
+            
+        if (empty($request["nomenklatur_jabatan"])) {
+            $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
+        }else{
             $bulan = date("m");
             $tahun = date("Y");
 
-            if (empty($request["nomenklatur_jabatan"])) {
-                $errors['perihal'] = 'Nomenklatur jabatan tidak boleh kosong';    
-            }else{
-                $count = DB::table("transaksi_surat_keluar")
-                ->select(
-                    "id AS id_surat"
-                )->count();
+                
+            $count = DB::table("transaksi_surat_keluar")
+            ->select(
+                "id AS id_surat"
+            )->count();
 
-                $num = $count +1;
+            $num = $count +1;
 
-                $no_agenda = sprintf('%03d', $num);
+            $no_agenda = sprintf('%03d', $num);
 
-                if($request["nomenklatur_jabatan"] == 1){
-                    $nomor_surat =  $no_agenda."/KPTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
-                }
-        
-                if($request["nomenklatur_jabatan"] == 2){
-                    $nomor_surat = $no_agenda."/PAN.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
-                }
-        
-                if($request["nomenklatur_jabatan"] == 3){
-                    $nomor_surat = $no_agenda."/SEK.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
-                    
-                }
+            if($request["nomenklatur_jabatan"] == 1){
+                $nomor_surat =  $no_agenda."/KPTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
             }
 
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+            if($request["nomenklatur_jabatan"] == 2){
+                $nomor_surat = $no_agenda."/PAN.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+            }
+
+            if($request["nomenklatur_jabatan"] == 3){
+                $nomor_surat = $no_agenda."/SEK.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                
+            }
+        }
+
+        if (empty($request["tujuan2"])) {
+            $errors['tujuan2'] = 'Tujuan surat tidak boleh kosong';
         }
         
         if (empty($request["perihal"])) {
@@ -183,13 +185,13 @@ class SuratKeluarController extends Controller
 
             //detail transaksi surat
             $tujuan2 = $request["tujuan2"];
-            $data = array();
+            $value = array();
             //get last id
             $id_surat_keluar = DB::table("transaksi_surat_keluar")->max('id');
             
             foreach($tujuan2 as $id_pegawai){
                 if(!empty($id_pegawai)){
-                    $data[] = [
+                    $value[] = [
                         "id_surat_keluar"=>$id_surat_keluar,
                         "id_penerima"=>$id_pegawai,
                         "internal"=>1
@@ -197,7 +199,7 @@ class SuratKeluarController extends Controller
                 }
             }
 
-            DB::table('detail_transaksi_surat')->insert($data);
+            DB::table('detail_transaksi_surat')->insert($value);
         }
 
         return response()->json($data);
@@ -263,8 +265,12 @@ class SuratKeluarController extends Controller
         $data = [];
 
 
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+        if (empty($request["nomenklatur_jabatan"])) {
+            $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
+        }
+        
+        if (empty($request["tujuan2"])) {
+            $errors['tujuan2'] = 'Tujuan surat tidak boleh kosong';
         }
 
         if (empty($request["perihal"])) {
@@ -363,6 +369,7 @@ class SuratKeluarController extends Controller
 
     public function delete($id_surat){
         DB::table("transaksi_surat_keluar")->where("id", $id_surat)->delete();
+        DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id_surat)->delete();
         return response()->json();
     }
 }
