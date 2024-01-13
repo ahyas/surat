@@ -25,7 +25,7 @@ class UserController extends Controller
     public function getUser(){
         $table=DB::table("users")
         ->where("users.id","!=", 1)
-        ->select("users.id AS id_user","users.name AS nama","bidang.nama AS bidang","users.email")
+        ->select("users.id AS id_user","users.name AS nama","bidang.nama AS bidang","users.email","bidang.id AS id_bidang")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->get();
 

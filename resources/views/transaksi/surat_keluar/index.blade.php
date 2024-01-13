@@ -148,7 +148,8 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Nomor Surat</th>
-                        <th >Perihal/Isi Ringkas</th>
+                        <th>Perihal/Isi Ringkas</th>
+                        <th>Tujuan</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th class="text-end min-w-125px">Actions</th>
@@ -163,7 +164,7 @@
     <!--end::Card-->
 </div>
 <!--end::Post-->
-<div class="modal fade" id="kt_modal_scrollable_2" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_preview" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header">
@@ -191,9 +192,8 @@ $(document).ready(function(){
 
     $("#tgl_surat").flatpickr();
     var id_role = `{{$data['id_role']}}`;
-    
 
-    $("#tb_surat_keluar").DataTable({
+    let tb_surat_keluar = $("#tb_surat_keluar").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_keluar.get_data')}}",
             dataSrc:""
@@ -225,17 +225,28 @@ $(document).ready(function(){
                 }
             },
             {data:"perihal"},
+            {data:"jumlah_tujuan", 
+                mRender:function(data, type, full){
+                    if(data>0){
+                        var show = `<a href="javascript:void(0)" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        return show;
+                    }else{
+                        return '';
+                    }
+                    
+                }
+            },
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}">File</a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             },
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+                            <button class="btn btn-light-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' >Edit</a></li>
                                     <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a></li>
@@ -247,8 +258,20 @@ $(document).ready(function(){
     });
 
     $("body").on("click", "#lampiran", function(){
-        $("#kt_modal_scrollable_2").modal("show");
+        $("#modal_preview").modal("show");
         document.getElementById("preview").src = $(this).data("url")
+    });
+
+    $(("body")).on("click","#tujuan", function(){
+        let id_surat = $(this).data("id_surat");
+        $.ajax({
+            url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
+            type:"GET",
+            success:function(data){
+                console.log(data);
+                $("#modal_tujuan").modal("show");
+            }
+        });
     });
 
     $("body").on("click","#delete_surat_keluar", function(){

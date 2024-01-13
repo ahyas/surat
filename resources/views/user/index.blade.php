@@ -93,16 +93,16 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                                        <button type="submit" class="btn btn-primary" id="save_user" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Save</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
+                                        <button type="submit" class="btn btn-primary save_user" id="save_user" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
                                         </button>
-                                        <button type="submit" class="btn btn-primary" id="update_user" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Update</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="submit" class="btn btn-primary update_user" id="update_user" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
                                         </button>
                                     </div>
                                     <!--end::Actions-->
@@ -143,7 +143,6 @@
 @endsection
 @push('scripts')
 
-<script src="{{asset('public/assets/js/custom/apps/user-management/users/list/add.js')}}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $("#tb_user").DataTable({
@@ -151,22 +150,39 @@ $(document).ready(function(){
             url:"{{route('user.list.get_data')}}",
             dataSrc:""
         },
+        responsive  : true,
         serverSide  : false,
         columns     :
         [
             {data:"nama", className:"d-flex align-items-center",
                 mRender:function(data, type, full){
                     return`<div class="d-flex flex-column">
-                                <a href="javascript:void(0)" class="text-gray-800 text-hover-primary mb-1">${data}</a>
+                                <div class="text-gray-800 mb-1">${data}</div>
                                 <span>${full['email']}</span>
                             </div>`;
                 }
             },
-            {data:"bidang"},
+            {data:"bidang",
+                mRender:function(data, type, full){
+                    if(full['id_bidang'] == 1){
+                        var a = `<span class="badge badge-light-danger">${data}</span>`;
+                    }
+
+                    if(full['id_bidang'] == 2){
+                        var a = `<span class="badge badge-light-primary">${data}</span>`; 
+                    }
+
+                    if(full['id_bidang'] == 3){
+                        var a = `<span class="badge badge-light-success">${data}</span>`;
+                    }
+
+                    return a;
+                }
+            },
             {data:"id_user", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
+                            <button class="btn btn-light-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a href="javascript:void(0)" class="dropdown-item" id="edit_user" data-id_user='${data}'>Edit</a></li>
                                     <li><a href="javascript:void(0)" class="dropdown-item delete_user" data-id_user='${data}'>Delete</a></li>
@@ -200,13 +216,14 @@ $(document).ready(function(){
     $("#update_user").click(function(e){
         e.preventDefault();
         var id_user = $("input[name='id_user']").val();
+        setButtonSpinner(".update_user", "on");
         $.ajax({
             type    : "POST",
             url     : `{{url('user/list/${id_user}/update')}}`,
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
             success :function(data){
-                console.log("Sip");
+                setButtonSpinner(".update_user", "off");
                 $("#tb_user").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_user").modal("hide");  
             }
@@ -221,16 +238,25 @@ $(document).ready(function(){
         $("#kt_modal_add_user").modal("show");
     });
 
+    function setButtonSpinner(query_selector, status){
+        var btn = document.querySelector(query_selector);
+        btn.setAttribute("data-kt-indicator", status);
+        btn.setAttribute("disabled","disabled");
+
+        return btn;
+    }
+
     $("#save_user").click(function(e){
         e.preventDefault();
-        console.log($("input[name='email']").val());
+        setButtonSpinner(".save_user", "on");
+
         $.ajax({
             type    : "POST",
             url     : "{{route('user.list.save')}}",
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
             success :function(data){
-                console.log("Sip");
+                setButtonSpinner(".save_user", "off");
                 $("#tb_user").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_user").modal("hide");
             }
