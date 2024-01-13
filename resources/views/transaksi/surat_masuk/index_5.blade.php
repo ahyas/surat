@@ -98,7 +98,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
-                        <th class="text-end min-w-125px">Lampiran</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -161,7 +161,7 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"file", className: "text-end",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}">File</a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             }
         ]

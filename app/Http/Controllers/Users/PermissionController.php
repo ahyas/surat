@@ -40,13 +40,27 @@ class PermissionController extends Controller
     }
 
     public function update(Request $request, $id_user){
+        $errors = [];
+        $data = [];
 
-        DB::table("permission")
-        ->where("id_user", $id_user)
-        ->update([
-            "id_role"=>$request['user_role'],
-        ]);
+        if (empty($request["user_role"])) {
+            $errors['user_role'] = 'Pilih role yang sesuai';
+        }
 
-        return response()->json();
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['errors'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
+            DB::table("permission")
+            ->where("id_user", $id_user)
+            ->update([
+                "id_role"=>$request['user_role'],
+            ]);
+        }
+
+        return response()->json($data);
     }
 }

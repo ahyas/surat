@@ -152,7 +152,7 @@
                         <th>Tujuan</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -244,13 +244,21 @@ $(document).ready(function(){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             },
-            {data:"id_surat",
+            {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-light-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' >Edit</a></li>
-                                    <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a></li>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' >Edit</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>`;
                 }

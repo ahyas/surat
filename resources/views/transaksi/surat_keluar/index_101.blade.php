@@ -23,8 +23,8 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Nomor Surat</th>
-                        <th >Tujuan</th>
                         <th >Perihal/Isi Ringkas</th>
+                        <th >Tujuan</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th class="text-end min-w-125px">Lampiran</th>
                     </tr>
@@ -75,6 +75,7 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        responsive  : true,
         columns     :
         [
             {data:"no_surat",
@@ -99,13 +100,23 @@ $(document).ready(function(){
                     </div>`;
                 }
             },
-            {data:"tujuan"},
             {data:"perihal"},
+            {data:"jumlah_tujuan", 
+                mRender:function(data, type, full){
+                    if(data>0){
+                        var show = `<a href="javascript:void(0)" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        return show;
+                    }else{
+                        return '';
+                    }
+                    
+                }
+            },
             {data:"tgl_surat"},
             {data:"file",className: "text-end",
                 mRender:function(data){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}">File</a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             }
         ]

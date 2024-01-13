@@ -135,12 +135,15 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        responsive:true,
         columns     :
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
                     if(full['rahasia'] !== 'true'){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
                     }
 
                     return`<div class="d-flex flex-column">
@@ -154,7 +157,7 @@ $(document).ready(function(){
             {data:"tgl_surat", className: "text-end"},
             {data:"file", className: "text-end",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}">File</a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             }
         ]

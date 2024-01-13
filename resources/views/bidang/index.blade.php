@@ -93,7 +93,7 @@
         <!--begin::Card body-->
         <div class="card-body py-4">
             <!--begin::Table-->
-            <table class="table align-middle table-striped fs-6 gy-5" id="tb_bidang">
+            <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_bidang">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Bidang</th>
@@ -126,7 +126,7 @@ $(document).ready(function(){
             {data:"id_bidang", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-light btn-active-light-primary btn-flex btn-center btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions<i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions<i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" aria-labelledby="dropdownMenuButton1 data-kt-menu="true">
                                     <li>
                                         <div class="menu-item px-3">

@@ -33,22 +33,50 @@ class UserController extends Controller
     }
 
     public function save(Request $request){
-        DB::table("users")
-        ->insert([
-            "name"=>$request['name'],
-            "email"=>$request['email'],
-            "password"=>Hash::make("ptapabar"),
-            "id_bidang"=>$request['bidang']
-        ]);
+        $errors = [];
+        $data = [];
 
-        $userId = DB::getPdo()->lastInsertId();
+        if (empty($request["name"])) {
+            $errors['name'] = 'Nama tidak boleh kosong';
+        }
+        
+        if (empty($request["email"])) {
+            $errors['email'] = 'Email tidak boleh kosong';
+        }else{
+            $count=DB::table("users")->where("email",$request["email"])->count();   
+            if($count>0){
+                $errors['email'] = 'Email sudah digunakan';
+            }
+        }
 
-        DB::table("permission")
-        ->insert([
-            "id_user"=>$userId
-        ]);
+        if (empty($request["bidang"])) {
+            $errors['bidang'] = 'Pilih bidang yang sesuai';
+        }
 
-        return response()->json();
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['errors'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
+            DB::table("users")
+            ->insert([
+                "name"=>$request['name'],
+                "email"=>$request['email'],
+                "password"=>Hash::make("ptapabar"),
+                "id_bidang"=>$request['bidang']
+            ]);
+
+            $userId = DB::getPdo()->lastInsertId();
+
+            DB::table("permission")
+            ->insert([
+                "id_user"=>$userId
+            ]);
+        }
+
+        return response()->json($data);
     }
 
     public function edit($id_user){
@@ -63,15 +91,35 @@ class UserController extends Controller
     }
 
     public function update(Request $request, $id_user){
-        DB::table("users")
-        ->where("id", $id_user)
-        ->update([
-            "name"=>$request['name'],
-            "email"=>$request['email'],
-            "id_bidang"=>$request['bidang']
-        ]);
+        $errors = [];
+        $data = [];
 
-        return response()->json();
+        if (empty($request["name"])) {
+            $errors['name'] = 'Nama tidak boleh kosong';
+        }
+
+        if (empty($request["bidang"])) {
+            $errors['bidang'] = 'Pilih bidang yang sesuai';
+        }
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['errors'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
+            DB::table("users")
+            ->where("id", $id_user)
+            ->update([
+                "name"=>$request['name'],
+                "email"=>$request['email'],
+                "id_bidang"=>$request['bidang']
+            ]);
+
+        }
+
+        return response()->json($data);
     }
 
     public function delete($id_user){

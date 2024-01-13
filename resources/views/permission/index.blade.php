@@ -44,6 +44,8 @@
                                     <!--begin::Scroll-->
                                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
                                         <!--begin::Input group-->
+                                        <div id="notification"></div>
+
                                         <input type="hidden" name="id_user" class="form-control" />
                                         <div class="fv-row mb-7">
                                             <!--begin::Label-->
@@ -86,11 +88,11 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
-                                        <button type="submit" class="btn btn-primary" id="update_permission" data-kt-users-modal-action="submit">
-                                            <span class="indicator-label">Update</span>
-                                            <span class="indicator-progress">Please wait... 
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger">Cancel</button>
+                                        <button type="submit" class="btn btn-primary update_permission" id="update_permission" data-kt-indicator="off">
+                                            <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
                                         </button>
                                     </div>
                                     <!--end::Actions-->
@@ -116,7 +118,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">User</th>
                         <th class="min-w-125px">Role</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -130,7 +132,6 @@
 <!--end::Post-->
 @endsection
 @push('scripts')
-<script src="{{asset('public/assets/js/custom/apps/user-management/users/list/add.js')}}"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $("#tb_user").DataTable({
@@ -139,6 +140,7 @@ $(document).ready(function(){
             dataSrc:""
         },
         serverSide  : false,
+        responsive  : true,
         columns     :
         [
             {data:"nama", className:"d-flex align-items-center",
@@ -153,9 +155,13 @@ $(document).ready(function(){
             {data:"id_user", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a href="javascript:void(0)" class="dropdown-item" id="edit_permission" data-id_user='${data}'>Edit</a></li>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_permission" data-id_user='${data}'>Edit</a>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>`;
                 }
@@ -183,17 +189,43 @@ $(document).ready(function(){
     $("#update_permission").click(function(e){
         e.preventDefault();
         var id_user = $("input[name='id_user']").val();
+        setButtonSpinner(".update_permission","on");
         $.ajax({
             type    : "POST",
             url     : `{{url('user/permissions/${id_user}/update')}}`,
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
             success :function(data){
-                console.log("Sip ",data);
-                $("#tb_user").DataTable().ajax.reload(null, false);
-                $("#kt_modal_add_user").modal("hide");  
+                if (!data.success) {
+                    let err_user_role = data.errors.user_role  ? `<li>${data.errors.user_role}</li>` : ``;
+
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_user_role+"</div></div>";      
+                    setButtonSpinner(".update_permission", "off");
+
+                }else{
+                    setButtonSpinner(".update_permission","off");
+                    $("#tb_user").DataTable().ajax.reload(null, false);
+                    $("#kt_modal_add_user").modal("hide");  
+                }
             }
         });
+    });
+
+    function setButtonSpinner(query_selector, status){
+        var btn = document.querySelector(query_selector);
+        btn.setAttribute("data-kt-indicator", status);
+        
+        if(status == "off"){
+            btn.removeAttribute("disabled");
+        }else{
+            btn.setAttribute("disabled","disabled");
+        }
+
+        return btn;
+    }
+
+    $("#btn-cancel").click(function(){
+        $("#kt_modal_add_user").modal("hide");
     });
 
 });

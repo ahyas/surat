@@ -102,9 +102,9 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
                         <th >Tanggal Surat</th>
-                        <th >Sifat</th>
+                    
                         <th>Lampiran</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -148,39 +148,46 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        responsive  : true,
         columns     :
         [
             {data:"no_surat", 
-                mRender:function(data){
+                mRender:function(data, type, full){
+                    if(full['rahasia'] == 'true'){
+                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
+                    }else{
+                        var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }
+
                     return`<div class="d-flex flex-column">
-                            <div class="text-gray-800 mb-1">${data}</div>                        
+                            <div class="text-gray-800 mb-1">${data}</div> 
+                            <span>${a}</span>                       
                             </div>`;
                 }
             },
             {data:"pengirim"},
             {data:"perihal"},
             {data:"tgl_surat"},
-            {data: "rahasia",
-                mRender:function(data){
-                    if(data == 'true'){
-                        return`<span class="badge badge-light-danger">Rahasia</span>`;
-                    }
-
-                    return`<span class="badge badge-light-success">Biasa</span>`;
-                }
-            },
             {data:"file",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}">File</a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a href="javascript:void(0)" class="dropdown-item" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a></li>
-                                    <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a></li>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a>
+                                        </div>  
+                                    </li>
                                 </ul>
                             </div>`;
                 }

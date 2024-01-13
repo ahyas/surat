@@ -36,22 +36,13 @@
                                     <div class="fv-row mb-7">
                                         <!--begin::Label-->
                                         <label class="required fw-semibold fs-6 mb-2">Kode</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
-                                        <input type="text" name="kode_klasifikasi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode klasifikasi" />
-                                        <!--end::Input-->
+                                        <input type="text" name="kode_klasifikasi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode klasifikasi"/>
                                     </div>
                                     <div class="fv-row mb-7">
-                                        <!--begin::Label-->
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
-                                        <!--end::Label-->
-                                        <!--begin::Input-->
                                         <input type="text" name="deskripsi_klasifikasi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Deskripsi" />
-                                        <!--end::Input-->
                                     </div>
-                                    <!--end::Input group-->
                                     
-                                    <!--end::Input group-->
                                     <div class="text pt-10">
                                         <button class="btn btn-danger btn-sm" id="btnCancel">Cancel</button>
                                         <button type="submit" class="btn btn-primary btn-sm" id="save_klasifikasi" data-kt-users-modal-action="submit">Save</button>
@@ -74,7 +65,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Kode</th>
                         <th class="min-w-125px">Deskripsi</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -98,9 +89,9 @@
             </div>
         </div>
         <div class="card-body py-4">
-            <div class="fs-5 fw-semibold text-muted">
+            <span class="badge badge-light-primary badge-lg">
                 <span id="show_kode_klasifikasi"></span><span id="show_deskripsi_klasifikasi"></span>
-            </div>
+            </span>
             <input type="hidden" name="id_ref_klasifikasi">
             <div class="modal fade" id="kt_modal_add_fungsi" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -120,7 +111,7 @@
                                     <input type="hidden" name="id_fungsi" class="form-control" />
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Kode</label>
-                                        <input type="text" name="kode_fungsi" id="kode_fungsi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode klasifikasi" />
+                                        <input type="text" name="kode_fungsi" id="kode_fungsi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode klasifikasi" readonly/>
                                     </div>
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
@@ -146,7 +137,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Kode</th>
                         <th class="min-w-125px">Deskripsi</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -169,9 +160,9 @@
             </div>
         </div>
         <div class="card-body py-4">
-            <div class="fs-5 fw-semibold text-muted">
+            <span class="badge badge-light-primary badge-lg">
                 <span id="show_kode_fungsi"></span><span id="show_deskripsi_fungsi"></span>
-            </div>
+            </span>
 
             <div class="modal fade" id="kt_modal_add_kegiatan" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -192,7 +183,7 @@
                                     <input type="hidden" name="id_ref_kegiatan" class="form-control" />
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Kode</label>
-                                        <input type="text" name="kode_kegiatan" id="kode_kegiatan" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode Kegiatan" />
+                                        <input type="text" name="kode_kegiatan" id="kode_kegiatan" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode Kegiatan" readonly/>
                                     </div>
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
@@ -214,7 +205,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Kode</th>
                         <th class="min-w-125px">Deskripsi</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -237,9 +228,9 @@
             </div>
         </div>
         <div class="card-body py-4">
-            <div class="fs-5 fw-semibold text-muted">
+            <span class="badge badge-light-primary badge-lg">
                 <span id="show_kode_kegiatan"></span><span id="show_deskripsi_kegiatan"></span>
-            </div>
+            </span>
 
             <div class="modal fade" id="kt_modal_add_transaksi" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -262,7 +253,7 @@
                                     <input type="hidden" name="id_transaksi" class="form-control" />
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Kode</label>
-                                        <input type="text" name="kode_transaksi" id="kode_transaksi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode Transaksi" />
+                                        <input type="text" name="kode_transaksi" id="kode_transaksi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Kode Transaksi" readonly/>
                                     </div>
                                     <div class="fv-row mb-7">
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
@@ -284,7 +275,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">Kode</th>
                         <th class="min-w-125px">Deskripsi</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -309,6 +300,7 @@ $(document).ready(function(){
         pageLength  :5,
         lengthMenu  : [[5, 10, 20], [5, 10, 20]],
         serverSide  : false,
+        responsive  : true,
         columns     :
         [
             {data:"kode_klasifikasi"},
@@ -316,11 +308,23 @@ $(document).ready(function(){
             {data:"id_klasifikasi", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
-                            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a href="javascript:void(0)" class="dropdown-item" id="detail_klasifikasi" data-id_klasifikasi='${data}' data-show_kode_klasifikasi=${full['kode_klasifikasi']} data-show_deskripsi_klasifikasi="${full['deskripsi_klasifikasi']}">Detail</a></li>
-                                    <li><a href="javascript:void(0)" class="dropdown-item" id="edit_klasifikasi" data-id_klasifikasi='${data}'>Edit</a></li>
-                                    <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_klasifikasi" data-id_klasifikasi='${data}'>Delete</a></li>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item" id="detail_klasifikasi" data-id_klasifikasi='${data}' data-show_kode_klasifikasi=${full['kode_klasifikasi']} data-show_deskripsi_klasifikasi="${full['deskripsi_klasifikasi']}">Detail</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_klasifikasi" data-id_klasifikasi='${data}'>Edit</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_klasifikasi" data-id_klasifikasi='${data}'>Delete</a>
+                                        </div>
+                                    </li>
                                 </ul>
                             </div>`;
                 }
@@ -430,6 +434,7 @@ $(document).ready(function(){
             pageLength  :5,
             lengthMenu: [[5, 10, 20], [5, 10, 20]],
             serverSide  : false,
+            responsive  : true,
             columns     :
             [
                 {data:"kode_fungsi"},
@@ -437,20 +442,23 @@ $(document).ready(function(){
                 {data:"id_fungsi", className: "text-end",
                     mRender:function(data, type, full){
                         return`<div class="dropdown">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                    <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
-                                            <a href="javascript:void(0)" 
-                                                class="dropdown-item" 
-                                                id="detail_fungsi"
-                                                data-id_fungsi='${data}' 
-                                                data-show_kode_fungsi='${full["kode_fungsi"]}' 
-                                                data-show_deskripsi_fungsi='${full["deskripsi_fungsi"]}'>
-                                                    Detail
-                                            </a>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="dropdown-item" id="detail_fungsi"data-id_fungsi='${data}' data-show_kode_fungsi='${full["kode_fungsi"]}' data-show_deskripsi_fungsi='${full["deskripsi_fungsi"]}'>Detail</a>
+                                            </div>
                                         </li>
-                                        <li><a href="javascript:void(0)" class="dropdown-item" id="edit_fungsi" data-id_fungsi='${data}'>Edit</a></li>
-                                        <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_fungsi" data-id_fungsi='${data}'>Delete</a></li>
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="dropdown-item" id="edit_fungsi" data-id_fungsi='${data}'>Edit</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_fungsi" data-id_fungsi='${data}'>Delete</a>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>`;
                     }
@@ -565,6 +573,7 @@ $(document).ready(function(){
                 pageLength  : 5,
                 lengthMenu  : [[5, 10, 20], [5, 10, 20]],
                 serverSide  : false,
+                responsive  : true,
                 columns     :
                 [
                     {data:"kode_kegiatan"},
@@ -572,21 +581,23 @@ $(document).ready(function(){
                     {data:"id_kegiatan", className: "text-end",
                         mRender:function(data, type, full){
                             return`<div class="dropdown">
-                                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false" >Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                        <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                             <li>
-                                                <a href="javascript:void(0)" 
-                                                    class="dropdown-item" 
-                                                    id="detail_kegiatan" 
-                                                    data-id_kegiatan='${data}'
-                                                    data-show_kode_kegiatan='${full["kode_kegiatan"]}'
-                                                    data-show_deskripsi_kegiatan='${full["deskripsi_kegiatan"]}'    
-                                                >
-                                                        Detail
-                                                </a>
+                                                <div class="menu-item px-3">
+                                                    <a href="javascript:void(0)" class="dropdown-item" id="detail_kegiatan" data-id_kegiatan='${data}'data-show_kode_kegiatan='${full["kode_kegiatan"]}' data-show_deskripsi_kegiatan='${full["deskripsi_kegiatan"]}'>Detail</a>
+                                                </div>
                                             </li>
-                                            <li><a href="javascript:void(0)" class="dropdown-item" id="edit_kegiatan" data-id_kegiatan='${data}'>Edit</a></li>
-                                            <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_kegiatan" data-id_kegiatan='${data}'>Delete</a></li>
+                                            <li>
+                                                <div class="menu-item px-3">
+                                                    <a href="javascript:void(0)" class="dropdown-item" id="edit_kegiatan" data-id_kegiatan='${data}'>Edit</a>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="menu-item px-3">
+                                                    <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_kegiatan" data-id_kegiatan='${data}'>Delete</a>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>`;
                         }
@@ -688,6 +699,7 @@ $(document).ready(function(){
             pageLength  : 5,
             lengthMenu  : [[5, 10, 20], [5, 10, 20]],
             serverSide  : false,
+            responsive  : true,
             columns     :
             [
                 {data:"kode_transaksi"},
@@ -695,10 +707,18 @@ $(document).ready(function(){
                 {data:"id_transaksi", className: "text-end",
                     mRender:function(data, type, full){
                         return`<div class="dropdown">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a href="javascript:void(0)" class="dropdown-item" id="edit_transaksi" data-id_transaksi='${data}'>Edit</a></li>
-                                        <li><a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_transaksi" data-id_transaksi='${data}'>Delete</a></li>
+                                <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                    <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="dropdown-item" id="edit_transaksi" data-id_transaksi='${data}'>Edit</a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_transaksi" data-id_transaksi='${data}'>Delete</a>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>`;
                     }
