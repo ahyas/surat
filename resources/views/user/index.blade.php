@@ -176,6 +176,10 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-success">${data}</span>`;
                     }
 
+                    if(full['id_bidang'] == null){
+                        var a = ``;
+                    }
+
                     return a;
                 }
             },
