@@ -32,7 +32,7 @@ License: For each use you must have a valid license purchased only from above li
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
 		<!--begin::Vendor Stylesheets(used for this page only)-->
-		<link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+		<link href="{{asset('public/assets/css/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css" />
 		<link href="{{asset('public/assets/plugins/custom/vis-timeline/vis-timeline.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<!--end::Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
@@ -6651,9 +6651,9 @@ License: For each use you must have a valid license purchased only from above li
 		<script src="{{asset('public/assets/js/scripts.bundle.js')}}"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Vendors Javascript(used for this page only)-->
-		<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-		<script src="https://cdn.datatables.net/rowreorder/1.4.1/js/dataTables.rowReorder.min.js"></script>
-		<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+		<script src="{{asset('public/assets/js/jquery.dataTables.min.js')}}"></script>
+		<script src="{{asset('public/assets/js/dataTables.rowReorder.min.js')}}"></script>
+		<script src="{{asset('public/assets/js/dataTables.responsive.min.js')}}"></script>
 		<script src="{{asset('public/assets/plugins/custom/vis-timeline/vis-timeline.bundle.js')}}"></script>
 		<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
 		<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>

@@ -152,7 +152,7 @@
                         <th>Tujuan</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="text-end min-w-125px">Actions</th>
+                        <th class="min-w-125px">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -200,6 +200,7 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        responsive  : true,
         columns     :
         [
             {data:"no_surat",
@@ -243,7 +244,7 @@ $(document).ready(function(){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
                 }
             },
-            {data:"id_surat", className: "text-end",
+            {data:"id_surat",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
                             <button class="btn btn-light-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">Actions</button>
