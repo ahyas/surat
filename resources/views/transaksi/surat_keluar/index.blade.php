@@ -105,9 +105,9 @@
                                             <!--end::Input row-->
                                         </div>
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tembusan</label>
+                                            <label class="required fw-semibold fs-6 mb-2">Tujuan dan/atau Tembusan</label>
                                             <select name="tembusan[]" id="tembusan" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
-                                            <option>Pilih tujuan surat</option>
+                                            <option>Pilih tembusan surat</option>
                                             @foreach($user as $row)
                                             <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
                                             @endforeach
@@ -332,8 +332,6 @@ $(document).ready(function(){
             element.removeAttribute("disabled");
             element.value = "";
         });
-
-        document.getElementById("tujuan").focus();
     }
 
     function disabledAll(){
