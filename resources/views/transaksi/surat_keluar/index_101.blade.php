@@ -101,7 +101,7 @@ $(document).ready(function(){
                 }
             },
             {data:"perihal"},
-            {data:"jumlah_tujuan", 
+            {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
                         var show = `<a href="javascript:void(0)" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
