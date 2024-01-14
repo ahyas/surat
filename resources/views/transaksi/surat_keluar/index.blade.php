@@ -37,7 +37,7 @@
                             </div>
                             <div class="modal-body px-5 my-7">
                             
-                                <form id="kt_modal_add_surat_keluar_form" name="add_surat_keluar_form" class="form" action="#" enctype="multipart/form-data" >
+                                <form id="kt_modal_add_surat_keluar_form" name="add_surat_keluar_form" class="form">
                                 {{csrf_field()}}
                                     <!--begin::Scroll-->
                                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
@@ -105,7 +105,7 @@
                                             <!--end::Input row-->
                                         </div>
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan dan/atau Tembusan</label>
+                                            <label class="required fw-semibold fs-6 mb-2">Penerima dan/atau Tembusan</label>
                                             <select name="tembusan[]" id="tembusan" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
                                             <option>Pilih tembusan surat</option>
                                             @foreach($user as $row)
@@ -280,7 +280,7 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' >Edit</a>
+                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
@@ -330,7 +330,7 @@ $(document).ready(function(){
     function enabledAll(){
         document.querySelectorAll(".my_input").forEach(element=>{
             element.removeAttribute("disabled");
-            element.value = "";
+            
         });
     }
 
@@ -560,7 +560,7 @@ $(document).ready(function(){
         document.getElementById("row-transaksi").style.display = 'inline-block';
         let id_surat = $(this).data("id_surat_keluar");
         $("input[name='id_surat_keluar']").val(id_surat);
-        
+        $("input[name='kode_surat']").val($(this).data("kode_surat"));
         $.ajax({
                 url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
                 type:"GET",

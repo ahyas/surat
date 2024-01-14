@@ -93,7 +93,8 @@ class SuratKeluarController extends Controller
             "ref_kegiatan.kode AS kode_kegiatan",
             "ref_transaksi.kode AS kode_transaksi",
             DB::raw('COUNT(detail_transaksi_surat.id_surat_keluar) AS jumlah_tembusan'),
-            DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi")
+            DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi"),
+            DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
         )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
         ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
         ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
@@ -283,6 +284,30 @@ class SuratKeluarController extends Controller
 
         if (empty($request["nomenklatur_jabatan"])) {
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
+        }else{
+            $bulan = date("m");
+            $tahun = date("Y");
+
+            $count = DB::table("transaksi_surat_keluar")
+            ->where("id",$id)
+            ->select(
+                "no_surat"
+            )->first();
+            //get first 3 character
+            $no_agenda = substr($count->no_surat,0, 3);
+
+            if($request["nomenklatur_jabatan"] == 1){
+                $nomor_surat =  $no_agenda."/KPTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+            }
+
+            if($request["nomenklatur_jabatan"] == 2){
+                $nomor_surat = $no_agenda."/PAN.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+            }
+
+            if($request["nomenklatur_jabatan"] == 3){
+                $nomor_surat = $no_agenda."/SEK.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                
+            }
         }
         
         if (empty($request["tujuan_surat"])) {
@@ -324,10 +349,15 @@ class SuratKeluarController extends Controller
                 ->where("id", $id)
                 ->update(
                     [
+                        "id_ref_klasifikasi"=>$request["klasifikasi"],
+                        "id_ref_fungsi"=>$request["fungsi"],
+                        "id_ref_kegiatan"=>$request["kegiatan"],
+                        "id_ref_transaksi"=>$request["transaksi"],
+                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
+                        "no_surat"=>$nomor_surat ,
                         "internal"=>$request["tujuan_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
-                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                         "file"=>$fileName
                     ]
                 );
@@ -354,10 +384,15 @@ class SuratKeluarController extends Controller
                 ->where("id", $id)
                 ->update(
                     [
+                        "id_ref_klasifikasi"=>$request["klasifikasi"],
+                        "id_ref_fungsi"=>$request["fungsi"],
+                        "id_ref_kegiatan"=>$request["kegiatan"],
+                        "id_ref_transaksi"=>$request["transaksi"],
+                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
+                        "no_surat"=>$nomor_surat ,
                         "internal"=>$request["tujuan_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
-                        "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                     ]
                 );
 
