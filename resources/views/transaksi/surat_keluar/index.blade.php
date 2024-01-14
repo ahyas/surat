@@ -423,7 +423,7 @@ $(document).ready(function(){
                     document.getElementById("row-transaksi").style.display = 'inline-block';
                     document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
                     $("#nomenklatur_jabatan").val(0);
-                    disabledAll();
+                   
                     document.getElementById("kegiatan").innerHTML = `<option disabled selected value='0'>Pilih kategori kegiatan</option>`;
                     for(var i=0; i<data.length; i++){                    
                         document.getElementById("kegiatan").innerHTML += `<option class='kegiatan-list' value='${data[i].id_kegiatan}' data-kode_kegiatan='${data[i].kode_kegiatan}'>${data[i].kode_kegiatan} - ${data[i].deskripsi_kegiatan}</option>`; 
@@ -439,8 +439,6 @@ $(document).ready(function(){
                 document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
                 $("#nomenklatur_jabatan").val(0);
                 document.getElementById("row-transaksi").style.display = 'inline-block';
-
-                disabledAll();
                 
             }
         });
@@ -477,8 +475,6 @@ $(document).ready(function(){
                 document.getElementById("row-transaksi").style.display = 'none';
                 document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                 $("#nomenklatur_jabatan").val(0);
-
-                disabledAll();
             }
         });
     });
