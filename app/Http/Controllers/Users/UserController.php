@@ -113,7 +113,6 @@ class UserController extends Controller
             ->where("id", $id_user)
             ->update([
                 "name"=>$request['name'],
-                "email"=>$request['email'],
                 "id_bidang"=>$request['bidang']
             ]);
 
