@@ -43,10 +43,18 @@
                                         <input type="text" name="deskripsi_klasifikasi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Deskripsi" />
                                     </div>
                                     
-                                    <div class="text pt-10">
-                                        <button class="btn btn-danger btn-sm" id="btnCancel">Cancel</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="save_klasifikasi" data-kt-users-modal-action="submit">Save</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="update_klasifikasi" data-kt-users-modal-action="submit">Update</button>
+                                    <div class="text-center pt-10">
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary save_klasifikasi" id="save_klasifikasi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
+                                        </button>
+                                        <button type="submit" class="btn btn-primary update_klasifikasi" id="update_klasifikasi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -117,10 +125,18 @@
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
                                         <input type="text" name="deskripsi_fungsi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Deskripsi" />
                                     </div>
-                                    <div class="text pt-10">
-                                        <button class="btn btn-danger btn-sm" id="btnCancel">Cancel</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="save_fungsi" data-kt-users-modal-action="submit">Save</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="update_fungsi" data-kt-users-modal-action="submit">Update</button>
+                                    <div class="text-center pt-10">
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary save_fungsi" id="save_fungsi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
+                                        </button>
+                                        <button type="submit" class="btn btn-primary update_fungsi" id="update_fungsi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -189,10 +205,18 @@
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
                                         <input type="text" name="deskripsi_kegiatan" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Deskripsi" />
                                     </div>
-                                    <div class="text pt-10">
-                                        <button class="btn btn-danger btn-sm" id="btnCancel">Cancel</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="save_kegiatan" data-kt-users-modal-action="submit">Save</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="update_kegiatan" data-kt-users-modal-action="submit">Update</button>
+                                    <div class="text-center pt-10">
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary save_kegiatan" id="save_kegiatan" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
+                                        </button>
+                                        <button type="submit" class="btn btn-primary update_kegiatan" id="update_kegiatan" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -259,10 +283,18 @@
                                         <label class="required fw-semibold fs-6 mb-2">Deskripsi</label>
                                         <input type="text" name="deskripsi_transaksi" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Deskripsi" />
                                     </div>
-                                    <div class="text pt-10">
-                                        <button class="btn btn-danger btn-sm" id="btnCancel">Cancel</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="save_transaksi" data-kt-users-modal-action="submit">Save</button>
-                                        <button type="submit" class="btn btn-primary btn-sm" id="update_transaksi" data-kt-users-modal-action="submit">Update</button>
+                                    <div class="text-center pt-10">
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary save_transaksi" id="save_transaksi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Save
+                                        </button>
+                                        <button type="submit" class="btn btn-primary update_transaksi" id="update_transaksi" data-kt-indicator="off">
+                                            <span class="indicator-progress">
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                            Update
+                                        </button>
                                     </div>
                                 </div>
                             </form>
@@ -339,6 +371,7 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#add_klasifikasi", function(){
+        document.querySelector("input[name='kode_klasifikasi']").removeAttribute("readonly");
         document.getElementById("sub-fungsi").style.display = "none";
         document.getElementById("sub-kegiatan").style.display = "none";
         document.getElementById("sub-transaksi").style.display = "none";
@@ -351,12 +384,14 @@ $(document).ready(function(){
 
     $("#save_klasifikasi").click(function(e){
         e.preventDefault();
+        setButtonSpinner(".save_klasifikasi", "on");
         $.ajax({
             type    :"POST",
             url     :"{{route('referensi.klasifikasi_surat.save')}}",
             data    :$("#modal_klasifikasi_surat_form").serialize(),
             dataType:"JSON",
             success :function(data){
+                setButtonSpinner(".save_klasifikasi", "off");
                 $("#tb_klasifikasi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_klasifikasi").modal("hide");
             }
@@ -364,6 +399,7 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#edit_klasifikasi",function(){
+        document.querySelector("input[name='kode_klasifikasi']").setAttribute("readonly","readonly");
         document.getElementById("sub-fungsi").style.display = "none";
         document.getElementById("sub-kegiatan").style.display = "none";
         document.getElementById("sub-transaksi").style.display = "none";
@@ -388,13 +424,15 @@ $(document).ready(function(){
     $("#update_klasifikasi").click(function(e){
         var id_klasifikasi = $("input[name='id_klasifikasi']").val();
         e.preventDefault();
+        setButtonSpinner(".update_klasifikasi", "on");
         $.ajax({
             type    :"POST",
             url     :`{{url('referensi/klasifikasi_surat/${id_klasifikasi}/update')}}`,
             data    :$("#modal_klasifikasi_surat_form").serialize(),
             dataType:"JSON",
             success :function(data){
-                $("#tb_klasifikasi").DataTable().ajax.reload();
+                setButtonSpinner(".update_klasifikasi", "off");
+                $("#tb_klasifikasi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_klasifikasi").modal("hide");
             }
         });
@@ -487,6 +525,7 @@ $(document).ready(function(){
 
     $("#save_fungsi").click(function(e){
         e.preventDefault();
+        setButtonSpinner(".save_fungsi", "on");
         let id_ref_klasifikasi = $("input[name='id_ref_klasifikasi']").val();
         let kode_ref_fungsi = $("input[name='kode_fungsi']").val();
         let deskripsi_ref_fungsi = $("input[name='deskripsi_fungsi']").val();
@@ -496,6 +535,7 @@ $(document).ready(function(){
             data    :{id_ref_klasifikasi:id_ref_klasifikasi, kode_ref_fungsi:kode_ref_fungsi, deskripsi_ref_fungsi:deskripsi_ref_fungsi},
             dataType:"JSON",
             success :function(data){
+                setButtonSpinner(".save_fungsi", "off");
                 $("#kt_modal_add_fungsi").modal("hide");
                 $("#tb_fungsi").DataTable().ajax.reload(null, false);
             }
@@ -525,6 +565,7 @@ $(document).ready(function(){
 
     $("#update_fungsi").click(function(e){
         e.preventDefault();
+        setButtonSpinner(".update_fungsi", "on");
         let id_fungsi = $("input[name='id_fungsi']").val();
         let kode_ref_fungsi = $("input[name='kode_fungsi']").val();
         let deskripsi_ref_fungsi = $("input[name='deskripsi_fungsi']").val();
@@ -534,6 +575,7 @@ $(document).ready(function(){
             data:{kode_ref_fungsi:kode_ref_fungsi, deskripsi_ref_fungsi:deskripsi_ref_fungsi},
             dataType:"JSON",
             success:function(data){
+                setButtonSpinner(".update_fungsi", "off");
                 $("#tb_fungsi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_fungsi").modal("hide");
             }
@@ -621,12 +663,14 @@ $(document).ready(function(){
 
     $("#save_kegiatan").click(function(e){
         e.preventDefault();
+        setButtonSpinner(".save_kegiatan", "on");
         $.ajax({
             url:"{{route('referensi.kegiatan_surat.save')}}",
             type:"POST",
             data:$("#modal_kegiatan_surat_form").serialize(),
             dataType:"JSON",
             success:function(data){
+                setButtonSpinner(".save_kegiatan", "off");
                 $("#tb_kegiatan").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_kegiatan").modal("hide");
             }
@@ -656,13 +700,14 @@ $(document).ready(function(){
     $("body").on("click","#update_kegiatan",function(e){
         e.preventDefault();
         let id_kegiatan = $("input[name='id_ref_kegiatan']").val();
-        console.log(id_kegiatan);
+        setButtonSpinner(".update_kegiatan", "on");
         $.ajax({
             url:`{{url('referensi/kegiatan_surat/${id_kegiatan}/update')}}`,
             type:"GET",
             data:$("#modal_kegiatan_surat_form").serialize(),
             dataType:"JSON",
             success:function(data){
+                setButtonSpinner(".update_kegiatan", "off");
                 $("#tb_kegiatan").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_kegiatan").modal("hide");
             }
@@ -743,12 +788,14 @@ $(document).ready(function(){
 
     $("#save_transaksi").click(function(e){
         e.preventDefault();
+        setButtonSpinner(".save_transaksi", "on");
         $.ajax({
             url:"{{route('referensi.transaksi_surat.save')}}",
             type:"POST",
             data:$("#modal_transaksi_surat_form").serialize(),
             dataType:"JSON",
             success:function(data){
+                setButtonSpinner(".save_transaksi", "off");
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_transaksi").modal("hide");
             }
@@ -777,11 +824,13 @@ $(document).ready(function(){
     $("#update_transaksi").click(function(e){
         e.preventDefault();
         let id_transaksi = $("input[name='id_transaksi']").val();
+        setButtonSpinner(".update_transaksi", "on");
         $.ajax({
             url:`{{url('/referensi/transaksi_surat/${id_transaksi}/update')}}`,
             type:"GET",
             data:$("#modal_transaksi_surat_form").serialize(),
             success:function(data){
+                setButtonSpinner(".update_transaksi", "off");
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_transaksi").modal("hide");
             }
@@ -805,7 +854,20 @@ $(document).ready(function(){
         });
         }
     });
-    /** END::Transaksi*/
+
+    function setButtonSpinner(query_selector, status){
+        var btn = document.querySelector(query_selector);
+        btn.setAttribute("data-kt-indicator", status);
+
+        if(status == "off"){
+            btn.removeAttribute("disabled");
+        }else{
+            btn.setAttribute("disabled","disabled");
+        }
+
+        return btn;
+    }
+
 });
 </script>
 @endpush
