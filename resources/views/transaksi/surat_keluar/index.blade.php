@@ -168,9 +168,9 @@
                         <th>Perihal/Isi Ringkas</th>
                         <th>Tujuan</th>
                         <th>Tembusan</th>
-                        <th>Tanggal Surat</th>
+                        <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="text-end"></th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>

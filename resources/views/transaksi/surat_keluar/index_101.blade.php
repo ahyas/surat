@@ -25,8 +25,8 @@
                         <th>Nomor Surat</th>
                         <th >Perihal/Isi Ringkas</th>
                         <th >Tujuan</th>
-                        <th>Tanggal Surat</th>
-                        <th class="text-end">Lampiran</th>
+                        <th class="min-w-125px">Tanggal Surat</th>
+                        <th class="text-end min-w-125px"">Lampiran</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
