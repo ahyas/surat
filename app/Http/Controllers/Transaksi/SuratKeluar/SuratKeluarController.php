@@ -289,6 +289,10 @@ class SuratKeluarController extends Controller
             $errors['tujuan_surat'] = 'Tujuan surat tidak boleh kosong';
         }
 
+        if (empty($request["tembusan"])) {
+            $errors['tembusan'] = 'Tembusan surat tidak boleh kosong';
+        }
+
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
         }

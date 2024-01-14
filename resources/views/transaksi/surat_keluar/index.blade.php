@@ -643,12 +643,13 @@ $(document).ready(function(){
                     console.log(data);
                     if (!data.success) {
                         let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                        let err_tujuan_surat = data.errors.tujuan_surat  ? `<li>${data.errors.tujuan_surat}</li>` : ``;
                         let err_tembusan = data.errors.tembusan  ? `<li>${data.errors.tembusan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tembusan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan_surat+err_tembusan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                     } else {
