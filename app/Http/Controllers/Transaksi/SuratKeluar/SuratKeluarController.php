@@ -136,15 +136,15 @@ class SuratKeluarController extends Controller
             $no_agenda = sprintf('%03d', $num);
 
             if($request["nomenklatur_jabatan"] == 1){
-                $nomor_surat =  $no_agenda."/KPTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat =  $no_agenda."/KPTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
             }
 
             if($request["nomenklatur_jabatan"] == 2){
-                $nomor_surat = $no_agenda."/PAN.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat = $no_agenda."/PAN.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
             }
 
             if($request["nomenklatur_jabatan"] == 3){
-                $nomor_surat = $no_agenda."/SEK.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat = $no_agenda."/SEK.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
                 
             }
         }
@@ -297,15 +297,15 @@ class SuratKeluarController extends Controller
             $no_agenda = substr($count->no_surat,0, 3);
 
             if($request["nomenklatur_jabatan"] == 1){
-                $nomor_surat =  $no_agenda."/KPTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat =  $no_agenda."/KPTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
             }
 
             if($request["nomenklatur_jabatan"] == 2){
-                $nomor_surat = $no_agenda."/PAN.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat = $no_agenda."/PAN.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
             }
 
             if($request["nomenklatur_jabatan"] == 3){
-                $nomor_surat = $no_agenda."/SEK.PTA.W-31/".$request['kode_surat']."/".$bulan."/".$tahun;
+                $nomor_surat = $no_agenda."/SEK.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
                 
             }
         }
