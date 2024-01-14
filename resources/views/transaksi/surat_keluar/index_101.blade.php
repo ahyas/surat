@@ -22,11 +22,11 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-125px">Nomor Surat</th>
+                        <th>Nomor Surat</th>
                         <th >Perihal/Isi Ringkas</th>
                         <th >Tujuan</th>
-                        <th class="min-w-150px">Tanggal Surat</th>
-                        <th class="text-end min-w-125px">Lampiran</th>
+                        <th>Tanggal Surat</th>
+                        <th class="text-end">Lampiran</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
