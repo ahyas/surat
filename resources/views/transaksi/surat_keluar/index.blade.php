@@ -84,12 +84,29 @@
                                         </div>
                                        
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                            <input type="text" name="tujuan" id="tujuan" class="form-control form-control-sm form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tujuan surat" required disabled/>
+                                            <label class="required fw-semibold fs-6 mb-5">Tujuan</label>
+                                            <div class="d-flex fv-row">
+                                                <!--begin::Radio-->
+                                                <div class="form-check form-check-custom form-check-solid">
+                                                    <!--begin::Input-->
+                                                    <input class="form-check-input me-3" name="tujuan_surat" type="radio" value="1" id="kt_modal_update_role_option_0" />
+                                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
+                                                        <div class="fw-bold text-gray-800">Internal</div>
+                                                    </label>
+                                                    
+                                                    <input class="form-check-input me-3" name="tujuan_surat" type="radio" value="2" id="kt_modal_update_role_option_1" style="margin-left:20px"/>
+                                                    <label class="form-check-label" for="kt_modal_update_role_option_1">
+                                                        <div class="fw-bold text-gray-800">External</div>
+                                                    </label>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Radio-->
+                                            </div>
+                                            <!--end::Input row-->
                                         </div>
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan 2</label>
-                                            <select name="tujuan2[]" id="tujuan2" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                            <label class="required fw-semibold fs-6 mb-2">Tembusan</label>
+                                            <select name="tembusan[]" id="tembusan" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
                                             <option>Pilih tujuan surat</option>
                                             @foreach($user as $row)
                                             <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
@@ -150,6 +167,7 @@
                         <th class="min-w-125px">Nomor Surat</th>
                         <th>Perihal/Isi Ringkas</th>
                         <th>Tujuan</th>
+                        <th>Tembusan</th>
                         <th class="min-w-150px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th class="text-end min-w-125px"></th>
@@ -226,7 +244,18 @@ $(document).ready(function(){
                 }
             },
             {data:"perihal"},
-            {data:"jumlah_tujuan", 
+            {data:"internal",
+                mRender:function(data){
+                    if(data == 2){
+                        return`<span>External</span>`;
+                    }else if(data == 1){
+                        return`<span>Internal</span>`;
+                    }else{
+                        return``;
+                    }
+                }
+            },
+            {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
                         var show = `<a href="javascript:void(0)" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
@@ -308,7 +337,8 @@ $(document).ready(function(){
     }
 
     function disabledAll(){
-        $("#tujuan2").val([]).trigger("change");
+        $("#tembusan").val([]).trigger("change");
+        $("input[name='tujuan_surat']").prop('checked',false);
         document.querySelectorAll(".my_input").forEach(element=>{
             element.value = "";
             element.setAttribute("disabled", "disabled");
@@ -485,8 +515,8 @@ $(document).ready(function(){
     });
 
     $("#save_surat").click(function(e){
-        e.preventDefault();
         
+        console.log($("input[name='tujuan_surat']").val());
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
@@ -503,12 +533,13 @@ $(document).ready(function(){
                     console.log(data)
                     if (!data.success) {
                         let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
-                        let err_tujuan2 = data.errors.tujuan2  ? `<li>${data.errors.tujuan2}</li>` : ``;
+                        let err_tembusan = data.errors.tembusan  ? `<li>${data.errors.tembusan}</li>` : ``;
+                        let err_tujuan_surat = data.errors.tujuan_surat  ? `<li>${data.errors.tujuan_surat}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan2+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan_surat+err_tembusan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                     } else {
@@ -541,11 +572,11 @@ $(document).ready(function(){
                     disabledList();
                     console.log(data.penerima_surat);
                     
-                    let tujuan2 = data.penerima_surat.map(function (obj) {
+                    let tembusan = data.penerima_surat.map(function (obj) {
                         return obj.id_penerima;
                     });
 
-                    console.log(tujuan2);
+                    console.log(tembusan);
 
                     $("#klasifikasi").val(data.id_klasifikasi);
                     if(data.ref_fungsi.length>0){
@@ -580,10 +611,10 @@ $(document).ready(function(){
 
                     document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                     $("#nomenklatur_jabatan").val(data.id_nomenklatur);
-                    
+                    console.log(data.surat_keluar.internal);
                     $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
-                    $("input[name='tujuan']").val(data.surat_keluar.tujuan);
-                    $("#tujuan2").val(tujuan2).trigger("change");
+                    document.add_surat_keluar_form.tujuan_surat.value=data.surat_keluar.internal;
+                    $("#tembusan").val(tembusan).trigger("change");
                     $("#perihal").val(data.surat_keluar.perihal);
                     $("input[name='tgl_surat']").val(data.surat_keluar.tgl_surat);
 
@@ -612,12 +643,12 @@ $(document).ready(function(){
                     console.log(data);
                     if (!data.success) {
                         let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
-                        let err_tujuan2 = data.errors.tujuan2  ? `<li>${data.errors.tujuan2}</li>` : ``;
+                        let err_tembusan = data.errors.tembusan  ? `<li>${data.errors.tembusan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan2+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tembusan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                     } else {

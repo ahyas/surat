@@ -177,7 +177,7 @@ $(document).ready(function(){
             url:`{{url('user/permissions/${id_user}/edit')}}`,
             dataType:"JSON",
             success:function(data){
-                console.log(data);
+
                 $("input[name='id_user']").val(data.id_user);
                 $("input[name='name']").val(data.nama);
                 document.add_user_form.user_role.value=data.id_role;

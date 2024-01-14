@@ -85,19 +85,20 @@ class SuratKeluarController extends Controller
             "surat_keluar.id_nomenklatur_jabatan",
             "surat_keluar.no_surat",
             "surat_keluar.tujuan",
+            "surat_keluar.internal",
             "surat_keluar.perihal",
             "surat_keluar.tgl_surat",
             "surat_keluar.file",
             "ref_fungsi.kode AS kode_fungsi",
             "ref_kegiatan.kode AS kode_kegiatan",
             "ref_transaksi.kode AS kode_transaksi",
-            DB::raw('COUNT(detail_transaksi_surat.id_surat_keluar) AS jumlah_tujuan'),
+            DB::raw('COUNT(detail_transaksi_surat.id_surat_keluar) AS jumlah_tembusan'),
             DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi")
         )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
         ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
         ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
         ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat_keluar")
-        ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi")
+        ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
         ->orderBy("surat_keluar.created_at","DESC")->get();
 
         return response()->json($table);
@@ -124,7 +125,6 @@ class SuratKeluarController extends Controller
             $bulan = date("m");
             $tahun = date("Y");
 
-                
             $count = DB::table("transaksi_surat_keluar")
             ->select(
                 "id AS id_surat"
@@ -148,8 +148,12 @@ class SuratKeluarController extends Controller
             }
         }
 
-        if (empty($request["tujuan2"])) {
-            $errors['tujuan2'] = 'Tujuan surat tidak boleh kosong';
+        if (empty($request["tujuan_surat"])) {
+            $errors['tujuan_surat'] = 'Tujuan surat tidak boleh kosong';
+        }
+
+        if (empty($request["tembusan"])) {
+            $errors['tembusan'] = 'Tembusan surat tidak boleh kosong';
         }
         
         if (empty($request["perihal"])) {
@@ -190,24 +194,23 @@ class SuratKeluarController extends Controller
                 "id_ref_transaksi"=>$request["transaksi"],
                 "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                 "no_surat"=>$nomor_surat ,
-                "tujuan"=>$request["tujuan"],
+                "internal"=>$request["tujuan_surat"],
                 "perihal"=>$request["perihal"],
                 "tgl_surat"=>$request["tgl_surat"],
                 "file"=>$fileName
             ]);
 
             //detail transaksi surat
-            $tujuan2 = $request["tujuan2"];
+            $tembusan = $request["tembusan"];
             $value = array();
             //get last id
             $id_surat_keluar = DB::table("transaksi_surat_keluar")->max('id');
             
-            foreach($tujuan2 as $id_pegawai){
+            foreach($tembusan as $id_pegawai){
                 if(!empty($id_pegawai)){
                     $value[] = [
                         "id_surat_keluar"=>$id_surat_keluar,
-                        "id_penerima"=>$id_pegawai,
-                        "internal"=>1
+                        "id_penerima"=>$id_pegawai
                     ];
                 }
             }
@@ -282,8 +285,8 @@ class SuratKeluarController extends Controller
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
         }
         
-        if (empty($request["tujuan2"])) {
-            $errors['tujuan2'] = 'Tujuan surat tidak boleh kosong';
+        if (empty($request["tujuan_surat"])) {
+            $errors['tujuan_surat'] = 'Tujuan surat tidak boleh kosong';
         }
 
         if (empty($request["perihal"])) {
@@ -317,7 +320,7 @@ class SuratKeluarController extends Controller
                 ->where("id", $id)
                 ->update(
                     [
-                        "tujuan"=>$request["tujuan"],
+                        "internal"=>$request["tujuan_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
@@ -328,15 +331,14 @@ class SuratKeluarController extends Controller
                 DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id)->delete();
 
                 //detail transaksi surat
-                $tujuan2 = $request["tujuan2"];
+                $tembusan = $request["tembusan"];
                 $value = array();
                 
-                foreach($tujuan2 as $id_pegawai){
+                foreach($tembusan as $id_pegawai){
                     if(!empty($id_pegawai)){
                         $value[] = [
                             "id_surat_keluar"=>$id,
-                            "id_penerima"=>$id_pegawai,
-                            "internal"=>1
+                            "id_penerima"=>$id_pegawai
                         ];
                     }
                 }
@@ -348,7 +350,7 @@ class SuratKeluarController extends Controller
                 ->where("id", $id)
                 ->update(
                     [
-                        "tujuan"=>$request["tujuan"],
+                        "internal"=>$request["tujuan_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
@@ -359,15 +361,14 @@ class SuratKeluarController extends Controller
                 DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id)->delete();
 
                 //detail transaksi surat
-                $tujuan2 = $request["tujuan2"];
+                $tembusan = $request["tembusan"];
                 $value = array();
                 
-                foreach($tujuan2 as $id_pegawai){
+                foreach($tembusan as $id_pegawai){
                     if(!empty($id_pegawai)){
                         $value[] = [
                             "id_surat_keluar"=>$id,
-                            "id_penerima"=>$id_pegawai,
-                            "internal"=>1
+                            "id_penerima"=>$id_pegawai
                         ];
                     }
                 }
