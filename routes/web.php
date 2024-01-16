@@ -17,8 +17,11 @@ Route::get('/', function(){
     return redirect()->route('login');
 });
 Auth::routes();
-    Route::get('home', 'HomeController@index')->name('home');
-//login sebagai super admin
+    Route::group(['middleware'=>'role:5, 6, 101'], function(){
+        Route::get('home', 'HomeController@index')->name('home');
+    });
+    
+    //login sebagai super admin
     Route::group(['middleware'=>'role: 1'], function(){
         //BEGIN::user list
         Route::get('/user/list', 'Users\UserController@index')->name('user.list.index');

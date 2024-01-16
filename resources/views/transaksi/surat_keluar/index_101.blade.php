@@ -73,9 +73,9 @@ $(document).ready(function(){
             url:"{{route('transaksi.surat_keluar.get_data')}}",
             dataSrc:""
         },
-        serverSide  : false,
+        serverSide  :false,
         ordering    :false,
-        responsive  : true,
+        responsive  :true,
         columns     :
         [
             {data:"no_surat",
@@ -96,7 +96,6 @@ $(document).ready(function(){
                         <div class="text-gray-800 mb-1">${data}</div>
                         <span>${full['deskripsi']}</span>
                         <span>${a}</span>
-                        
                     </div>`;
                 }
             },

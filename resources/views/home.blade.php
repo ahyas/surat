@@ -6,23 +6,8 @@
     <!--begin::Page title-->
     <div class="page-title d-flex flex-column me-3">
         <!--begin::Title-->
-        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Dashboards {{$data['id_role']}}</h1>
+        <h1 class="d-flex text-gray-900 fw-bold my-1 fs-3">Dashboards</h1>
         <!--end::Title-->
-        <!--begin::Breadcrumb-->
-        <ul class="breadcrumb breadcrumb-dot fw-semibold text-gray-600 fs-7 my-1">
-            <!--begin::Item-->
-            <li class="breadcrumb-item text-gray-600">
-                <a href="index.html" class="text-gray-600 text-hover-primary">Home</a>
-            </li>
-            <!--end::Item-->
-            <!--begin::Item-->
-            <li class="breadcrumb-item text-gray-600">Dashboards</li>
-            <!--end::Item-->
-            <!--begin::Item-->
-            <li class="breadcrumb-item text-gray-500">Projects</li>
-            <!--end::Item-->
-        </ul>
-        <!--end::Breadcrumb-->
     </div>
     <!--end::Page title-->
 </div>
@@ -40,25 +25,18 @@
                     <!--begin::Title-->
                     <div class="card-title d-flex flex-column">
                         <!--begin::Amount-->
-                        <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">69</span>
-                        <!--end::Amount-->
-                        <!--begin::Subtitle-->
-                        <span class="text-white opacity-50 pt-1 fw-semibold fs-6">Active Projects</span>
-                        <!--end::Subtitle-->
+                        <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">{{$count_surat_masuk}}</span>
+                        <span class="text-white pt-1 fw-semibold fs-6">Surat Masuk</span>
                     </div>
                     <!--end::Title-->
                 </div>
                 <!--end::Header-->
                 <!--begin::Card body-->
                 <div class="card-body d-flex align-items-end pt-0">
-                    <!--begin::Progress-->
                     <div class="d-flex align-items-center flex-column mt-3 w-100">
                         <div class="d-flex justify-content-between fw-bold fs-6 text-white opacity-50 w-100 mt-auto mb-2">
-                            <span>43 Pending</span>
-                            <span>72%</span>
-                        </div>
-                        <div class="h-8px mx-3 w-100 bg-light-danger rounded">
-                            <div class="bg-danger rounded h-8px" role="progressbar" style="width: 72%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                            <span></span>
+                            <span></span>
                         </div>
                     </div>
                     <!--end::Progress-->
@@ -67,54 +45,30 @@
             </div>
             <!--end::Card widget 16-->
             <!--begin::Card widget 7-->
-            <div class="card card-flush h-md-50 mb-5 mb-xl-10">
+            <div class="card card-flush h-md-50 mb-5 mb-xl-10" style="background-color:#00496e">
                 <!--begin::Header-->
                 <div class="card-header pt-5">
-                    <!--begin::Title-->
                     <div class="card-title d-flex flex-column">
-                        <!--begin::Amount-->
-                        <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">357</span>
-                        <!--end::Amount-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Professionals</span>
-                        <!--end::Subtitle-->
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">{{$count_surat_keluar}}</span>
+                        </div>
+                        <span class="text-white pt-1 fw-semibold fs-6">Surat keluar</span>
                     </div>
-                    <!--end::Title-->
                 </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
-                <div class="card-body d-flex flex-column justify-content-end pe-0">
-                    <!--begin::Title-->
-                    <span class="fs-6 fw-bolder text-gray-800 d-block mb-2">Today’s Heroes</span>
-                    <!--end::Title-->
-                    <!--begin::Users group-->
-                    <div class="symbol-group symbol-hover flex-nowrap">
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Alan Warden">
-                            <span class="symbol-label bg-warning text-inverse-warning fw-bold">A</span>
+                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
+                    <div class="d-flex flex-column content-justify-center flex-row-fluid">
+                        <div class="d-flex fw-semibold align-items-center">
+                            <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
+                            <div class="text-white opacity-50 flex-grow-1 me-4">Internal</div>
+                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_surat_keluar_internal}}</div>
                         </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Michael Eberon">
-                            <img alt="Pic" src="{{asset('public/assets/media/avatars/300-11.jpg')}}" />
+                        <div class="d-flex fw-semibold align-items-center my-3">
+                            <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
+                            <div class="text-white opacity-50 flex-grow-1 me-4">External</div>
+                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_surat_keluar_eksternal}}</div>
                         </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Susan Redwood">
-                            <span class="symbol-label bg-primary text-inverse-primary fw-bold">S</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Melody Macy">
-                            <img alt="Pic" src="{{asset('public/assets/media/avatars/300-2.jpg')}}" />
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Perry Matthew">
-                            <span class="symbol-label bg-danger text-inverse-danger fw-bold">P</span>
-                        </div>
-                        <div class="symbol symbol-35px symbol-circle" data-bs-toggle="tooltip" title="Barry Walter">
-                            <img alt="Pic" src="{{asset('public/assets/media/avatars/300-12.jpg')}}" />
-                        </div>
-                        <a href="#" class="symbol symbol-35px symbol-circle" data-bs-toggle="modal" data-bs-target="#kt_modal_view_users">
-                            <span class="symbol-label bg-dark text-gray-300 fs-8 fw-bold">+42</span>
-                        </a>
-                        <br>
                     </div>
-                    <!--end::Users group-->
                 </div>
-                <!--end::Card body-->
             </div>
             <!--end::Card widget 7-->
         </div>
@@ -122,182 +76,62 @@
         <!--begin::Col-->
         <div class="col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10">
             <!--begin::Card widget 17-->
+            <div class="card card-flush h-md-50 mb-5 mb-xl-10" style="background-color:#610539">
+                <!--begin::Header-->
+                <div class="card-header pt-5">
+                    <div class="card-title d-flex flex-column">
+                        <div class="d-flex align-items-center">
+                            <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">Statistik</span>
+                        </div>
+                        <span class="text-white pt-1 fw-semibold fs-6">Top 3 Penggunaan Nomor Teratas</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
+                    <div class="d-flex flex-center me-5 pt-2">
+                        <div id="kt_card_widget_17_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
+                    </div>
+                    
+                    <div class="d-flex flex-column content-justify-center flex-row-fluid">
+                    @foreach($top_3 as $row)
+                        <div class="d-flex fw-semibold align-items-center">
+                            <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
+                            <div class="text-gray-500 flex-grow-1 me-4">{{$row->deskripsi}}</div>
+                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$row->jumlah_pemakaian}}</div>
+                        </div>
+                    @endforeach
+                    </div>
+                </div>
+            </div>
             <div class="card card-flush h-md-50 mb-5 mb-xl-10">
                 <!--begin::Header-->
                 <div class="card-header pt-5">
-                    <!--begin::Title-->
                     <div class="card-title d-flex flex-column">
-                        <!--begin::Info-->
                         <div class="d-flex align-items-center">
-                            <!--begin::Currency-->
                             <span class="fs-4 fw-semibold text-gray-500 me-1 align-self-start">$</span>
-                            <!--end::Currency-->
-                            <!--begin::Amount-->
                             <span class="fs-2hx fw-bold text-gray-900 me-2 lh-1 ls-n2">69,700</span>
-                            <!--end::Amount-->
-                            <!--begin::Badge-->
                             <span class="badge badge-light-success fs-base">
                             <i class="ki-duotone ki-arrow-up fs-5 text-success ms-n1">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>2.2%</span>
-                            <!--end::Badge-->
                         </div>
-                        <!--end::Info-->
-                        <!--begin::Subtitle-->
-                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Projects Earnings in April</span>
-                        <!--end::Subtitle-->
+                        <span class="text-gray-500 pt-1 fw-semibold fs-6">Disposisi</span>
                     </div>
-                    <!--end::Title-->
                 </div>
-                <!--end::Header-->
-                <!--begin::Card body-->
                 <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-                    <!--begin::Chart-->
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="kt_card_widget_17_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
-                    </div>
-                    <!--end::Chart-->
-                    <!--begin::Labels-->
                     <div class="d-flex flex-column content-justify-center flex-row-fluid">
-                        <!--begin::Label-->
                         <div class="d-flex fw-semibold align-items-center">
-                            <!--begin::Bullet-->
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
                             <div class="text-gray-500 flex-grow-1 me-4">Leaf CRM</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
                             <div class="fw-bolder text-gray-700 text-xxl-end">$7,660</div>
-                            <!--end::Stats-->
                         </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
                         <div class="d-flex fw-semibold align-items-center my-3">
-                            <!--begin::Bullet-->
                             <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
                             <div class="text-gray-500 flex-grow-1 me-4">Mivy App</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
                             <div class="fw-bolder text-gray-700 text-xxl-end">$2,820</div>
-                            <!--end::Stats-->
                         </div>
-                        <!--end::Label-->
-                        <!--begin::Label-->
-                        <div class="d-flex fw-semibold align-items-center">
-                            <!--begin::Bullet-->
-                            <div class="bullet w-8px h-3px rounded-2 me-3" style="background-color: #E4E6EF"></div>
-                            <!--end::Bullet-->
-                            <!--begin::Label-->
-                            <div class="text-gray-500 flex-grow-1 me-4">Others</div>
-                            <!--end::Label-->
-                            <!--begin::Stats-->
-                            <div class="fw-bolder text-gray-700 text-xxl-end">$45,257</div>
-                            <!--end::Stats-->
-                        </div>
-                        <!--end::Label-->
                     </div>
-                    <!--end::Labels-->
                 </div>
-                <!--end::Card body-->
-            </div>
-            <!--end::Card widget 17-->
-            <!--begin::List widget 25-->
-            <div class="card card-flush h-lg-50">
-                <!--begin::Header-->
-                <div class="card-header pt-5">
-                    <!--begin::Title-->
-                    <h3 class="card-title text-gray-800">Highlights</h3>
-                    <!--end::Title-->
-                    <!--begin::Toolbar-->
-                    <div class="card-toolbar d-none">
-                        <!--begin::Daterangepicker(defined in src/js/layout/app.js)-->
-                        <div data-kt-daterangepicker="true" data-kt-daterangepicker-opens="left" class="btn btn-sm btn-light d-flex align-items-center px-4">
-                            <!--begin::Display range-->
-                            <div class="text-gray-600 fw-bold">Loading date range...</div>
-                            <!--end::Display range-->
-                            <i class="ki-duotone ki-calendar-8 fs-1 ms-2 me-0">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                <span class="path3"></span>
-                                <span class="path4"></span>
-                                <span class="path5"></span>
-                                <span class="path6"></span>
-                            </i>
-                        </div>
-                        <!--end::Daterangepicker-->
-                    </div>
-                    <!--end::Toolbar-->
-                </div>
-                <!--end::Header-->
-                <!--begin::Body-->
-                <div class="card-body pt-5">
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Section-->
-                        <div class="text-gray-700 fw-semibold fs-6 me-2">Avg. Client Rating</div>
-                        <!--end::Section-->
-                        <!--begin::Statistics-->
-                        <div class="d-flex align-items-senter">
-                            <i class="ki-duotone ki-arrow-up-right fs-2 text-success me-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                            <!--begin::Number-->
-                            <span class="text-gray-900 fw-bolder fs-6">7.8</span>
-                            <!--end::Number-->
-                            <span class="text-gray-500 fw-bold fs-6">/10</span>
-                        </div>
-                        <!--end::Statistics-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed my-3"></div>
-                    <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Section-->
-                        <div class="text-gray-700 fw-semibold fs-6 me-2">Avg. Quotes</div>
-                        <!--end::Section-->
-                        <!--begin::Statistics-->
-                        <div class="d-flex align-items-senter">
-                            <i class="ki-duotone ki-arrow-down-right fs-2 text-danger me-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                            <!--begin::Number-->
-                            <span class="text-gray-900 fw-bolder fs-6">730</span>
-                            <!--end::Number-->
-                        </div>
-                        <!--end::Statistics-->
-                    </div>
-                    <!--end::Item-->
-                    <!--begin::Separator-->
-                    <div class="separator separator-dashed my-3"></div>
-                    <!--end::Separator-->
-                    <!--begin::Item-->
-                    <div class="d-flex flex-stack">
-                        <!--begin::Section-->
-                        <div class="text-gray-700 fw-semibold fs-6 me-2">Avg. Agent Earnings</div>
-                        <!--end::Section-->
-                        <!--begin::Statistics-->
-                        <div class="d-flex align-items-senter">
-                            <i class="ki-duotone ki-arrow-up-right fs-2 text-success me-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                            <!--begin::Number-->
-                            <span class="text-gray-900 fw-bolder fs-6">$2,309</span>
-                            <!--end::Number-->
-                        </div>
-                        <!--end::Statistics-->
-                    </div>
-                    <!--end::Item-->
-                </div>
-                <!--end::Body-->
             </div>
             <!--end::LIst widget 25-->
         </div>
@@ -310,389 +144,17 @@
                 <div class="card-header border-0 pt-5">
                     <h3 class="card-title align-items-start flex-column">
                         <span class="card-label fw-bold text-gray-900">What’s up Today</span>
-                        <span class="text-muted mt-1 fw-semibold fs-7">Total 424,567 deliveries</span>
+                        <span class="text-muted mt-1 fw-semibold fs-7">Surat Keluar Terbaru</span>
                     </h3>
-                    <!--begin::Toolbar-->
-                    <div class="card-toolbar">
-                        <a href="#" class="btn btn-sm btn-light">Report Cecnter</a>
-                    </div>
-                    <!--end::Toolbar-->
                 </div>
                 <!--end::Header-->
                 <!--begin::Body-->
                 <div class="card-body pt-7 px-0">
                     <!--begin::Nav-->
-                    <ul class="nav nav-stretch nav-pills nav-pills-custom nav-pills-active-custom d-flex justify-content-between mb-8 px-5">
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_1">
-                                <span class="fs-7 fw-semibold">Fr</span>
-                                <span class="fs-6 fw-bold">20</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_2">
-                                <span class="fs-7 fw-semibold">Sa</span>
-                                <span class="fs-6 fw-bold">21</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_3">
-                                <span class="fs-7 fw-semibold">Su</span>
-                                <span class="fs-6 fw-bold">22</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger active" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_4">
-                                <span class="fs-7 fw-semibold">Tu</span>
-                                <span class="fs-6 fw-bold">23</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_5">
-                                <span class="fs-7 fw-semibold">Tu</span>
-                                <span class="fs-6 fw-bold">24</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_6">
-                                <span class="fs-7 fw-semibold">We</span>
-                                <span class="fs-6 fw-bold">25</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_7">
-                                <span class="fs-7 fw-semibold">Th</span>
-                                <span class="fs-6 fw-bold">26</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_8">
-                                <span class="fs-7 fw-semibold">Fri</span>
-                                <span class="fs-6 fw-bold">27</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_9">
-                                <span class="fs-7 fw-semibold">Sa</span>
-                                <span class="fs-6 fw-bold">28</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_10">
-                                <span class="fs-7 fw-semibold">Su</span>
-                                <span class="fs-6 fw-bold">29</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                        <!--begin::Nav item-->
-                        <li class="nav-item p-0 ms-0">
-                            <!--begin::Date-->
-                            <a class="nav-link btn d-flex flex-column flex-center rounded-pill min-w-45px py-4 px-3 btn-active-danger" data-bs-toggle="tab" href="#kt_timeline_widget_3_tab_content_11">
-                                <span class="fs-7 fw-semibold">Mo</span>
-                                <span class="fs-6 fw-bold">30</span>
-                            </a>
-                            <!--end::Date-->
-                        </li>
-                        <!--end::Nav item-->
-                    </ul>
                     <!--end::Nav-->
                     <!--begin::Tab Content (ishlamayabdi)-->
                     <div class="tab-content mb-2 px-9">
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_1">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_2">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_3">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-primary"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
+                        @foreach($top_3_surat as $row)
                         <div class="tab-pane fade show active" id="kt_timeline_widget_3_tab_content_4">
                             <!--begin::Wrapper-->
                             <div class="d-flex align-items-center mb-6">
@@ -702,17 +164,13 @@
                                 <!--begin::Info-->
                                 <div class="flex-grow-1 me-5">
                                     <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
+                                    <div class="text-gray-800 fw-semibold fs-3">{{$row->no_surat}} </div>
                                     <!--end::Time-->
                                     <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
+                                    <div class="text-gray-700 fw-semibold fs-6"><?php echo substr($row->perihal, 0, 20); ?></div>
                                     <!--end::Description-->
                                     <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
+                                    <div class="text-gray-500 fw-semibold fs-7">{{$row->tgl_surat}}</div>
                                     <!--end::Link-->
                                 </div>
                                 <!--end::Info-->
@@ -722,655 +180,12 @@
                             </div>
                             <!--end::Wrapper-->
                             <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
                             <!--end::Wrapper-->
                         </div>
+                        @endforeach
                         <!--end::Tap pane-->
                         <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_5">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-danger"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_6">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-primary"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_7">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-danger"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_8">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-danger"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_9">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-primary"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-success"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_10">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-danger"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-warning"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        <div class="tab-pane fade" id="kt_timeline_widget_3_tab_content_11">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">16:30 - 17:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">PM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Dashboard UI/UX Design Review</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Mark Morris</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-danger"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">10:20 - 11:00 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">Marketing Campaign Discussion</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Peter Marcus</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
-                                <!--begin::Bullet-->
-                                <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-primary"></span>
-                                <!--end::Bullet-->
-                                <!--begin::Info-->
-                                <div class="flex-grow-1 me-5">
-                                    <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-2">12:00 - 13:40 
-                                    <span class="text-gray-500 fw-semibold fs-7">AM</span></div>
-                                    <!--end::Time-->
-                                    <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6">9 Degree Project Estimation Meeting</div>
-                                    <!--end::Description-->
-                                    <!--begin::Link-->
-                                    <div class="text-gray-500 fw-semibold fs-7">Lead by 
-                                    <!--begin::Name-->
-                                    <a href="#" class="text-primary opacity-75-hover fw-semibold">Lead by Bob</a>
-                                    <!--end::Name--></div>
-                                    <!--end::Link-->
-                                </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
-                                <!--end::Action-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
+                        
                         <!--end::Tap pane-->
                     </div>
                     <!--end::Tab Content-->

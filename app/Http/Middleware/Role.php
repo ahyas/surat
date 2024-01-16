@@ -34,9 +34,8 @@ class Role
 
                 abort(403, "Maaf, Anda tidak punya akses untuk halaman ini");
             }
-
-        }else{
-            return redirect()->route('login');
         }
+        
+        return redirect()->route('login');
     }
 }
