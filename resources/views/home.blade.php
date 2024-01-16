@@ -167,7 +167,7 @@
                                     <div class="text-gray-800 fw-semibold fs-3">{{$row->no_surat}} </div>
                                     <!--end::Time-->
                                     <!--begin::Description-->
-                                    <div class="text-gray-700 fw-semibold fs-6"><?php echo substr($row->perihal, 0, 20); ?></div>
+                                    <div class="text-gray-700 fw-semibold fs-6"><?php if (strlen($row->perihal) > 40) {echo substr($row->perihal, 0, 40)." ...";}else {echo $row->perihal; } ?></div>
                                     <!--end::Description-->
                                     <!--begin::Link-->
                                     <div class="text-gray-500 fw-semibold fs-7">{{$row->tgl_surat}}</div>
