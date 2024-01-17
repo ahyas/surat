@@ -106,7 +106,7 @@
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Penerima dan/atau Tembusan</label>
-                                            <select name="tembusan[]" id="tembusan" class="form-select form-select-sm form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                            <select name="tembusan[]" id="tembusan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
                                             <option>Pilih tembusan surat</option>
                                             @foreach($user as $row)
                                             <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
@@ -146,6 +146,38 @@
                                     <!--end::Actions-->
                                 </form>
                                 <!--end::Form-->
+                            </div>
+                            <!--end::Modal body-->
+                        </div>
+                        <!--end::Modal content-->
+                    </div>
+                    <!--end::Modal dialog-->
+                </div>
+
+                <div class="modal fade" id="kt_modal_tembusan" tabindex="-1" aria-hidden="true">
+                    <!--begin::Modal dialog-->
+                    <div class="modal-dialog modal-dialog-centered mw-650px">
+                        <!--begin::Modal content-->
+                        <div class="modal-content">
+                            <!--begin::Modal header-->
+                            <div class="modal-header">
+                                <h2 class="modal-title">Daftar tembusan surat</h2>
+                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_tembusan">
+                                    <thead>
+                                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-gray-600 fw-semibold"></tbody>
+                                </table>
+                                <div class="text-center pt-10">
+                                    <button type="button" id="btn-cancel" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                                </div>
                             </div>
                             <!--end::Modal body-->
                         </div>
@@ -239,7 +271,6 @@ $(document).ready(function(){
                         <div class="text-gray-800 mb-1">${data}</div>
                         <span>${full['deskripsi']}</span>
                         <span>${a}</span>
-                        
                     </div>`;
                 }
             },
@@ -247,9 +278,9 @@ $(document).ready(function(){
             {data:"internal",
                 mRender:function(data){
                     if(data == 2){
-                        return`<span>External</span>`;
+                        return`<span class="badge badge-light-danger">External</span>`;
                     }else if(data == 1){
-                        return`<span>Internal</span>`;
+                        return`<span class="badge badge-light-primary">Internal</span>`;
                     }else{
                         return``;
                     }
@@ -258,7 +289,7 @@ $(document).ready(function(){
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
-                        var show = `<a href="javascript:void(0)" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        var show = `<a href="javascript:void(0)" id="daftar_tembusan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
                         return show;
                     }else{
                         return '';
@@ -270,7 +301,7 @@ $(document).ready(function(){
             {data:"file",
                 mRender:function(data){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
             {data:"id_surat", className: "text-end",
@@ -293,6 +324,33 @@ $(document).ready(function(){
                 }
             }
         ]
+    });
+
+    $("body").on("click","#daftar_tembusan",function(){
+        var id_surat = $(this).data("id_surat");
+        $("#kt_modal_tembusan").modal("show");
+        $("#tb_tembusan").DataTable({
+            ajax        : {
+                url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
+                dataSrc:""
+            },
+            "bDestroy": true,
+            searching   : false, paging: true, info: false,
+            serverSide  : false,
+            ordering    : false,
+            responsive  : true,
+            columns     :
+            [
+                {data:"nama_penerima",
+                    mRender:function(data, type, full){
+                        return`<div class="d-flex flex-column">
+                            <div class="text-gray-800 mb-1">${data}</div>
+                            <span>${full['email']}</span>
+                        </div>`;
+                    }
+                }
+            ]
+        });
     });
 
     $("body").on("click", "#lampiran", function(){
@@ -564,13 +622,10 @@ $(document).ready(function(){
                 success:function(data){
                     enabledAll();
                     disabledList();
-                    console.log(data.penerima_surat);
                     
                     let tembusan = data.penerima_surat.map(function (obj) {
                         return obj.id_penerima;
                     });
-
-                    console.log(tembusan);
 
                     $("#klasifikasi").val(data.id_klasifikasi);
                     if(data.ref_fungsi.length>0){

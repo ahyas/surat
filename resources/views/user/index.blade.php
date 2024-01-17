@@ -34,16 +34,11 @@
                             <!--begin::Modal header-->
                             <div class="modal-header" id="kt_modal_add_user_header">
                                 <!--begin::Modal title-->
-                                <h2 class="fw-bold">Add User</h2>
+                                <div id="title"></div>
                                 <!--end::Modal title-->
-                                <!--begin::Close-->
-                                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                    <i class="ki-duotone ki-cross fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
+                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                                 </div>
-                                <!--end::Close-->
                             </div>
                             <!--end::Modal header-->
                             <!--begin::Modal body-->
@@ -210,6 +205,7 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_user", function(){
         var id_user = $(this).data("id_user");
+        document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit user</h2>`;
         document.querySelector("input[name='email']").setAttribute("disabled","disabled");
         document.getElementById("update_user").style.display = "inline-block";
         document.getElementById("save_user").style.display = "none";
@@ -257,6 +253,7 @@ $(document).ready(function(){
 
     $("body").on("click","#add_user", function(){
         document.querySelector("input[name='email']").removeAttribute("disabled");
+        document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add User</h2>`;
         document.getElementById("notification").innerHTML ='';
         document.getElementById("update_user").style.display = "none";
         document.getElementById("save_user").style.display = "inline-block";

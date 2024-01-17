@@ -108,7 +108,7 @@ class SuratKeluarController extends Controller
     public function getDetailSurat($id_surat_keluar){
         $table = DB::table("detail_transaksi_surat")
         ->where("id_surat_keluar", $id_surat_keluar)
-        ->select("users.name AS nama_penerima")
+        ->select("users.name AS nama_penerima", "users.email")
         ->join("users", "detail_transaksi_surat.id_penerima","=","users.id")
         ->get();
 

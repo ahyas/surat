@@ -55,17 +55,17 @@
                         <span class="text-white pt-1 fw-semibold fs-6">Surat keluar</span>
                     </div>
                 </div>
-                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
+                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">                   
                     <div class="d-flex flex-column content-justify-center flex-row-fluid">
                         <div class="d-flex fw-semibold align-items-center">
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                             <div class="text-white opacity-50 flex-grow-1 me-4">Internal</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_surat_keluar_internal}}</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$count_surat_keluar_internal}}</span></div>
                         </div>
-                        <div class="d-flex fw-semibold align-items-center my-3">
-                            <div class="bullet w-8px h-3px rounded-2 bg-primary me-3"></div>
-                            <div class="text-white opacity-50 flex-grow-1 me-4">External</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_surat_keluar_eksternal}}</div>
+                        <div class="d-flex fw-semibold align-items-center">
+                            <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
+                            <div class="text-white opacity-50 flex-grow-1 me-4">Eksternal</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$count_surat_keluar_eksternal}}</span></div>
                         </div>
                     </div>
                 </div>
@@ -83,20 +83,16 @@
                         <div class="d-flex align-items-center">
                             <span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">Statistik</span>
                         </div>
-                        <span class="text-white pt-1 fw-semibold fs-6">Top 3 Penggunaan Nomor Teratas</span>
+                        <span class="text-white pt-1 fw-semibold fs-6">Top 3 Penggunaan Nomor</span>
                     </div>
                 </div>
-                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="kt_card_widget_17_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
-                    </div>
-                    
+                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">                    
                     <div class="d-flex flex-column content-justify-center flex-row-fluid">
                     @foreach($top_3 as $row)
                         <div class="d-flex fw-semibold align-items-center">
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                             <div class="text-white opacity-50 flex-grow-1 me-4">{{$row->deskripsi}}</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$row->jumlah_pemakaian}}</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$row->jumlah_pemakaian}}</span></div>
                         </div>
                     @endforeach
                     </div>
@@ -112,26 +108,22 @@
                         <span class="text-white pt-1 fw-semibold fs-6">Penggunaan Nomor</span>
                     </div>
                 </div>
-                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-                    <div class="d-flex flex-center me-5 pt-2">
-                        <div id="kt_card_widget_17_chart" style="min-width: 70px; min-height: 70px" data-kt-size="70" data-kt-line="11"></div>
-                    </div>
-                    
+                <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">                   
                     <div class="d-flex flex-column content-justify-center flex-row-fluid">
                         <div class="d-flex fw-semibold align-items-center">
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                             <div class="text-white opacity-50 flex-grow-1 me-4">Pimpinan</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_pimpinan}}</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$count_pimpinan}}</span></div>
                         </div>
                         <div class="d-flex fw-semibold align-items-center">
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                             <div class="text-white opacity-50 flex-grow-1 me-4">Kesekretariatan</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_kesekretariatan}}</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$count_kesekretariatan}}</span></div>
                         </div>
                         <div class="d-flex fw-semibold align-items-center">
                             <div class="bullet w-8px h-3px rounded-2 bg-success me-3"></div>
                             <div class="text-white opacity-50 flex-grow-1 me-4">Kepaniteraan</div>
-                            <div class="fw-bolder text-white opacity-50 text-xxl-end">{{$count_kepaniteraan}}</div>
+                            <div class="fw-bolder text-white text-xxl-end"><span class="badge badge-circle badge-danger">{{$count_kepaniteraan}}</span></div>
                         </div>
                     </div>
                 </div>
@@ -167,7 +159,7 @@
                                 <!--begin::Info-->
                                 <div class="flex-grow-1 me-5">
                                     <!--begin::Time-->
-                                    <div class="text-gray-800 fw-semibold fs-6">{{$row->no_surat}} </div>
+                                    <div class="text-gray-800 fw-semibold fs-4">{{$row->no_surat}} </div>
                                     <!--end::Time-->
                                     <!--begin::Description-->
                                     <div class="text-gray-700 fw-semibold fs-6"><?php if (strlen($row->perihal) > 30) {echo substr($row->perihal, 0, 30)." ...";}else {echo $row->perihal; } ?></div>
@@ -178,7 +170,6 @@
                                 </div>
                                 <!--end::Info-->
                                 <!--begin::Action-->
-                                <a href="#" class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#kt_modal_create_project">View</a>
                                 <!--end::Action-->
                             </div>
                             <!--end::Wrapper-->
