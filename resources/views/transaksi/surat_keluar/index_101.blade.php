@@ -175,6 +175,8 @@ $(document).ready(function(){
             },
             "bDestroy": true,
             searching   : false, paging: true, info: false,
+            pageLength  :5,
+            lengthMenu  : [[5, 10, 20], [5, 10, 20]],
             serverSide  : false,
             ordering    : false,
             responsive  : true,
