@@ -171,6 +171,7 @@
                                     <thead>
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -255,7 +256,7 @@ $(document).ready(function(){
         [
             {data:"no_surat",
                 mRender:function(data, type, full){
-                    if(full['id_nomenklatur_jabatan'] == 1){
+                    /*if(full['id_nomenklatur_jabatan'] == 1){
                         var a = `<span class="badge badge-light-danger">Pimpinan</span>`;
                     }
 
@@ -265,12 +266,11 @@ $(document).ready(function(){
 
                     if(full['id_nomenklatur_jabatan'] == 3){
                         var a = `<span class="badge badge-light-success">Kesekretariatan</span>`;
-                    }
+                    }*/
 
                     return`<div class="d-flex flex-column">
                         <div class="text-gray-800 mb-1">${data}</div>
                         <span>${full['deskripsi']}</span>
-                        <span>${a}</span>
                     </div>`;
                 }
             },
@@ -349,8 +349,9 @@ $(document).ready(function(){
                             <div class="text-gray-800 mb-1">${data}</div>
                             <span>${full['email']}</span>
                         </div>`;
-                    }
-                }
+                    },
+                },
+                {data:"nama_bidang", className:"text-end"}
             ]
         });
     });
