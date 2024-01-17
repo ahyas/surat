@@ -55,6 +55,22 @@ class HomeController extends Controller
         ->take(4)
         ->get();
 
-        return view('home', compact('table','count_surat_masuk','count_surat_keluar','count_surat_keluar_internal','count_surat_keluar_eksternal',"top_3","top_3_surat"));
+        $count_pimpinan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",1)->count();
+        $count_kesekretariatan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",2)->count();
+        $count_kepaniteraan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",3)->count();
+
+        return view('home', 
+        compact('table',
+                'count_surat_masuk',
+                'count_surat_keluar',
+                'count_surat_keluar_internal',
+                'count_surat_keluar_eksternal',
+                "top_3",
+                "top_3_surat",
+                "count_pimpinan",
+                "count_kesekretariatan",
+                "count_kepaniteraan"
+            )
+        );
     }
 }
