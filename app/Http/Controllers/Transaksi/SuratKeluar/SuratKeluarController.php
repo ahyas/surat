@@ -116,6 +116,55 @@ class SuratKeluarController extends Controller
         return response()->json($table);
     }
 
+    public function getBulanRomawi($tgl_surat){
+        $date = strtotime($tgl_surat);
+        
+        $bulan =  ltrim(date("m", $date), "0"); 
+
+        switch($bulan){
+            case 1:
+                return "I";
+            break;
+            case 2:
+                return "II";
+            break;
+            case 3:
+                return "III";
+            break;
+            case 4:
+                return "IV";
+            break;
+            case 5:
+                return "V";
+            break;
+            case 6:
+                return "VI";
+            break;
+            case 7:
+                return "VII";
+            break;
+            case 8:
+                return "VIII";
+            break;
+            case 9:
+                return "IX";
+            break;
+            case 10:
+                return "X";
+            break;
+            case 11:
+                return "XI";
+            break;
+            case 12:
+                return "XII";
+            break;
+            default:
+
+                return "";
+
+        }
+    }
+
     public function save(Request $request){
         $errors = [];
         $data = [];
@@ -124,8 +173,10 @@ class SuratKeluarController extends Controller
         if (empty($request["nomenklatur_jabatan"])) {
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
         }else{
-            $bulan = date("m");
-            $tahun = date("Y");
+            
+            $date = strtotime($request["tgl_surat"]);
+            $bulan = $this->getBulanRomawi($request["tgl_surat"]);
+            $tahun = date("Y", $date); 
 
             $count = DB::table("transaksi_surat_keluar")
             ->select(

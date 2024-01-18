@@ -168,19 +168,9 @@
                                     <div class="text-gray-500 fw-semibold fs-7">{{$row->tgl_surat}}</div>
                                     <!--end::Link-->
                                 </div>
-                                <!--end::Info-->
-                                <!--begin::Action-->
-                                <!--end::Action-->
                             </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Wrapper-->
-                            <!--end::Wrapper-->
                         </div>
                         @endforeach
-                        <!--end::Tap pane-->
-                        <!--begin::Tap pane-->
-                        
-                        <!--end::Tap pane-->
                     </div>
                     <!--end::Tab Content-->
                     <!--begin::Action-->
@@ -192,8 +182,6 @@
                 </div>
                 <!--end: Card Body-->
             </div>
-            <!--end::Timeline widget 3-->
-            <!--begin::Timeline widget 3-->
             <div class="card card-flush d-none h-md-100">
                 <!--begin::Card header-->
                 <div class="card-header mt-6">
