@@ -79,7 +79,7 @@ License: For each use you must have a valid license purchased only from above li
 								
 								<a href="{{route('home')}}">
 									<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
-									<span style="color:white; font-size: 25px">Simansur</span>
+									<span style="color:white; font-size: 20px; font-weight:bold">Simansur</span>
 								</a>
 								<!--end::Logo-->
 								<!--begin::Nav-->

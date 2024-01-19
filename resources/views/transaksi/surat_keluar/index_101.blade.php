@@ -21,13 +21,14 @@
             <!--begin::Table-->
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
-                    <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th >Perihal/Isi Ringkas</th>
-                        <th >Tujuan</th>
-                        <th >Tembusan</th>
+                        <th>Kategori</th>
+                        <th>Perihal/Isi ringkas</th>
+                        <th>Tujuan</th>
                         <th class="min-w-125px">Tanggal Surat</th>
-                        <th class="text-end min-w-125px">Lampiran</th>
+                        <th>Lampiran</th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -113,41 +114,25 @@ $(document).ready(function(){
         [
             {data:"no_surat",
                 mRender:function(data, type, full){
-                    if(full['id_nomenklatur_jabatan'] == 1){
-                        var a = `<span class="badge badge-light-danger">Pimpinan</span>`;
-                    }
-
-                    if(full['id_nomenklatur_jabatan'] == 2){
-                        var a = `<span class="badge badge-light-primary">Kepaniteraan</span>`; 
-                    }
-
-                    if(full['id_nomenklatur_jabatan'] == 3){
-                        var a = `<span class="badge badge-light-success">Kesekretariatan</span>`;
+                    if(full["internal"] == 2){
+                        var a = `<span class="badge badge-light-danger">External</span>`;
+                    }else if(full["internal"] == 1){
+                        var a = `<span class="badge badge-light-primary">Internal</span>`;
+                    }else{
+                        var a = ``;
                     }
 
                     return`<div class="d-flex flex-column">
                         <div class="text-gray-800 mb-1">${data}</div>
-                        <span>${full['deskripsi']}</span>
-                        <span>${a}</span>
-                    </div>`;
+                        </div>${a}`;
                 }
             },
+            {data:"deskripsi"},
             {data:"perihal"},
-            {data:"internal",
-                mRender:function(data){
-                    if(data == 2){
-                        return`<span class="badge badge-light-danger">External</span>`;
-                    }else if(data == 1){
-                        return`<span class="badge badge-light-primary">Internal</span>`;
-                    }else{
-                        return``;
-                    }
-                }
-            },
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
-                        var show = `<a href="javascript:void(0)" id="daftar_tembusan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        var show = `<a href="javascript:void(0)" id="daftar_tembusan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
                         return show;
                     }else{
                         return '';
@@ -156,12 +141,12 @@ $(document).ready(function(){
                 }
             },
             {data:"tgl_surat"},
-            {data:"file",className: "text-end",
+            {data:"file",
                 mRender:function(data){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
-            }
+            },
         ]
     });
 
