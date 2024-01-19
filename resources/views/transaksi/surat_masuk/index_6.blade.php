@@ -138,9 +138,15 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    $("#tgl_surat").flatpickr();
+    var date = document.getElementById("tgl_surat");
+    flatpickr(date, {
+        dateFormat: "Y-m-d",
+    });
+
+    var fp = date._flatpickr;
+
     var id_role = `{{$data['id_role']}}`;
-    console.log(id_role);
+    
     $("#tb_surat_masuk").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_masuk.get_data')}}",
@@ -269,7 +275,8 @@ $(document).ready(function(){
                     $("input[name='nomor_surat']").val(data[0].no_surat);
                     $("input[name='pengirim']").val(data[0].pengirim);
                     $("#perihal").val(data[0].perihal);
-                    $("input[name='tgl_surat']").val(data[0].tgl_surat);
+                    //$("input[name='tgl_surat']").val(data[0].tgl_surat);
+                    fp.setDate(data[0].tgl_surat, true, "Y-m-d");
                     document.getElementById("rahasia").checked = data[0].rahasia == 'true' ? true : false;
 
                     $("#kt_modal_add_surat_masuk").modal("show");

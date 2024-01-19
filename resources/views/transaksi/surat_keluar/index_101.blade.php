@@ -23,7 +23,7 @@
                 <thead>
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th>Kategori</th>
+                        <th>Kategori klasifikasi</th>
                         <th>Perihal/Isi ringkas</th>
                         <th>Tujuan</th>
                         <th class="min-w-125px">Tanggal Surat</th>
@@ -137,7 +137,6 @@ $(document).ready(function(){
                     }else{
                         return '';
                     }
-                    
                 }
             },
             {data:"tgl_surat"},

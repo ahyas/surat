@@ -337,16 +337,18 @@ class SuratKeluarController extends Controller
         if (empty($request["nomenklatur_jabatan"])) {
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
         }else{
-            $bulan = date("m");
-            $tahun = date("Y");
+            $date = strtotime($request["tgl_surat"]);
+            $bulan = $this->getBulanRomawi($request["tgl_surat"]);
+            $tahun = date("Y", $date); 
 
             $count = DB::table("transaksi_surat_keluar")
-            ->where("id",$id)
             ->select(
-                "no_surat"
-            )->first();
-            //get first 3 character
-            $no_agenda = substr($count->no_surat,0, 3);
+                "id AS id_surat"
+            )->count();
+
+            $num = $count +1;
+
+            $no_agenda = sprintf('%03d', $num);
 
             if($request["nomenklatur_jabatan"] == 1){
                 $nomor_surat =  $no_agenda."/KPTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
@@ -451,7 +453,7 @@ class SuratKeluarController extends Controller
                         "id_ref_kegiatan"=>$request["kegiatan"],
                         "id_ref_transaksi"=>$request["transaksi"],
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
-                        "no_surat"=>$nomor_surat ,
+                        "no_surat"=>$nomor_surat,
                         "internal"=>$request["penerima_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],

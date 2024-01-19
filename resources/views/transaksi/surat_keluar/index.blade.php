@@ -198,7 +198,7 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th>Kategori</th>
+                        <th>Kategori klasifikasi</th>
                         <th>Perihal/Isi ringkas</th>
                         <th>Tujuan</th>
                         <th class="min-w-125px">Tanggal Surat</th>
@@ -241,7 +241,14 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    $("#tgl_surat").flatpickr();
+    var date = document.getElementById("tgl_surat");
+    flatpickr(date, {
+        dateFormat: "Y-m-d",
+        
+    });
+
+    var fp = date._flatpickr;
+
     var id_role = `{{$data['id_role']}}`;
 
     let tb_surat_keluar = $("#tb_surat_keluar").DataTable({
@@ -606,60 +613,58 @@ $(document).ready(function(){
         $("input[name='id_surat_keluar']").val(id_surat);
         $("input[name='kode_surat']").val($(this).data("kode_surat"));
         $.ajax({
-                url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
-                type:"GET",
-                dataType:"JSON",
-                success:function(data){
-                    enabledAll();
-                    disabledList();
+            url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
+            type:"GET",
+            dataType:"JSON",
+            success:function(data){
+                enabledAll();
+                disabledList();
 
-                    $("#klasifikasi").val(data.id_klasifikasi);
-                    if(data.ref_fungsi.length>0){
-                        document.getElementById("fungsi").removeAttribute("disabled");
-                        document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
-                        for(var i=0; i<data.ref_fungsi.length; i++){
-                            let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
-                            document.getElementById("fungsi").innerHTML += `<option ${selected} value='${data.ref_fungsi[i].id_fungsi}' data-kode_fungsi='${data.ref_fungsi[i].kode_fungsi}'>${data.ref_fungsi[i].kode_fungsi} - ${data.ref_fungsi[i].deskripsi_fungsi}</option>`; 
-                        }
-                        
+                $("#klasifikasi").val(data.id_klasifikasi);
+                if(data.ref_fungsi.length>0){
+                    document.getElementById("fungsi").removeAttribute("disabled");
+                    document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
+                    for(var i=0; i<data.ref_fungsi.length; i++){
+                        let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
+                        document.getElementById("fungsi").innerHTML += `<option ${selected} value='${data.ref_fungsi[i].id_fungsi}' data-kode_fungsi='${data.ref_fungsi[i].kode_fungsi}'>${data.ref_fungsi[i].kode_fungsi} - ${data.ref_fungsi[i].deskripsi_fungsi}</option>`; 
                     }
                     
-                    if(data.ref_kegiatan.length>0){
-                        document.getElementById("kegiatan").removeAttribute("disabled");
-                        document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
-                        for(var i=0; i<data.ref_kegiatan.length; i++){
-                            let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
-                            document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_fungsi='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
-                        }
-                        
-                    }
-
-                    if(data.ref_transaksi.length>0){
-                        document.getElementById("transaksi").removeAttribute("disabled");
-                        document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
-                        for(var i=0; i<data.ref_transaksi.length; i++){
-                            let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
-                            document.getElementById("transaksi").innerHTML += `<option ${selected} value='${data.ref_transaksi[i].id_transaksi}' data-kode_transaksi='${data.ref_transaksi[i].kode_transaksi}'>${data.ref_transaksi[i].kode_transaksi} - ${data.ref_transaksi[i].deskripsi_transaksi}</option>`; 
-                        }
-                        
-                    }
-
-                    let tujuan_surat = data.tujuan_surat.map(function (obj) {
-                        return obj.id_penerima;
-                    });
-
-                    document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
-                    $("#nomenklatur_jabatan").val(data.id_nomenklatur);
-                    console.log(data.surat_keluar.internal);
-                    $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
-                    document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                    $("#tujuan").val(tujuan_surat).trigger("change");
-                    $("#perihal").val(data.surat_keluar.perihal);
-                    $("input[name='tgl_surat']").val(data.surat_keluar.tgl_surat);
-
-                    $("#kt_modal_add_surat_keluar").modal("show");
                 }
-            });
+                
+                if(data.ref_kegiatan.length>0){
+                    document.getElementById("kegiatan").removeAttribute("disabled");
+                    document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
+                    for(var i=0; i<data.ref_kegiatan.length; i++){
+                        let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
+                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_fungsi='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
+                    }
+                    
+                }
+
+                if(data.ref_transaksi.length>0){
+                    document.getElementById("transaksi").removeAttribute("disabled");
+                    document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
+                    for(var i=0; i<data.ref_transaksi.length; i++){
+                        let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
+                        document.getElementById("transaksi").innerHTML += `<option ${selected} value='${data.ref_transaksi[i].id_transaksi}' data-kode_transaksi='${data.ref_transaksi[i].kode_transaksi}'>${data.ref_transaksi[i].kode_transaksi} - ${data.ref_transaksi[i].deskripsi_transaksi}</option>`;
+                    }
+                    
+                }
+
+                let tujuan_surat = data.tujuan_surat.map(function (obj) {
+                    return obj.id_penerima;
+                });
+
+                document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
+                $("#nomenklatur_jabatan").val(data.id_nomenklatur);
+                $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
+                document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
+                $("#tujuan").val(tujuan_surat).trigger("change");
+                $("#perihal").val(data.surat_keluar.perihal);
+                fp.setDate(data.surat_keluar.tgl_surat, true, "Y-m-d");
+                $("#kt_modal_add_surat_keluar").modal("show");
+            }
+        });
     });
 
     $("#update_surat").click(function(e){

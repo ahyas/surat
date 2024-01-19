@@ -56,8 +56,8 @@ class HomeController extends Controller
         ->get();
 
         $count_pimpinan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",1)->count();
-        $count_kesekretariatan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",2)->count();
-        $count_kepaniteraan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",3)->count();
+        $count_kepaniteraan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",2)->count();
+        $count_kesekretariatan=DB::table("transaksi_surat_keluar")->where("id_nomenklatur_jabatan",3)->count();
 
         return view('home', 
         compact('table',
