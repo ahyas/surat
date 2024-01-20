@@ -157,7 +157,7 @@ $(document).ready(function(){
             {data:"tgl_surat", className: "text-end"},
             {data:"file", className: "text-end",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
             }
         ]

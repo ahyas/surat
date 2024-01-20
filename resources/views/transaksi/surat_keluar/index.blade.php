@@ -131,7 +131,7 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary save_surat_keluar" id="save_surat" data-kt-indicator="on">
                                             <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -259,6 +259,10 @@ $(document).ready(function(){
         serverSide  : false,
         ordering    : false,
         responsive  : true,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         columns     :
         [
             {data:"no_surat",
@@ -370,6 +374,7 @@ $(document).ready(function(){
 
         let id_surat = $(this).data("id_surat_keluar");
         if(confirm("Anda yakin ingin menghapus data ini?")){
+        loadingPage(true);
         $.ajax({
                 url:`{{url('transaksi/surat_keluar/${id_surat}/delete')}}`,
                 type:"GET",
@@ -565,6 +570,7 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
+        
         var formData = new FormData(document.getElementById("kt_modal_add_surat_keluar_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_keluar.save')}}`,
@@ -586,8 +592,10 @@ $(document).ready(function(){
 
                         document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
+                        loadingPage(false);
                         btn.removeAttribute("disabled");
                     } else {
+                        loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
                     }
@@ -612,6 +620,8 @@ $(document).ready(function(){
         let id_surat = $(this).data("id_surat_keluar");
         $("input[name='id_surat_keluar']").val(id_surat);
         $("input[name='kode_surat']").val($(this).data("kode_surat"));
+        $("#file_surat").val("");
+        loadingPage(true);
         $.ajax({
             url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
             type:"GET",
@@ -662,6 +672,8 @@ $(document).ready(function(){
                 $("#tujuan").val(tujuan_surat).trigger("change");
                 $("#perihal").val(data.surat_keluar.perihal);
                 fp.setDate(data.surat_keluar.tgl_surat, true, "Y-m-d");
+
+                loadingPage(false);
                 $("#kt_modal_add_surat_keluar").modal("show");
             }
         });
@@ -673,7 +685,8 @@ $(document).ready(function(){
         let id_surat = $("input[name='id_surat_keluar']").val();
         var btn = document.querySelector(".update_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
-        btn.setAttribute("disabled","disabled");
+        btn.setAttribute("disabled","disabled");    
+
         $.ajax({
             url:`{{url('/transaksi/surat_keluar/${id_surat}/update')}}`,
             type:"POST",
@@ -697,10 +710,12 @@ $(document).ready(function(){
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                         $("#file_surat").val("");
-                    } else {
+                        
+                        return false;
+                    } 
+                        loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
-                    }
             },error:function(){
                 if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                     location.reload();
@@ -709,24 +724,26 @@ $(document).ready(function(){
         });
     });
 
-    $("body").on("click", "#delete_surat_masuk", function(){
-        let id_surat = $(this).data("id_surat_masuk");
-        if(confirm("Anda yakin ingin menghapus data ini?")){
-            $.ajax({
-                url:`{{url('/transaksi/surat_masuk/${id_surat}/delete')}}`,
-                type:"GET",
-                dataType:"JSON",
-                success:function(data){
-                    $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                    $("#kt_modal_add_surat_masuk").modal("hide");
-                }
-            });
-        }
-    });
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
 
-    $("#btn-cancel").click(function(){
-        $('#kt_modal_add_surat_keluar').modal('hide')
-    });
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
+    }
 
 });
 </script>

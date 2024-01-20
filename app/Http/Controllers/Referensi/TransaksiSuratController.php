@@ -53,16 +53,29 @@ class TransaksiSuratController extends Controller
     }
 
     public function delete($id_transaksi){
+        $errors = [];
+        $data = [];
+
         $count = DB::table("transaksi_surat_keluar")
         ->where("id_ref_transaksi", $id_transaksi)
         ->count();
-        
-        if($count == 0){
+
+        if($count > 0){
+            $errors['data_exist'] = 'Tidak dapat menghapus. Data sudah digunakan.';    
+        }
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['message'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
             DB::table("ref_transaksi")
             ->where("id",$id_transaksi)
             ->delete();
-        }
+        }  
 
-        return response()->json($count);
+        return response()->json($data);
     }
 }

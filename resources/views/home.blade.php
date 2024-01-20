@@ -14,6 +14,9 @@
 <!--end::Toolbar-->
 <!--begin::Post-->
 <div class="content flex-column-fluid" id="kt_content">
+    <button type="button" class="btn btn-primary" id="kt_page_loading_message">
+        Toggle Page Loading
+    </button>
     <!--begin::Row-->
     <div class="row g-5 g-xl-10 mb-xl-10">
         <!--begin::Col-->
@@ -132,9 +135,9 @@
         </div>
         <!--end::Col-->
         <!--begin::Col-->
-        <div class="col-lg-12 col-xl-12 col-xxl-6 mb-5 mb-xl-0">
+        <div class="col-lg-12 col-xl-12 col-xxl-6 mb-5 mb-xl-0" >
             <!--begin::Timeline widget 3-->
-            <div class="card h-md-100">
+            <div class="card h-md-100" style="background-color:#FFFDD0">
                 <!--begin::Header-->
                 <div class="card-header border-0 pt-5">
                     <h3 class="card-title align-items-start flex-column">
@@ -152,7 +155,7 @@
                         @foreach($top_3_surat as $row)
                         <div class="tab-pane fade show active" id="kt_timeline_widget_3_tab_content_4">
                             <!--begin::Wrapper-->
-                            <div class="d-flex align-items-center mb-6">
+                            <div class="d-flex align-items-center mb-6" style="background-color:#D0F0C0">
                                 <!--begin::Bullet-->
                                 <span data-kt-element="bullet" class="bullet bullet-vertical d-flex align-items-center min-h-70px mh-100 me-4 bg-info"></span>
                                 <!--end::Bullet-->
@@ -1273,3 +1276,40 @@
 </div>
 <!--end::Post-->
 @endsection
+@push('scripts')
+<script type="text/javascript">
+$(document).ready(function(){
+    // Toggle
+const button = document.querySelector("#kt_page_loading_message");
+const link = document.querySelector(".menu-title");
+link.addEventListener("click", function(){
+    console.log("Test")
+});
+// Handle toggle click event
+button.addEventListener("click", function() {
+    // Populate the page loading element dynamically.
+    // Optionally you can skipt this part and place the HTML
+    // code in the body element by refer to the above HTML code tab.
+    const loadingEl = document.createElement("div");
+    document.body.prepend(loadingEl);
+    loadingEl.classList.add("page-loader");
+    loadingEl.classList.add("flex-column");
+    loadingEl.classList.add("bg-dark");
+    loadingEl.classList.add("bg-opacity-25");
+    loadingEl.innerHTML = `
+        <span class="spinner-border text-primary" role="status"></span>
+        <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+    `;
+
+    // Show page loading
+    KTApp.showPageLoading();
+
+    // Hide after 3 seconds
+    setTimeout(function() {
+        KTApp.hidePageLoading();
+        loadingEl.remove();
+    }, 3000);
+});
+});
+</script>
+@endpush

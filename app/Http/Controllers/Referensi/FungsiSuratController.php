@@ -73,10 +73,31 @@ class FungsiSuratController extends Controller
     }
 
     public function delete($id_fungsi){
-        DB::table("ref_fungsi")
-        ->where("id",$id_fungsi)
-        ->delete();
-        
-        return response()->json();
+       
+
+        $errors = [];
+        $data = [];
+
+        $count = DB::table("transaksi_surat_keluar")
+        ->where("id_ref_fungsi", $id_fungsi)
+        ->count();
+
+        if($count > 0){
+            $errors['data_exist'] = 'Tidak dapat menghapus. Data sudah digunakan.';    
+        }
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['message'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
+            DB::table("ref_fungsi")
+            ->where("id",$id_fungsi)
+            ->delete();
+        }  
+
+        return response()->json($data);
     }
 }

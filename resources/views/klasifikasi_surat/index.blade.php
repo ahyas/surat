@@ -31,6 +31,8 @@
                             {{csrf_field()}}
                                 <!--begin::Scroll-->
                                 <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+
+                                    <div id="notification"></div>
                                     <!--begin::Input group-->
                                     <input type="hidden" name="id_klasifikasi" class="form-control" />
                                     <div class="fv-row mb-7">
@@ -333,6 +335,10 @@ $(document).ready(function(){
         lengthMenu  : [[5, 10, 20], [5, 10, 20]],
         serverSide  : false,
         responsive  : true,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         columns     :
         [
             {data:"kode_klasifikasi"},
@@ -364,12 +370,6 @@ $(document).ready(function(){
         ]
     });
 
-    $("body").on("click","#btnCancel", function(e){
-        e.preventDefault();
-        $("#kt_modal_add_klasifikasi").modal("hide");
-        $("#kt_modal_add_fungsi").modal("hide");
-    });
-
     $("body").on("click","#add_klasifikasi", function(){
         document.querySelector("input[name='kode_klasifikasi']").removeAttribute("readonly");
         document.getElementById("sub-fungsi").style.display = "none";
@@ -378,6 +378,7 @@ $(document).ready(function(){
         document.getElementById("kt_modal_add_klasifikasi_header").innerHTML = `<h2 class="fw-bold">Tambah Klasifikasi</h2>`;
         document.getElementById("update_klasifikasi").style.display = "none";
         document.getElementById("save_klasifikasi").style.display = "inline-block";
+        document.getElementById("notification").innerHTML ='';
         $("#modal_klasifikasi_surat_form").trigger("reset");
         $("#kt_modal_add_klasifikasi").modal("show");
     });
@@ -385,15 +386,28 @@ $(document).ready(function(){
     $("#save_klasifikasi").click(function(e){
         e.preventDefault();
         setButtonSpinner(".save_klasifikasi", "on");
+        var btn = document.querySelector(".save_klasifikasi");
         $.ajax({
             type    :"POST",
             url     :"{{route('referensi.klasifikasi_surat.save')}}",
             data    :$("#modal_klasifikasi_surat_form").serialize(),
             dataType:"JSON",
             success :function(data){
+                console.log(data)
+                if(!data.success){
+                    let err_kode = data.message.err_kode  ? `<li>${data.message.err_kode}</li>` : ``;
+                    let err_deskripsi = data.message.err_deskripsi  ? `<li>${data.message.err_deskripsi}</li>` : ``;
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_kode+err_deskripsi+"</div></div>";    
+                    loadingPage(false);  
+                    setButtonSpinner(".save_klasifikasi", "off");
+                    btn.removeAttribute("disabled");
+                    return false;
+                }
+
                 setButtonSpinner(".save_klasifikasi", "off");
                 $("#tb_klasifikasi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_klasifikasi").modal("hide");
+                loadingPage(true);
             }
         });
     });
@@ -408,6 +422,8 @@ $(document).ready(function(){
         $("#modal_klasifikasi_surat_form").trigger("reset");
         document.getElementById("update_klasifikasi").style.display = "inline-block";
         document.getElementById("save_klasifikasi").style.display = "none";
+        document.getElementById("notification").innerHTML ='';
+        loadingPage(true);
         $.ajax({
             type    :"GET",
             url     :`{{url('referensi/klasifikasi_surat/${id_klasifikasi}/edit')}}`,
@@ -416,6 +432,7 @@ $(document).ready(function(){
                 $("input[name='id_klasifikasi']").val(data.id_klasifikasi);
                 $("input[name='kode_klasifikasi']").val(data.kode_klasifikasi);
                 $("input[name='deskripsi_klasifikasi']").val(data.deskripsi_klasifikasi);
+                loadingPage(false);
                 $("#kt_modal_add_klasifikasi").modal("show");
             }
         });
@@ -425,27 +442,49 @@ $(document).ready(function(){
         var id_klasifikasi = $("input[name='id_klasifikasi']").val();
         e.preventDefault();
         setButtonSpinner(".update_klasifikasi", "on");
+        var btn = document.querySelector(".update_klasifikasi");
         $.ajax({
             type    :"POST",
             url     :`{{url('referensi/klasifikasi_surat/${id_klasifikasi}/update')}}`,
             data    :$("#modal_klasifikasi_surat_form").serialize(),
             dataType:"JSON",
             success :function(data){
+                console.log(data)
+                if(!data.success){
+                    let err_deskripsi = data.message.err_deskripsi  ? `<li>${data.message.err_deskripsi}</li>` : ``;
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_deskripsi+"</div></div>";    
+                    loadingPage(false);  
+                    setButtonSpinner(".update_klasifikasi", "off");
+                    btn.removeAttribute("disabled");
+                    return false;
+                }
+
                 setButtonSpinner(".update_klasifikasi", "off");
                 $("#tb_klasifikasi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_klasifikasi").modal("hide");
+                loadingPage(true);
             }
         });
     });
 
     $("body").on("click","#delete_klasifikasi", function(){
         var id_klasifikasi = $(this).data("id_klasifikasi");
+        document.getElementById("sub-fungsi").style.display = "none";
+        document.getElementById("sub-kegiatan").style.display = "none";
+        document.getElementById("sub-transaksi").style.display = "none";
         if(confirm("Anda yakin akan menghapus data ini?")){
+            loadingPage(true);
             $.ajax({
                 type    :"GET",
                 url     :`{{url('referensi/klasifikasi_surat/${id_klasifikasi}/delete')}}`,
                 dataType:"JSON",
                 success :function(data){
+                    console.log(data)
+                    if(!data.success){
+                        loadingPage(false);
+                        alert(data.message.data_exist);
+                        return false;
+                    }
                     $("#tb_klasifikasi").DataTable().ajax.reload(null, false);
                 }
             });
@@ -473,6 +512,10 @@ $(document).ready(function(){
             lengthMenu: [[5, 10, 20], [5, 10, 20]],
             serverSide  : false,
             responsive  : true,
+            drawCallback:function(settings){
+                loadingPage(false);
+                document.body.style.overflow = 'visible';
+            },
             columns     :
             [
                 {data:"kode_fungsi"},
@@ -538,6 +581,7 @@ $(document).ready(function(){
                 setButtonSpinner(".save_fungsi", "off");
                 $("#kt_modal_add_fungsi").modal("hide");
                 $("#tb_fungsi").DataTable().ajax.reload(null, false);
+                loadingPage(true);
             }
         });
     });
@@ -549,6 +593,7 @@ $(document).ready(function(){
         document.getElementById("update_fungsi").style.display = "inline-block";
         document.getElementById("save_fungsi").style.display = "none";
         document.getElementById("kt_modal_add_fungsi_header").innerHTML = `<h2 class="fw-bold">Edit Fungsi</h2>`;
+        loadingPage(true);
         $.ajax({
             url:`{{('referensi/fungsi_surat/${id_fungsi}/edit')}}`,
             type:"GET",
@@ -558,6 +603,7 @@ $(document).ready(function(){
                 $("input[name='kode_fungsi']").val(data.kode_fungsi);
                 $("input[name='deskripsi_fungsi']").val(data.deskripsi_fungsi);
                 $("input[name='id_ref_klasifikasi']").val(data.id_ref_klasifikasi);
+                loadingPage(false);
                 $("#kt_modal_add_fungsi").modal("show");
             }
         });
@@ -578,6 +624,7 @@ $(document).ready(function(){
                 setButtonSpinner(".update_fungsi", "off");
                 $("#tb_fungsi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_fungsi").modal("hide");
+                loadingPage(true);
             }
         });
     });
@@ -585,11 +632,16 @@ $(document).ready(function(){
     $("body").on("click", "#delete_fungsi",function(){
         let id_fungsi = $(this).data("id_fungsi")
         if(confirm("Anda yakin ingin menghapus data ini?")){
-            console.log("Deleted");
             $.ajax({
                 type:"GET",
                 url:`{{url('referensi/fungsi_surat/${id_fungsi}/delete')}}`,
-                success:function(){
+                success:function(data){
+                    if(!data.success){
+                        loadingPage(false);
+                        alert(data.message.data_exist);
+                        return false;
+                    }
+                    loadingPage(true);
                     $("#tb_fungsi").DataTable().ajax.reload(null, false);
                 }
             });
@@ -616,6 +668,10 @@ $(document).ready(function(){
                 lengthMenu  : [[5, 10, 20], [5, 10, 20]],
                 serverSide  : false,
                 responsive  : true,
+                drawCallback:function(settings){
+                    loadingPage(false);
+                    document.body.style.overflow = 'visible';
+                },
                 columns     :
                 [
                     {data:"kode_kegiatan"},
@@ -671,6 +727,7 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 setButtonSpinner(".save_kegiatan", "off");
+                loadingPage(true);
                 $("#tb_kegiatan").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_kegiatan").modal("hide");
             }
@@ -683,6 +740,7 @@ $(document).ready(function(){
         document.getElementById("update_kegiatan").style.display = "inline-block";
         document.getElementById("save_kegiatan").style.display = "none";
         let id_kegiatan = $(this).data("id_kegiatan");
+        loadingPage(true);
         $.ajax({
             url:`{{url('referensi/kegiatan_surat/${id_kegiatan}/edit')}}`,
             type:"GET",
@@ -692,6 +750,7 @@ $(document).ready(function(){
                 $("input[name='id_ref_kegiatan']").val(data.id_kegiatan);
                 $("input[name='kode_kegiatan']").val(data.kode_kegiatan);
                 $("input[name='deskripsi_kegiatan']").val(data.deskripsi_kegiatan);
+                loadingPage(false);
                 $("#kt_modal_add_kegiatan").modal("show");
             }
         });
@@ -701,6 +760,7 @@ $(document).ready(function(){
         e.preventDefault();
         let id_kegiatan = $("input[name='id_ref_kegiatan']").val();
         setButtonSpinner(".update_kegiatan", "on");
+        
         $.ajax({
             url:`{{url('referensi/kegiatan_surat/${id_kegiatan}/update')}}`,
             type:"GET",
@@ -708,6 +768,7 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 setButtonSpinner(".update_kegiatan", "off");
+                loadingPage(true);
                 $("#tb_kegiatan").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_kegiatan").modal("hide");
             }
@@ -717,11 +778,19 @@ $(document).ready(function(){
     $("body").on("click","#delete_kegiatan", function(){
         let id_kegiatan = $(this).data("id_kegiatan");
         if(confirm("Anda yakin akan menghapus data ini?")){
+            loadingPage(true);
             $.ajax({
                 url:`{{url('referensi/kegiatan_surat/${id_kegiatan}/delete')}}`,
                 type:"GET",
                 dataType:"JSON",
                 success:function(data){
+                    console.log(data);
+                    if(!data.success){
+                        loadingPage(false);
+                        alert(data.message.data_exist);
+                        return false;
+                    }
+
                     $("#tb_kegiatan").DataTable().ajax.reload(null, false);
                 }
             });
@@ -745,6 +814,10 @@ $(document).ready(function(){
             lengthMenu  : [[5, 10, 20], [5, 10, 20]],
             serverSide  : false,
             responsive  : true,
+            drawCallback:function(settings){
+                loadingPage(false);
+                document.body.style.overflow = 'visible';
+            },
             columns     :
             [
                 {data:"kode_transaksi"},
@@ -789,6 +862,7 @@ $(document).ready(function(){
     $("#save_transaksi").click(function(e){
         e.preventDefault();
         setButtonSpinner(".save_transaksi", "on");
+        
         $.ajax({
             url:"{{route('referensi.transaksi_surat.save')}}",
             type:"POST",
@@ -796,6 +870,7 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 setButtonSpinner(".save_transaksi", "off");
+                loadingPage(true);
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_transaksi").modal("hide");
             }
@@ -807,7 +882,7 @@ $(document).ready(function(){
         document.getElementById("update_transaksi").style.display = "inline-block";
         document.getElementById("save_transaksi").style.display = "none";
         let id_transaksi = $(this).data("id_transaksi");
-        console.log(id_transaksi);
+        loadingPage(true);
         $("input[name='id_transaksi']").val(id_transaksi);
         $.ajax({
             url:`{{url('referensi/transaksi_surat/${id_transaksi}/edit')}}`,
@@ -816,6 +891,7 @@ $(document).ready(function(){
                 console.log(data);
                 $("input[name='kode_transaksi']").val(data.kode);
                 $("input[name='deskripsi_transaksi']").val(data.deskripsi);
+                loadingPage(false);
                 $("#kt_modal_add_transaksi").modal("show");
             }
         });
@@ -825,12 +901,14 @@ $(document).ready(function(){
         e.preventDefault();
         let id_transaksi = $("input[name='id_transaksi']").val();
         setButtonSpinner(".update_transaksi", "on");
+        
         $.ajax({
             url:`{{url('/referensi/transaksi_surat/${id_transaksi}/update')}}`,
             type:"GET",
             data:$("#modal_transaksi_surat_form").serialize(),
             success:function(data){
                 setButtonSpinner(".update_transaksi", "off");
+                loadingPage(true);
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
                 $("#kt_modal_add_transaksi").modal("hide");
             }
@@ -840,13 +918,15 @@ $(document).ready(function(){
     $("body").on("click","#delete_transaksi",function(){
         let id_transaksi = $(this).data("id_transaksi");
         if(confirm("Anda yakin ingin menghapus data ini?")){
+            loadingPage(true);
             $.ajax({
             url:`{{url('referensi/transaksi_surat/${id_transaksi}/delete')}}`,
             type:"GET",
             success:function(data){
-                console.log(data)
-                if(data>0){
-                    alert("Gagal. Data ini sudah digunakan")
+                console.log(data);
+                if(!data.success){
+                    loadingPage(false);
+                    alert(data.message.data_exist);
                     return false;
                 }
                 $("#tb_transaksi").DataTable().ajax.reload(null, false);
@@ -866,6 +946,27 @@ $(document).ready(function(){
         }
 
         return btn;
+    }
+
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
+
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
     }
 
 });

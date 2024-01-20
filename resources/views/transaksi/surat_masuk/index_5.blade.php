@@ -68,7 +68,7 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="button" id="btn-cancel" class="btn btn-light-secondary">Cancel</button>
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary save_surat_masuk" id="save_surat_masuk" data-kt-indicator="off">
                                             <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -134,7 +134,7 @@ $(document).ready(function(){
 
     $("#tgl_surat").flatpickr();
     var id_role = `{{$data['id_role']}}`;
-    console.log(id_role);
+   
     $("#tb_surat_masuk").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_masuk.get_data')}}",
@@ -142,6 +142,10 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         columns     :
         [
             {data:"no_surat", 
@@ -161,7 +165,7 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"file", className: "text-end",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-danger">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
             }
         ]
@@ -187,7 +191,7 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_masuk");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
-
+        
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));        
         $.ajax({
             url:`{{route('transaksi.surat_masuk.save')}}`,
@@ -208,20 +212,37 @@ $(document).ready(function(){
                     document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";
                     
                     btn.setAttribute("data-kt-indicator", "off");
-                    btn.removeAttribute("disabled");                  
-                } else {
-                    if(confirm("Periksa kembali. Apakah semua data sudah benar?")){
-                        $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
-                        $("#kt_modal_add_surat_masuk").modal("hide");
-                    }
-                }
+                    btn.removeAttribute("disabled");
+                    return false;                  
+                } 
+                    loadingPage(true);
+                    $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
+                    $("#kt_modal_add_surat_masuk").modal("hide");
+                
             }
         });
     });
 
-    $("#btn-cancel").click(function(){
-        $('#kt_modal_add_surat_masuk').modal('hide')
-    });
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
+
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
+    }
 
 });
 </script>

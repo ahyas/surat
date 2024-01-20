@@ -25,13 +25,30 @@ class KlasifikasiSuratController extends Controller
     }
 
     public function save(Request $request){
-        DB::table("ref_klasifikasi")
-        ->insert([
-            "kode"=>$request["kode_klasifikasi"],
-            "deskripsi"=>$request["deskripsi_klasifikasi"]
-        ]);
+        $error = [];
+        $data = [];
+        if(empty($request["kode_klasifikasi"])){
+            $error["err_kode"] = "Kode klasifikasi tidak boleh kosong";
+        }
 
-        return response()->json($request);
+        if(empty($request["deskripsi_klasifikasi"])){
+            $error["err_deskripsi"] = "Deskripsi klasifikasi tidak boleh kosong";
+        }
+
+        if(!empty($error)){
+            $data["success"] = false;
+            $data["message"] = $error;
+        }else{
+            $data["success"] = true;
+            $data["message"] = "Success";
+            DB::table("ref_klasifikasi")
+            ->insert([
+                "kode"=>$request["kode_klasifikasi"],
+                "deskripsi"=>$request["deskripsi_klasifikasi"]
+            ]);
+        }
+
+        return response()->json($data);
     }
 
     public function edit($id_klasifikasi){
@@ -48,23 +65,56 @@ class KlasifikasiSuratController extends Controller
     }
 
     public function update(Request $request, $id_klasifikasi){
-        $table=DB::table("ref_klasifikasi")
-        ->where("id", $id_klasifikasi)
-        ->update(
-            [
-                "kode"=>$request["kode_klasifikasi"],
-                "deskripsi"=>$request["deskripsi_klasifikasi"]
-            ]
-        );
 
-        return response()->json($table);
+        $error = [];
+        $data = [];
+
+        if(empty($request["deskripsi_klasifikasi"])){
+            $error["err_deskripsi"] = "Deskripsi klasifikasi tidak boleh kosong";
+        }
+
+        if(!empty($error)){
+            $data["success"] = false;
+            $data["message"] = $error;
+        }else{
+            $data["success"] = true;
+            $data["message"] = "Success";
+            DB::table("ref_klasifikasi")
+            ->where("id", $id_klasifikasi)
+            ->update(
+                [
+                    "deskripsi"=>$request["deskripsi_klasifikasi"]
+                ]
+            );
+        }
+
+        return response()->json($data);
     }
 
     public function delete($id_klasifikasi){
-        DB::table("ref_klasifikasi")
-        ->where("id", $id_klasifikasi)
-        ->delete();
+        $errors = [];
+        $data = [];
 
-        return response()->json();
+        $count = DB::table("transaksi_surat_keluar")
+        ->where("id_ref_klasifikasi", $id_klasifikasi)
+        ->count();
+
+        if($count > 0){
+            $errors['data_exist'] = 'Tidak dapat menghapus. Data sudah digunakan.';    
+        }
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['message'] = $errors;
+        } else {
+            $data['success'] = true;
+            $data['message'] = 'Success!';
+
+            DB::table("ref_klasifikasi")
+            ->where("id", $id_klasifikasi)
+            ->delete();
+        }        
+
+        return response()->json($data);
     }
 }
