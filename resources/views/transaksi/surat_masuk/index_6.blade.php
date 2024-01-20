@@ -220,6 +220,8 @@ $(document).ready(function(){
         $("#kt_modal_add_surat_masuk_form").trigger("reset");
         document.getElementById("notification").innerHTML ='';
         document.getElementById("file_surat").classList.add("required");
+        let today = new Date();
+        fp.setDate(today, true, "Y-m-d");
         $("#bidang").val("").trigger('change');
         $("#kt_modal_add_surat_masuk").modal("show");
     });
@@ -269,6 +271,7 @@ $(document).ready(function(){
         document.getElementById("save_surat_masuk").style.display = "none";
         document.getElementById("file_surat").className += "required";
         document.getElementById("notification").innerHTML ='';
+        $("input[name='file_surat']").val("");
         let id_surat = $(this).data("id_surat_masuk");
         $("input[name='id_surat_masuk']").val(id_surat);
         loadingPage(true);
@@ -315,8 +318,9 @@ $(document).ready(function(){
                         let err_pengirim = data.errors.pengirim  ? `<li>${data.errors.pengirim}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
+                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+"</div></div>"; 
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>"; 
                         document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".update_surat_masuk").removeAttribute("disabled");                         
                         return false;

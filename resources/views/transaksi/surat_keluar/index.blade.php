@@ -563,6 +563,9 @@ $(document).ready(function(){
         document.getElementById("notification").innerHTML ='';
         document.getElementById("file").classList.add("required");
         document.getElementById("file_surat").setAttribute("required", "required");
+        let today = new Date();
+        fp.setDate(today, true, "Y-m-d");
+        
         $("#kt_modal_add_surat_keluar").modal("show");
     });
 
@@ -592,13 +595,13 @@ $(document).ready(function(){
 
                         document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
-                        loadingPage(false);
                         btn.removeAttribute("disabled");
-                    } else {
+
+                        return false;
+                    } 
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
-                    }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                         location.reload();
@@ -620,6 +623,7 @@ $(document).ready(function(){
         let id_surat = $(this).data("id_surat_keluar");
         $("input[name='id_surat_keluar']").val(id_surat);
         $("input[name='kode_surat']").val($(this).data("kode_surat"));
+        
         $("#file_surat").val("");
         loadingPage(true);
         $.ajax({
@@ -725,6 +729,7 @@ $(document).ready(function(){
     });
 
     function loadingPage(active){
+        document.body.style.overflow = 'hidden';
         const loadingEl = document.createElement("div");
         document.body.prepend(loadingEl);
         loadingEl.classList.add("page-loader");
@@ -737,7 +742,6 @@ $(document).ready(function(){
         `;
 
         if(active == true){
-            document.body.style.overflow = 'hidden';
             KTApp.showPageLoading();
         }else{
             KTApp.hidePageLoading();

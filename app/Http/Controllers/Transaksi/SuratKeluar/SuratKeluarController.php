@@ -11,6 +11,7 @@ class SuratKeluarController extends Controller
 {
     public function index(){
         $id_role = Auth::user()->getRole()->id_role;
+        
         switch ($id_role){
             //login sebagai admin monitoring
             case 101:
@@ -178,10 +179,7 @@ class SuratKeluarController extends Controller
             $bulan = $this->getBulanRomawi($request["tgl_surat"]);
             $tahun = date("Y", $date); 
 
-            $count = DB::table("transaksi_surat_keluar")
-            ->select(
-                "id AS id_surat"
-            )->count();
+            $count = DB::table("transaksi_surat_keluar")->max("id");
 
             $num = $count +1;
 

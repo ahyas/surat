@@ -156,6 +156,14 @@ class SuratMasukController extends Controller
             $errors['tgl_surat'] = 'Tanggal surat tidak boleh kosong';
         }
 
+        if($request->hasFile('file_surat')){
+            $allowed = ["pdf"];
+            $ext = strtolower($request->file_surat->extension());
+            if(!in_array($ext, $allowed)){
+                $errors['file_surat'] = 'Jenis file harus PDF';
+            }
+        }
+
         if (!empty($errors)) {
             $data['success'] = false;
             $data['errors'] = $errors;
