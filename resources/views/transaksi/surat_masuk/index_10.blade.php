@@ -90,10 +90,12 @@
                                                 <tr>
                                                     <td>
                                                         <div class="text-nowrap"><b>Status :</b> <span id="detail-status"></span></div>
-                                                        <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
-                                                        <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
-                                                        <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
-                                                        <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        <div id="detail-tindak_lanjut" style="display:none;">
+                                                            <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
+                                                            <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
+                                                            <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
+                                                            <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        </div>
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -326,12 +328,18 @@ $(document).ready(function(){
             },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
-                    //status on process
-                    if(full["id_status"]>1){
-                        var btn = 'disabled';
-                    //status selesai
+                     //status disposisi
+                     if(full["id_status"] == 1){
+                        var btn_disposisi = '';
+                        var btn_tindaklanjut = 'disabled';
+                        //status tindaklanjut
+                    }else if(full["id_status"] == 3){
+                        var btn_disposisi = 'disabled';
+                        var btn_tindaklanjut = 'disabled';
+                        //status dinaikan
                     }else{
-                        var btn = '';
+                        var btn_disposisi = '';
+                        var btn_tindaklanjut = '';
                     }
 
                     var file = full["file"];
@@ -345,12 +353,12 @@ $(document).ready(function(){
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item btn ${btn}" id="disposisi_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Disposisi</a>
+                                            <a href="javascript:void(0)" class="dropdown-item btn ${btn_disposisi}" id="disposisi_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Disposisi</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item btn ${btn}" id="tindak_lanjut_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Tindak lanjut</a>
+                                            <a href="javascript:void(0)" class="dropdown-item btn ${btn_tindaklanjut}" id="tindak_lanjut_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Tindak lanjut</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -447,6 +455,12 @@ $(document).ready(function(){
             type:"GET",
             success:function(data){
                 console.log(data)
+                //status tindak lanjut
+                if(data[0].id_status == 3){
+                    document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
+                }else{
+                    document.getElementById("detail-tindak_lanjut").style.display = "none";
+                }
                 showDaftarDisposisi(id_surat);
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;

@@ -180,10 +180,12 @@
                                                 <tr>
                                                     <td>
                                                         <div class="text-nowrap"><b>Status :</b> <span id="detail-status"></span></div>
-                                                        <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
-                                                        <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
-                                                        <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
-                                                        <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        <div id="detail-tindak_lanjut" style="display:none;">
+                                                            <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
+                                                            <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
+                                                            <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
+                                                            <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        </div>
                                                     </td>
                                                     <td></td>
                                                 </tr>
@@ -658,6 +660,11 @@ $(document).ready(function(){
             type:"GET",
             success:function(data){
                 showDaftarDisposisi(id_surat);
+                if(data[0].id_status == 3){
+                    document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
+                }else{
+                    document.getElementById("detail-tindak_lanjut").style.display = "none";
+                }
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
