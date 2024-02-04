@@ -350,17 +350,17 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="detail_klasifikasi" data-id_klasifikasi='${data}' data-show_kode_klasifikasi=${full['kode_klasifikasi']} data-show_deskripsi_klasifikasi="${full['deskripsi_klasifikasi']}">Detail</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3" id="detail_klasifikasi" data-id_klasifikasi='${data}' data-show_kode_klasifikasi=${full['kode_klasifikasi']} data-show_deskripsi_klasifikasi="${full['deskripsi_klasifikasi']}">Detail</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_klasifikasi" data-id_klasifikasi='${data}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3" id="edit_klasifikasi" data-id_klasifikasi='${data}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_klasifikasi" data-id_klasifikasi='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 text-danger" id="delete_klasifikasi" data-id_klasifikasi='${data}'>Delete</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -527,17 +527,17 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="dropdown-item" id="detail_fungsi"data-id_fungsi='${data}' data-show_kode_fungsi='${full["kode_fungsi"]}' data-show_deskripsi_fungsi='${full["deskripsi_fungsi"]}'>Detail</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3" id="detail_fungsi"data-id_fungsi='${data}' data-show_kode_fungsi='${full["kode_fungsi"]}' data-show_deskripsi_fungsi='${full["deskripsi_fungsi"]}'>Detail</a>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="dropdown-item" id="edit_fungsi" data-id_fungsi='${data}'>Edit</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3" id="edit_fungsi" data-id_fungsi='${data}'>Edit</a>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_fungsi" data-id_fungsi='${data}'>Delete</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 text-danger" id="delete_fungsi" data-id_fungsi='${data}'>Delete</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -683,17 +683,17 @@ $(document).ready(function(){
                                         <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                             <li>
                                                 <div class="menu-item px-3">
-                                                    <a href="javascript:void(0)" class="dropdown-item" id="detail_kegiatan" data-id_kegiatan='${data}'data-show_kode_kegiatan='${full["kode_kegiatan"]}' data-show_deskripsi_kegiatan='${full["deskripsi_kegiatan"]}'>Detail</a>
+                                                    <a href="javascript:void(0)" class="menu-link px-3" id="detail_kegiatan" data-id_kegiatan='${data}'data-show_kode_kegiatan='${full["kode_kegiatan"]}' data-show_deskripsi_kegiatan='${full["deskripsi_kegiatan"]}'>Detail</a>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="menu-item px-3">
-                                                    <a href="javascript:void(0)" class="dropdown-item" id="edit_kegiatan" data-id_kegiatan='${data}'>Edit</a>
+                                                    <a href="javascript:void(0)" class="menu-link px-3" id="edit_kegiatan" data-id_kegiatan='${data}'>Edit</a>
                                                 </div>
                                             </li>
                                             <li>
                                                 <div class="menu-item px-3">
-                                                    <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_kegiatan" data-id_kegiatan='${data}'>Delete</a>
+                                                    <a href="javascript:void(0)" class="menu-link px-3 text-danger" id="delete_kegiatan" data-id_kegiatan='${data}'>Delete</a>
                                                 </div>
                                             </li>
                                         </ul>
@@ -829,12 +829,12 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="dropdown-item" id="edit_transaksi" data-id_transaksi='${data}'>Edit</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3" id="edit_transaksi" data-id_transaksi='${data}'>Edit</a>
                                             </div>
                                         </li>
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_transaksi" data-id_transaksi='${data}'>Delete</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 text-danger" id="delete_transaksi" data-id_transaksi='${data}'>Delete</a>
                                             </div>
                                         </li>
                                     </ul>

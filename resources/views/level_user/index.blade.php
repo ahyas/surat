@@ -105,7 +105,7 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_level_user">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-125px">Parant user</th>
+                        <th class="min-w-125px">Parent user</th>
                         <th class="min-w-125px">Sub user</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
@@ -131,6 +131,10 @@ $(document).ready(function(){
         },
         responsive  : true,
         serverSide  : false,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         ordering    :false,
         columns     :
         [
@@ -144,7 +148,7 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item text-danger delete_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 text-danger delete_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Delete</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -189,6 +193,7 @@ $(document).ready(function(){
                     setButtonSpinner(".save_user", "off");
                     $("#tb_level_user").DataTable().ajax.reload(null, false);
                     $("#kt_modal_add_user").modal("hide");
+                    loadingPage(true)
                 }   
             }
         });
@@ -199,6 +204,7 @@ $(document).ready(function(){
         var id_sub_user = $(this).data("id_sub_user");
         var id_parent_user = $(this).data("id_parent_user");
         if(confirm("Anda yakin ingin menghapus data ini?")){
+            loadingPage(true);
             $.ajax({
                 type:"GET",
                 url:`{{url('/user/${id_parent_user}/${id_sub_user}/delete')}}`,
@@ -222,6 +228,27 @@ $(document).ready(function(){
         }
 
         return btn;
+    }
+
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
+
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
     }
 });
 </script>

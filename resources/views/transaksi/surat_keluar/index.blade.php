@@ -307,12 +307,12 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
                                         </div>
                                     </li>
                                 </ul>

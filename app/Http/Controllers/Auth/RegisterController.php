@@ -30,7 +30,8 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    //protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = '/login';
 
     /**
      * Create a new controller instance.
@@ -48,6 +49,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -65,22 +67,13 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        User::create([
+        return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            "created_at" => now(), # new \Datetime()
+            "updated_at" => now(),  # new \Datetime()
         ]);
 
-        $id = DB::getPdo()->lastInsertId();
-
-        DB::table("permission")
-        ->insert([
-            "id_user"=>$id,
-        ]);
-
-        DB::table("daftar_pegawai")
-        ->insert([
-            "id_user"=>$id,
-        ]);
     }
 }

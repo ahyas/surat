@@ -22,8 +22,9 @@ class PermissionController extends Controller
         $table = DB::table("users")
         ->where("users.id","!=",1)
         ->select("users.id AS id_user","users.name AS nama","users.email","roles.name AS role")
-        ->leftJoin("permission", "users.id","=","permission.id_user")
+        ->Join("permission", "users.id","=","permission.id_user")
         ->leftJoin("roles","permission.id_role","=","roles.id")
+        ->orderBy("users.created_at", 'DESC')
         ->get();
 
         return response()->json($table);

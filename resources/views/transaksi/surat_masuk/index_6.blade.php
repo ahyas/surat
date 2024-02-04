@@ -180,7 +180,7 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                            <div class="text-gray-800 mb-1">${data}</div> 
+                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div> 
                             <span>${a}</span>                       
                             </div>`;
                 }
@@ -196,19 +196,19 @@ $(document).ready(function(){
             {data:"status",
                 mRender:function(data, type, full){
                     if(full['id_status'] == 3){
-                        return `<div class="d-flex flex-column">
+                        return `
                             <div style='white-space: nowrap'>${data}</div> 
                             <span class="badge badge-light-primary">Selesai</span>                       
-                            </div>`;
+                            `;
                     }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
-                        return `<div class="d-flex flex-column">
+                        return `
                             <div style='white-space: nowrap'>${data}</div> 
                             <span class="badge badge-light-success">On-Process</span>                       
-                            </div>`;
+                            `;
                     }else{
-                        return `<div class="d-flex flex-column">
+                        return `
                             <span class="badge badge-light-danger">Unprocessed</span>                       
-                            </div>`;
+                            `;
                     }
                 }
             },
@@ -234,12 +234,12 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                     <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="dropdown-item btn ${btn}" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
+                                        <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${btn}" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                     <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="dropdown-item btn text-danger ${btn}" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a>
+                                        <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger ${btn}" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a>
                                         </div>  
                                     </li>
                                 </ul>

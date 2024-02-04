@@ -105,7 +105,7 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="button" id="btn-cancel" class="btn btn-light-danger">Cancel</button>
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary save_user" id="save_user" data-kt-indicator="off">
                                             <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -165,6 +165,10 @@ $(document).ready(function(){
         },
         responsive  : true,
         serverSide  : false,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         ordering    :false,
         columns     :
         [
@@ -202,15 +206,15 @@ $(document).ready(function(){
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
                             <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
-                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" aria-labelledby="dropdownMenuButton1 data-kt-menu="true">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_user" data-id_user='${data}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3" id="edit_user" data-id_user='${data}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item text-danger delete_user" data-id_user='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 text-danger delete_user" data-id_user='${data}'>Delete</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -227,18 +231,19 @@ $(document).ready(function(){
         document.getElementById("update_user").style.display = "inline-block";
         document.getElementById("save_user").style.display = "none";
         $("#kt_modal_add_user_form").trigger("reset");
-        console.log(id_user);
+        loadingPage(true);
         $.ajax({
             type:"GET",
             url:`{{url('user/list/${id_user}/edit')}}`,
             dataType:"JSON",
             success:function(data){
                 console.log(data);
-                $("input[name='id_user']").val(data.id_user);
+                $("input[name='id_user']").val(id_user);
                 $("input[name='name']").val(data.nama);
                 $("input[name='email']").val(data.email);
                 $("#bidang").val(data.id_bidang).trigger('change');
                 $("#jabatan").val(data.id_jabatan).trigger('change');
+                loadingPage(false);
                 $("#kt_modal_add_user").modal("show");
             }
         });
@@ -262,11 +267,11 @@ $(document).ready(function(){
 
                     document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_bidang+err_jabatan+"</div></div>";      
                     setButtonSpinner(".update_user", "off");
-
                 }else{
                     setButtonSpinner(".update_user", "off");
                     $("#tb_user").DataTable().ajax.reload(null, false);
                     $("#kt_modal_add_user").modal("hide");
+                    loadingPage(true);
                 }  
             }
         });
@@ -280,6 +285,7 @@ $(document).ready(function(){
         document.getElementById("save_user").style.display = "inline-block";
         $("#kt_modal_add_user_form").trigger("reset");
         $("#bidang").val("").trigger('change');
+        $("#jabatan").val("").trigger('change');
         $("#kt_modal_add_user").modal("show");
     });
 
@@ -299,7 +305,7 @@ $(document).ready(function(){
     $("#save_user").click(function(e){
         e.preventDefault();
         setButtonSpinner(".save_user", "on");
-
+        
         $.ajax({
             type    : "POST",
             url     : "{{route('user.list.save')}}",
@@ -310,14 +316,16 @@ $(document).ready(function(){
                     let err_name = data.errors.name  ? `<li>${data.errors.name}</li>` : ``;
                     let err_email = data.errors.email  ? `<li>${data.errors.email}</li>` : ``;
                     let err_bidang = data.errors.bidang  ? `<li>${data.errors.bidang}</li>` : ``;
+                    let err_jabatan = data.errors.jabatan  ? `<li>${data.errors.jabatan}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_email+err_bidang+"</div></div>";      
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_email+err_bidang+err_jabatan+"</div></div>";      
                     setButtonSpinner(".save_user", "off");
 
                 }else{
                     setButtonSpinner(".save_user", "off");
                     $("#tb_user").DataTable().ajax.reload(null, false);
                     $("#kt_modal_add_user").modal("hide");
+                    loadingPage(true);
                 }   
             }
         });
@@ -327,6 +335,7 @@ $(document).ready(function(){
         console.log($(this).data("id_user"));
         var id_user = $(this).data("id_user");
         if(confirm("Anda yakin ingin menghapus data ini?")){
+            loadingPage(true);
             $.ajax({
                 type:"GET",
                 url:`{{url('user/list/${id_user}/delete')}}`,
@@ -339,9 +348,26 @@ $(document).ready(function(){
         }
     });
 
-    $("#btn-cancel").click(function(){
-        $("#kt_modal_add_user").modal("hide");
-    });
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
+
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
+    }
 });
 </script>
 @endpush

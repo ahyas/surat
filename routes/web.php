@@ -17,7 +17,7 @@ Route::get('/', function(){
     return redirect()->route('login');
 });
 Auth::routes();
-    Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 101'], function(){
+    Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 18, 101'], function(){
         Route::get('home', 'HomeController@index')->name('home');
     });
     

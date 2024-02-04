@@ -27,11 +27,8 @@
                                 <h2 class="fw-bold">Edit Permission</h2>
                                 <!--end::Modal title-->
                                 <!--begin::Close-->
-                                <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
-                                    <i class="ki-duotone ki-cross fs-1">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
+                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                                 </div>
                                 <!--end::Close-->
                             </div>
@@ -88,7 +85,7 @@
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
-                                        <button type="button" id="btn-cancel" class="btn btn-light-danger">Cancel</button>
+                                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                                         <button type="submit" class="btn btn-primary update_permission" id="update_permission" data-kt-indicator="off">
                                             <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -140,7 +137,12 @@ $(document).ready(function(){
             dataSrc:""
         },
         serverSide  : false,
+        drawCallback:function(settings){
+            loadingPage(false);
+            document.body.style.overflow = 'visible';
+        },
         responsive  : true,
+        ordering    :false,
         columns     :
         [
             {data:"nama", className:"d-flex align-items-center",
@@ -159,7 +161,7 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="dropdown-item" id="edit_permission" data-id_user='${data}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3" id="edit_permission" data-id_user='${data}'>Edit</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -171,17 +173,20 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_permission", function(){
         var id_user = $(this).data("id_user");
+        console.log(id_user)
         $("#kt_modal_add_user_form").trigger("reset");
+        loadingPage(true); 
         $.ajax({
             type:"GET",
             url:`{{url('user/permissions/${id_user}/edit')}}`,
             dataType:"JSON",
             success:function(data){
 
-                $("input[name='id_user']").val(data.id_user);
+                $("input[name='id_user']").val(id_user);
                 $("input[name='name']").val(data.nama);
                 document.add_user_form.user_role.value=data.id_role;
                 $("#kt_modal_add_user").modal("show");
+                loadingPage(false); 
             }
         });
     });
@@ -205,11 +210,33 @@ $(document).ready(function(){
                 }else{
                     setButtonSpinner(".update_permission","off");
                     $("#tb_user").DataTable().ajax.reload(null, false);
-                    $("#kt_modal_add_user").modal("hide");  
+                    $("#kt_modal_add_user").modal("hide"); 
+                    loadingPage(true); 
                 }
             }
         });
     });
+
+    function loadingPage(active){
+        const loadingEl = document.createElement("div");
+        document.body.prepend(loadingEl);
+        loadingEl.classList.add("page-loader");
+        loadingEl.classList.add("flex-column");
+        loadingEl.classList.add("bg-dark");
+        loadingEl.classList.add("bg-opacity-25");
+        loadingEl.innerHTML = `
+            <span class="spinner-border text-primary" role="status"></span>
+            <span class="text-gray-800 fs-6 fw-semibold mt-5">Loading...</span>
+        `;
+
+        if(active == true){
+            document.body.style.overflow = 'hidden';
+            KTApp.showPageLoading();
+        }else{
+            KTApp.hidePageLoading();
+            loadingEl.remove();
+        }
+    }
 
     function setButtonSpinner(query_selector, status){
         var btn = document.querySelector(query_selector);
@@ -223,10 +250,6 @@ $(document).ready(function(){
 
         return btn;
     }
-
-    $("#btn-cancel").click(function(){
-        $("#kt_modal_add_user").modal("hide");
-    });
 
 });
 </script>

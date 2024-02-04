@@ -111,6 +111,16 @@ class Controller extends BaseController
                         ];
                         
                         break;
+                    //login sebagai end user
+                    case 18 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => '',
+                            ],
+                        ];
+                        
+                        break;
                     //login sebagai admin monitoring
                     case 101 :
                         $menu = 

@@ -28,15 +28,15 @@ class UserController extends Controller
         $table=DB::table("users")
         ->where("users.id","!=", 1)
         ->select("users.id AS id_user",
-        "users.name AS nama",
-        "bidang.nama AS bidang",
-        "users.email",
-        "bidang.id AS id_bidang",
-        "ref_jabatan.nama AS jabatan")
+            "users.name AS nama",
+            "bidang.nama AS bidang",
+            "users.email",
+            "bidang.id AS id_bidang",
+            "ref_jabatan.nama AS jabatan")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->leftJoin("ref_jabatan","daftar_pegawai.id_jabatan","=","ref_jabatan.id")
-        ->orderBy("bidang.id", 'ASC')
+        ->orderBy("users.created_at", 'DESC')
         ->get();
 
         return response()->json($table);
@@ -63,6 +63,10 @@ class UserController extends Controller
             $errors['bidang'] = 'Pilih bidang yang sesuai';
         }
 
+        if(empty($request["jabatan"])){
+            $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
+        }
+
         if (!empty($errors)) {
             $data['success'] = false;
             $data['errors'] = $errors;
@@ -75,14 +79,23 @@ class UserController extends Controller
                 "name"=>$request['name'],
                 "email"=>$request['email'],
                 "password"=>Hash::make("ptapabar"),
-                "id_bidang"=>$request['bidang']
+                "id_bidang"=>$request['bidang'],
+                "created_at" => now(), # new \Datetime()
+                "updated_at" => now(),  # new \Datetime()
             ]);
 
             $userId = DB::getPdo()->lastInsertId();
 
             DB::table("permission")
             ->insert([
-                "id_user"=>$userId
+                "id_user"=>$userId,
+                "id_role"=>18
+            ]);
+
+            DB::table("daftar_pegawai")
+            ->insert([
+                "id_user"=>$userId,
+                "id_jabatan"=>$request["jabatan"]
             ]);
         }
 
@@ -99,7 +112,7 @@ class UserController extends Controller
             "users.email",
             "daftar_pegawai.id_jabatan"
         )
-        ->join("permission", "users.id","=","permission.id_user")
+        ->leftJoin("permission", "users.id","=","permission.id_user")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->first();
@@ -132,15 +145,24 @@ class UserController extends Controller
 
             DB::table("users")
             ->where("id", $id_user)
-            ->update([
-                "name"=>$request['name'],
-                "id_bidang"=>$request['bidang']
-            ]);
+            ->update(
+                [
+                    "name"=>$request["name"],
+                    "id_bidang"=>$request['bidang']
+                ]);
 
             DB::table("daftar_pegawai")
-            ->where("id_user", $id_user)
-            ->update([
+            ->updateOrInsert(["id_user"=>$id_user], [
+                "id_user"=>$id_user,
                 "id_jabatan"=>$request["jabatan"]
+            ]);
+
+            DB::table("permission")
+            ->updateOrInsert([
+                "id_user"=>$id_user
+            ], [
+                "id_user"=>$id_user,
+                "id_role"=>18
             ]);
 
         }
@@ -154,6 +176,10 @@ class UserController extends Controller
         ->delete();
 
         DB::table("permission")
+        ->where("id_user", $id_user)
+        ->delete();
+
+        DB::table("daftar_pegawai")
         ->where("id_user", $id_user)
         ->delete();
 
