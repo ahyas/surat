@@ -19,14 +19,24 @@ class UserController extends Controller
         ->select("id AS id_bidang","nama AS bidang")
         ->get();
 
-        return view("user/index", compact("table","table2"));
+        $jabatan = DB::table("ref_jabatan")->select("id","nama AS jabatan")->get();
+
+        return view("user/index", compact("table","table2","jabatan"));
     }
 
     public function getUser(){
         $table=DB::table("users")
         ->where("users.id","!=", 1)
-        ->select("users.id AS id_user","users.name AS nama","bidang.nama AS bidang","users.email","bidang.id AS id_bidang")
+        ->select("users.id AS id_user",
+        "users.name AS nama",
+        "bidang.nama AS bidang",
+        "users.email",
+        "bidang.id AS id_bidang",
+        "ref_jabatan.nama AS jabatan")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
+        ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
+        ->leftJoin("ref_jabatan","daftar_pegawai.id_jabatan","=","ref_jabatan.id")
+        ->orderBy("bidang.id", 'ASC')
         ->get();
 
         return response()->json($table);
@@ -82,9 +92,16 @@ class UserController extends Controller
     public function edit($id_user){
         $table=DB::table("users")
         ->where("users.id",$id_user)
-        ->select("users.id AS id_user","users.name AS nama","bidang.id AS id_bidang","users.email")
+        ->select(
+            "users.id AS id_user",
+            "users.name AS nama",
+            "bidang.id AS id_bidang",
+            "users.email",
+            "daftar_pegawai.id_jabatan"
+        )
         ->join("permission", "users.id","=","permission.id_user")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
+        ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->first();
 
         return response()->json($table);
@@ -102,6 +119,10 @@ class UserController extends Controller
             $errors['bidang'] = 'Pilih bidang yang sesuai';
         }
 
+        if(empty($request["jabatan"])){
+            $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
+        }
+
         if (!empty($errors)) {
             $data['success'] = false;
             $data['errors'] = $errors;
@@ -114,6 +135,12 @@ class UserController extends Controller
             ->update([
                 "name"=>$request['name'],
                 "id_bidang"=>$request['bidang']
+            ]);
+
+            DB::table("daftar_pegawai")
+            ->where("id_user", $id_user)
+            ->update([
+                "id_jabatan"=>$request["jabatan"]
             ]);
 
         }

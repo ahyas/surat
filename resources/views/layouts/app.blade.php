@@ -56,7 +56,7 @@ License: For each use you must have a valid license purchased only from above li
 		<!--end::Theme mode setup on page load-->
 
 		<!--Start Loading animation transparent-->
-		<div class="page-loader flex-column bg-dark bg-opacity-25">
+		<div class="page-loader flex-column">
 			<span class="spinner-border text-primary" role="status"></span>
 			<span class="text-white fs-6 fw-semibold mt-5">Loading...</span>
 		</div>
@@ -300,7 +300,7 @@ License: For each use you must have a valid license purchased only from above li
 										<!--begin::Name-->
 										<div class="d-none d-md-flex flex-column align-items-end justify-content-center me-2 me-md-4">
 											<span class="text-muted fs-8 fw-semibold lh-1 mb-1">{{Auth::user()->name}}</span>
-											<span class="text-white fs-8 fw-bold lh-1">{{$data['role_name']}}</span>
+											<span class="text-white fs-8 fw-bold lh-1">{{$data['jabatan']}}</span>
 										</div>
 										<!--end::Name-->
 										<!--begin::Symbol-->
@@ -323,7 +323,7 @@ License: For each use you must have a valid license purchased only from above li
 												<!--begin::Username-->
 												<div class="d-flex flex-column">
 													<div class="fw-bold d-flex align-items-center fs-5">{{Auth::user()->name}}  
-													<span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span></div>
+													</div>
 													<a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{Auth::user()->email}}</a>
 												</div>
 												<!--end::Username-->

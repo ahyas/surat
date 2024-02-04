@@ -22,6 +22,13 @@ class Controller extends BaseController
         
                 $id_role = Auth::user()->getRole()->id_role;
                 $role_name = Auth::user()->getRole()->role_name;
+                $user = DB::table("users")
+                ->where("users.id", Auth::user()->id)
+                ->select("ref_jabatan.nama AS nama_jabatan")
+                ->leftJoin("daftar_pegawai", "users.id","=","daftar_pegawai.id_user")
+                ->leftJoin("ref_jabatan","daftar_pegawai.id_jabatan","=","ref_jabatan.id")
+                ->first();
+                $jabatan = $user->nama_jabatan;
 
                 switch($id_role){
                     //login as super admin
@@ -30,12 +37,14 @@ class Controller extends BaseController
                         [
                             'Manajemen Pengguna'=>[
                                 "Daftar" => route('user.list.index'),
-                                'Roles' => route('user.role.index'),
-                                'Permissions' => route('user.permission.index')
+                                'Permissions' => route('user.permission.index'),
+                                'Level user' => route('user.level.index'),
                             ],
                             'Referensi'=>[
                                 'Klasifikasi surat' => route('referensi.klasifikasi_surat.index'),
-                                'Bidang' => route('referensi.bidang.index')
+                                'Roles' => route('user.role.index'),
+                                'Bidang' => route('referensi.bidang.index'),
+                                'Jabatan' => route('referensi.jabatan.index'),
                             ]
                         ];
                     break;
@@ -62,6 +71,46 @@ class Controller extends BaseController
                         ];
                         
                         break;
+                    //login as admin disposisi 1
+                    case 8 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                            ],
+                        ];
+                        
+                        break;
+                    //login as admin disposisi 2
+                    case 10 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                            ],
+                        ];
+                        
+                        break;
+                         //login as admin disposisi 3
+                    case 13 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                            ],
+                        ];
+                        
+                        break;
+                    //login sebagai ketua
+                    case 16 :
+                        $menu = 
+                        [
+                            'Transaksi'=>[
+                                'Surat Masuk' => route('transaksi.surat_masuk'),
+                            ],
+                        ];
+                        
+                        break;
                     //login sebagai admin monitoring
                     case 101 :
                         $menu = 
@@ -83,7 +132,7 @@ class Controller extends BaseController
 
                 }
 
-                View::share('data', compact('menu', 'role_name', 'id_role'));
+                View::share('data', compact('menu', 'role_name', 'id_role','jabatan'));
 
                 return $next($request);
             }

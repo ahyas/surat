@@ -13,6 +13,10 @@ class SuratKeluarController extends Controller
         $id_role = Auth::user()->getRole()->id_role;
         
         switch ($id_role){
+            //login sebagai admin disposisi 1
+            case 8:
+                return view('transaksi/surat_keluar/index_8');
+            break;
             //login sebagai admin monitoring
             case 101:
                 return view('transaksi.surat_keluar.index_101');
@@ -76,39 +80,76 @@ class SuratKeluarController extends Controller
     }
 
     public function getData(){
-        $table = DB::table("transaksi_surat_keluar AS surat_keluar")
-        ->select(
-            "surat_keluar.id AS id_surat",
-            "surat_keluar.id_ref_klasifikasi",
-            "surat_keluar.id_ref_fungsi",
-            "surat_keluar.id_ref_kegiatan",
-            "surat_keluar.id_ref_transaksi",
-            "surat_keluar.id_nomenklatur_jabatan",
-            "surat_keluar.no_surat",
-            "surat_keluar.tujuan",
-            "surat_keluar.internal",
-            "surat_keluar.perihal",
-            "surat_keluar.tgl_surat",
-            "surat_keluar.file",
-            "ref_fungsi.kode AS kode_fungsi",
-            "ref_kegiatan.kode AS kode_kegiatan",
-            "ref_transaksi.kode AS kode_transaksi",
-            DB::raw('COUNT(detail_transaksi_surat.id_surat_keluar) AS jumlah_tembusan'),
-            DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi"),
-            DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
-        )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
-        ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
-        ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
-        ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat_keluar")
-        ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
-        ->orderBy("surat_keluar.created_at","DESC")->get();
+        $id_role = Auth::user()->getRole()->id_role;
+        switch ($id_role){
+            //login sebagai admin disposisi 1
+            case 8:
+                $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->where('detail_transaksi_surat.id_penerima', Auth::user()->id)
+                ->select(
+                    "surat_keluar.id AS id_surat",
+                    "surat_keluar.id_ref_klasifikasi",
+                    "surat_keluar.id_ref_fungsi",
+                    "surat_keluar.id_ref_kegiatan",
+                    "surat_keluar.id_ref_transaksi",
+                    "surat_keluar.id_nomenklatur_jabatan",
+                    "surat_keluar.no_surat",
+                    "surat_keluar.tujuan",
+                    "surat_keluar.internal",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "ref_fungsi.kode AS kode_fungsi",
+                    "ref_kegiatan.kode AS kode_kegiatan",
+                    "ref_transaksi.kode AS kode_transaksi",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi"),
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
+                ->orderBy("surat_keluar.created_at","DESC")->get();
 
-        return response()->json($table);
+                return response()->json($table);
+            break;
+
+            default:
+            $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+            ->select(
+                "surat_keluar.id AS id_surat",
+                "surat_keluar.id_ref_klasifikasi",
+                "surat_keluar.id_ref_fungsi",
+                "surat_keluar.id_ref_kegiatan",
+                "surat_keluar.id_ref_transaksi",
+                "surat_keluar.id_nomenklatur_jabatan",
+                "surat_keluar.no_surat",
+                "surat_keluar.tujuan",
+                "surat_keluar.internal",
+                "surat_keluar.perihal",
+                "surat_keluar.tgl_surat",
+                "surat_keluar.file",
+                "ref_fungsi.kode AS kode_fungsi",
+                "ref_kegiatan.kode AS kode_kegiatan",
+                "ref_transaksi.kode AS kode_transaksi",
+                DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
+                DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN CONCAT(ref_kegiatan.kode,' - ',ref_kegiatan.deskripsi) ELSE CONCAT(ref_transaksi.kode,' - ',ref_transaksi.deskripsi) END) AS deskripsi"),
+                DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
+            )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+            ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+            ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+            ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+            ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
+            ->orderBy("surat_keluar.created_at","DESC")->get();
+
+            return response()->json($table);
+
+        }
     }
 
-    public function getDetailSurat($id_surat_keluar){
+    public function getDetailSurat($id_surat){
         $table = DB::table("detail_transaksi_surat")
-        ->where("id_surat_keluar", $id_surat_keluar)
+        ->where("id_surat", $id_surat)
         ->select("users.name AS nama_penerima", "users.email","bidang.nama AS nama_bidang")
         ->join("users", "detail_transaksi_surat.id_penerima","=","users.id")
         ->leftJoin("bidang","users.id_bidang","=","bidang.id")
@@ -256,12 +297,12 @@ class SuratKeluarController extends Controller
             $tujuan = $request["tujuan"];
             $value = array();
             //get last id
-            $id_surat_keluar = DB::table("transaksi_surat_keluar")->max('id');
+            $id_surat = DB::table("transaksi_surat_keluar")->max('id');
             //get penerima surat
             foreach($tujuan as $id_pegawai){
                 if(!empty($id_pegawai)){
                     $value[] = [
-                        "id_surat_keluar"=>$id_surat_keluar,
+                        "id_surat"=>$id_surat,
                         "id_penerima"=>$id_pegawai
                     ];
                 }
@@ -311,7 +352,7 @@ class SuratKeluarController extends Controller
 
         $tujuan_surat = DB::table("detail_transaksi_surat")
         ->select("id_penerima")
-        ->where("id_surat_keluar", $id_surat)
+        ->where("id_surat", $id_surat)
         ->get();
 
         return response()->json([
@@ -423,7 +464,7 @@ class SuratKeluarController extends Controller
                 );
                 //replace old data with new data
                 DB::table("detail_transaksi_surat")
-                ->where("id_surat_keluar", $id)
+                ->where("id_surat", $id)
                 ->delete();
 
                 //detail transaksi surat
@@ -433,7 +474,7 @@ class SuratKeluarController extends Controller
                 foreach($tujuan as $id_pegawai){
                     if(!empty($id_pegawai)){
                         $value[] = [
-                            "id_surat_keluar"=>$id,
+                            "id_surat"=>$id,
                             "id_penerima"=>$id_pegawai
                         ];
                     }
@@ -460,7 +501,7 @@ class SuratKeluarController extends Controller
 
                 //replace old data with new data
                 DB::table("detail_transaksi_surat")
-                ->where("id_surat_keluar", $id)
+                ->where("id_surat", $id)
                 ->delete();
 
                 //detail transaksi surat
@@ -470,7 +511,7 @@ class SuratKeluarController extends Controller
                 foreach($tujuan as $id_pegawai){
                     if(!empty($id_pegawai)){
                         $value[] = [
-                            "id_surat_keluar"=>$id,
+                            "id_surat"=>$id,
                             "id_penerima"=>$id_pegawai
                         ];
                     }
@@ -487,7 +528,7 @@ class SuratKeluarController extends Controller
 
     public function delete($id_surat){
         DB::table("transaksi_surat_keluar")->where("id", $id_surat)->delete();
-        DB::table("detail_transaksi_surat")->where("id_surat_keluar", $id_surat)->delete();
+        DB::table("detail_transaksi_surat")->where("id_surat", $id_surat)->delete();
         return response()->json();
     }
 }

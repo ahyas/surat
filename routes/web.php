@@ -17,7 +17,7 @@ Route::get('/', function(){
     return redirect()->route('login');
 });
 Auth::routes();
-    Route::group(['middleware'=>'role:1, 5, 6, 101'], function(){
+    Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 101'], function(){
         Route::get('home', 'HomeController@index')->name('home');
     });
     
@@ -44,10 +44,20 @@ Auth::routes();
         Route::post('/user/permissions/{id_user}/update','Users\PermissionController@update')->name('user.permission.update');
         //END::user permissions
 
+        //BEGIN::level user
+        Route::get('/user/level', 'Users\LevelUserController@index')->name('user.level.index');
+        Route::get('/user/level/get_data', 'Users\LevelUserController@getData')->name('user.level.get_data');
+        Route::post('/user/level/save', 'Users\LevelUserController@save')->name('user.level.save');
+        Route::get('/user/{id_parent_user}/{id_sub_user}/delete', 'Users\LevelUserController@delete');
+        //END::level user
+
         //BEGIN::Bidang
         Route::get('/referensi/bidang', 'Referensi\BidangController@index')->name('referensi.bidang.index'); 
         Route::get('/referensi/bidang/get_data','Referensi\BidangController@getBidang')->name('referensi.bidang.get_data');
         //END::Bidang
+
+        Route::get('/referensi/jabatan','Referensi\JabatanController@index')->name('referensi.jabatan.index');
+        Route::get('/referensi/jabatan/get_data','Referensi\JabatanController@getData')->name('referensi.jabatan.get_data');
     });
 //login sebagai super admin dan admin tata usaha
     Route::group(['middleware'=>'role: 1, 6'], function(){
@@ -85,7 +95,7 @@ Auth::routes();
         //END::transaksi surat
     });
    
-    Route::group(['middleware'=>'role:5, 6, 101'], function(){
+    Route::group(['middleware'=>'role:5, 6, 8, 10, 13, 16, 101'], function(){
          //Begin::Transaksi surat masuk
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');
@@ -93,10 +103,25 @@ Auth::routes();
         Route::get('/transaksi/surat_masuk/{id}/edit', 'Transaksi\SuratMasuk\SuratMasukController@edit')->name('transaksi.surat_masuk.edit');
         Route::post('/transaksi/surat_masuk/{id}/update', 'Transaksi\SuratMasuk\SuratMasukController@update')->name('transaksi.surat_masuk.update');
         Route::get('/transaksi/surat_masuk/{id}/delete', 'Transaksi\SuratMasuk\SuratMasukController@delete')->name('transaksi.surat_masuk.delete');
+        Route::get('/transaksi/surat_masuk/{id}/detail', 'Transaksi\SuratMasuk\SuratMasukController@detail')->name('transaksi.surat_masuk.detail');
         //End::Transaksi surat masuk
+
+        //Begin::disposisi
+        Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
+        Route::post('/transaksi/surat_masuk/disposisi/kirim', 'Transaksi\SuratMasuk\SuratMasukController@kirim')->name('transaksi.surat_masuk.disposisi.kirim');
+        //End::Disposisi
+
+        //Begin::teruskan
+        Route::post('/transaksi/surat_masuk/teruskan','Transaksi\SuratMasuk\SuratMasukController@teruskan')->name('transaksi.surat_masuk.teruskan.kirim');
+        Route::post('/transaksi/surat_masuk/naikan','Transaksi\SuratMasuk\SuratMasukController@naikan')->name('transaksi.surat_masuk.naikan.kirim');
+        //End::teruskan
+
+        //Begin::tindak lanjut
+        Route::post('/transaksi/surat_masuk/tindak_lanjut','Transaksi\SuratMasuk\SuratMasukController@tindakLanjut')->name('transaksi.surat_masuk.tindak_lanjut');
+        //End::tindak lanjut
     });
 //login sebagai admin tata usaha
-    Route::group(['middleware'=>'role:6, 101'], function(){
+    Route::group(['middleware'=>'role:6, 8, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
         Route::post('/transaksi/surat_keluar/save', 'Transaksi\SuratKeluar\SuratKeluarController@save')->name('transaksi.surat_keluar.save');

@@ -20,10 +20,10 @@
                         <div class="modal-content">
                             <!--begin::Modal header-->
                             <div class="modal-header" id="kt_modal_add_surat_masuk_header">
-                                    <div id="title"></div>
-                                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                                        <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
-                                    </div>
+                                <div id="title"></div>
+                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                                </div>
                             </div>
                             <div class="modal-body px-5 my-7">
                             
@@ -44,6 +44,16 @@
                                             <input type="text" name="pengirim" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Pengirim surat" required/>
                                         </div>
                                         <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                            <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
+                                                <option value="">Pilih tujuan surat</option>
+                                                @foreach($user as $row)
+                                                    <option value="{{$row->id_parent_user}}">{{$row->nama_pegawai}}</option>
+                                                @endforeach
+                                            </select>
+
+                                        </div>
+                                        <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
                                             <textarea class="form-control form-control-solid" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required></textarea>
                                         </div>
@@ -52,11 +62,10 @@
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tanggal surat" required/>
                                         </div>
                                         <div class="fv-row mb-7">
-                                        <div class="form-check">
-                                            <input type="checkbox" name="rahasia" class="form-check-input" id="rahasia">
-                                            <label class="fw-semibold fs-6 mb-2" for="rahasia">Rahasia</label>
-                                        </div>
-                                            
+                                            <div class="form-check">
+                                                <input type="checkbox" name="rahasia" class="form-check-input" id="rahasia">
+                                                <label class="fw-semibold fs-6 mb-2" for="rahasia">Rahasia</label>
+                                            </div>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2" id="file_surat">File</label>
@@ -67,7 +76,7 @@
                                     <!--begin::Actions-->
                                     <div class="text-center pt-10">
                                         <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
-                                        <button type="button" class="btn btn-primary save_surat_masuk" id="save_surat_masuk" data-kt-indicator="off">
+                                        <button type="submit" class="btn btn-primary save_surat_masuk" id="save_surat_masuk" data-kt-indicator="off">
                                             <span class="indicator-progress"> 
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                                             Save</button>
@@ -101,10 +110,11 @@
                         <th class="min-w-125px">No. Surat</th>
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
-                        <th >Tanggal Surat</th>
-                    
+                        <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="text-end min-w-125px"></th>
+                        <th>Status</th>
+                        <th class="min-w-150px">Dibuat Oleh</th>
+                        <th class="text-end min-w-100px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -183,19 +193,53 @@ $(document).ready(function(){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
             },
+            {data:"status",
+                mRender:function(data, type, full){
+                    if(full['id_status'] == 3){
+                        return `<div class="d-flex flex-column">
+                            <div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-primary">Selesai</span>                       
+                            </div>`;
+                    }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
+                        return `<div class="d-flex flex-column">
+                            <div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-success">On-Process</span>                       
+                            </div>`;
+                    }else{
+                        return `<div class="d-flex flex-column">
+                            <span class="badge badge-light-danger">Unprocessed</span>                       
+                            </div>`;
+                    }
+                }
+            },
+            {data:"dibuat_oleh",
+                mRender:function(data){
+                    if(data !== null){
+                        return`<span>${data}</span>`;
+                    }else{
+                        return`-`;
+                    }
+                }
+            },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
+                    if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 3 || full['id_status'] == 4 || full['id_status'] == 5){
+                        var btn = 'disabled';
+                    }else{
+                        var btn = '';
+                    }
+
                     return`<div class="dropdown">
                             <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                     <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="dropdown-item" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
+                                        <a href="javascript:void(0)" class="dropdown-item btn ${btn}" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                     <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="dropdown-item text-danger" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a>
+                                        <a href="javascript:void(0)" class="dropdown-item btn text-danger ${btn}" id="delete_surat_masuk" data-id_surat_masuk='${data}'>Delete</a>
                                         </div>  
                                     </li>
                                 </ul>
@@ -213,7 +257,7 @@ $(document).ready(function(){
     $("body").on("click","#add_surat_masuk", function(){
         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
         document.querySelector(".save_surat_masuk").removeAttribute("disabled");
-
+        $("#tujuan").val("").trigger("change");
         document.getElementById("update_surat_masuk").style.display = "none";
         document.getElementById("save_surat_masuk").style.display = "inline-block";
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add surat masuk</h2>`;
@@ -231,7 +275,7 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_masuk");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
-        
+        console.log(document.getElementById("rahasia").checked);
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_masuk.save')}}`,
@@ -246,11 +290,12 @@ $(document).ready(function(){
                     if (!data.success) {
                         let err_nomor_surat = data.errors.nomor_surat  ? `<li>${data.errors.nomor_surat}</li>` : ``;
                         let err_pengirim = data.errors.pengirim  ? `<li>${data.errors.pengirim}</li>` : ``;
+                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
                         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".save_surat_masuk").removeAttribute("disabled");                       
                         return false;
@@ -276,21 +321,22 @@ $(document).ready(function(){
         $("input[name='id_surat_masuk']").val(id_surat);
         loadingPage(true);
         $.ajax({
-                url:`{{url('/transaksi/surat_masuk/${id_surat}/edit')}}`,
-                type:"GET",
-                dataType:"JSON",
-                success:function(data){
-                    console.log(data[0].rahasia)
-                    $("input[name='nomor_surat']").val(data[0].no_surat);
-                    $("input[name='pengirim']").val(data[0].pengirim);
-                    $("#perihal").val(data[0].perihal);
-                    //$("input[name='tgl_surat']").val(data[0].tgl_surat);
-                    fp.setDate(data[0].tgl_surat, true, "Y-m-d");
-                    document.getElementById("rahasia").checked = data[0].rahasia == 'true' ? true : false;
-                    loadingPage(false);
-                    $("#kt_modal_add_surat_masuk").modal("show");
-                }
-            });
+            url:`{{url('/transaksi/surat_masuk/${id_surat}/edit')}}`,
+            type:"GET",
+            dataType:"JSON",
+            success:function(data){
+                
+                $("input[name='nomor_surat']").val(data.table[0].no_surat);
+                $("input[name='pengirim']").val(data.table[0].pengirim);
+                $("#perihal").val(data.table[0].perihal);
+                let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
+                $("#tujuan").val(id_penerima).trigger('change');
+                fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
+                document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
+                loadingPage(false);
+                $("#kt_modal_add_surat_masuk").modal("show");
+            }
+        });
     });
 
     $("#update_surat_masuk").click(function(e){
@@ -312,22 +358,23 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 console.log(data);
-                console.log(data)
                     if (!data.success) {
                         let err_nomor_surat = data.errors.nomor_surat  ? `<li>${data.errors.nomor_surat}</li>` : ``;
                         let err_pengirim = data.errors.pengirim  ? `<li>${data.errors.pengirim}</li>` : ``;
+                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>"; 
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>"; 
                         document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".update_surat_masuk").removeAttribute("disabled");                         
                         return false;
                     } 
-                        loadingPage(true);
+                        
                         $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_masuk").modal("hide");
+                        loadingPage(true);
                 
             }
         });

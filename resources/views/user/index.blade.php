@@ -86,6 +86,20 @@
                                             </select>
                                             <!--end::Input-->
                                         </div>
+
+                                        <div class="fv-row mb-7">
+                                            <!--begin::Label-->
+                                            <label class="required fw-semibold fs-6 mb-2">Jabatan</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <select name="jabatan" id="jabatan" class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" data-hide-search="true">
+                                                <option></option>
+                                                @foreach($jabatan as $row)
+                                                <option value="{{$row->id}}">{{$row->jabatan}}</option>
+                                                @endforeach
+                                            </select>
+                                            <!--end::Input-->
+                                        </div>
                                         <!--end::Input group-->
                                     </div>
                                     <!--end::Scroll-->
@@ -126,6 +140,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">User</th>
                         <th class="min-w-125px">Bidang</th>
+                        <th>Jabatan</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -150,6 +165,7 @@ $(document).ready(function(){
         },
         responsive  : true,
         serverSide  : false,
+        ordering    :false,
         columns     :
         [
             {data:"nama", className:"d-flex align-items-center",
@@ -181,6 +197,7 @@ $(document).ready(function(){
                     return a;
                 }
             },
+            {data:"jabatan"},
             {data:"id_user", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
@@ -210,6 +227,7 @@ $(document).ready(function(){
         document.getElementById("update_user").style.display = "inline-block";
         document.getElementById("save_user").style.display = "none";
         $("#kt_modal_add_user_form").trigger("reset");
+        console.log(id_user);
         $.ajax({
             type:"GET",
             url:`{{url('user/list/${id_user}/edit')}}`,
@@ -220,6 +238,7 @@ $(document).ready(function(){
                 $("input[name='name']").val(data.nama);
                 $("input[name='email']").val(data.email);
                 $("#bidang").val(data.id_bidang).trigger('change');
+                $("#jabatan").val(data.id_jabatan).trigger('change');
                 $("#kt_modal_add_user").modal("show");
             }
         });
@@ -235,11 +254,13 @@ $(document).ready(function(){
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
             success :function(data){
+                console.log(data);
                 if (!data.success) {
                     let err_name = data.errors.name  ? `<li>${data.errors.name}</li>` : ``;
                     let err_bidang = data.errors.bidang  ? `<li>${data.errors.bidang}</li>` : ``;
+                    let err_jabatan = data.errors.jabatan  ? `<li>${data.errors.jabatan}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_bidang+"</div></div>";      
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_bidang+err_jabatan+"</div></div>";      
                     setButtonSpinner(".update_user", "off");
 
                 }else{

@@ -8,6 +8,7 @@ use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class RegisterController extends Controller
 {
@@ -64,10 +65,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+        ]);
+
+        $id = DB::getPdo()->lastInsertId();
+
+        DB::table("permission")
+        ->insert([
+            "id_user"=>$id,
+        ]);
+
+        DB::table("daftar_pegawai")
+        ->insert([
+            "id_user"=>$id,
         ]);
     }
 }

@@ -98,7 +98,8 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
-                        <th class="text-end min-w-125px"></th>
+                        <th>Lampiran</th>
+                        <th class="text-end min-w-125px">Dibuat Oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -132,7 +133,13 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    $("#tgl_surat").flatpickr();
+    var date = document.getElementById("tgl_surat");
+    flatpickr(date, {
+        dateFormat: "Y-m-d",
+    });
+
+    var fp = date._flatpickr;
+    
     var id_role = `{{$data['id_role']}}`;
    
     $("#tb_surat_masuk").DataTable({
@@ -167,7 +174,8 @@ $(document).ready(function(){
                 mRender:function(data){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
-            }
+            },
+            {data:"dibuat_oleh", className:"text-end"}
         ]
     });
 
@@ -183,6 +191,8 @@ $(document).ready(function(){
         $("#kt_modal_add_surat_masuk_form").trigger("reset");
         document.getElementById("notification").innerHTML ='';
         $("#bidang").val("").trigger('change');
+        let today = new Date();
+        fp.setDate(today, true, "Y-m-d");
         $("#kt_modal_add_surat_masuk").modal("show");
     });
 

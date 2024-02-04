@@ -111,7 +111,7 @@
                                                 @foreach($user as $row)
                                                     <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
                                                 @endforeach
-                                        </select>
+                                            </select>
 
                                         </div>
                                         
@@ -154,14 +154,14 @@
                     <!--end::Modal dialog-->
                 </div>
 
-                <div class="modal fade" id="kt_modal_tembusan" tabindex="-1" aria-hidden="true">
+                <div class="modal fade" id="kt_modal_tujuan" tabindex="-1" aria-hidden="true">
                     <!--begin::Modal dialog-->
                     <div class="modal-dialog modal-dialog-centered mw-650px">
                         <!--begin::Modal content-->
                         <div class="modal-content">
                             <!--begin::Modal header-->
                             <div class="modal-header">
-                                <h2 class="modal-title">Daftar tembusan surat</h2>
+                                <h2 class="modal-title">Daftar tujuan surat</h2>
                                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                                     <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                                 </div>
@@ -285,7 +285,7 @@ $(document).ready(function(){
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
-                        var show = `<a href="javascript:void(0)" id="daftar_tembusan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        var show = `<a href="javascript:void(0)" id="daftar_tujuan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
                         return show;
                     }else{
                         return '';
@@ -322,9 +322,9 @@ $(document).ready(function(){
         ]
     });
 
-    $("body").on("click","#daftar_tembusan",function(){
+    $("body").on("click","#daftar_tujuan",function(){
         var id_surat = $(this).data("id_surat");
-        $("#kt_modal_tembusan").modal("show");
+        $("#kt_modal_tujuan").modal("show");
         $("#tb_tembusan").DataTable({
             ajax        : {
                 url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
