@@ -168,7 +168,7 @@
                         <div class="modal-content">
                             <!--begin::Modal header-->
                             <div class="modal-header">
-                                <h2 class="modal-title">Daftar tujuan surat</h2>
+                                <h2 class="modal-title">Daftar Penerima Surat</h2>
                                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                                     <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                                 </div>
@@ -207,7 +207,7 @@
                         <th>Nomor Surat</th>
                         <th>Kategori klasifikasi</th>
                         <th>Perihal/Isi ringkas</th>
-                        <th>Tujuan</th>
+                        <th>Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th class="text-end min-w-125px"></th>
