@@ -783,6 +783,7 @@ $(document).ready(function(){
         if(active == true){
             KTApp.showPageLoading();
         }else{
+            document.body.style.overflow = 'scroll';
             KTApp.hidePageLoading();
             loadingEl.remove();
         }

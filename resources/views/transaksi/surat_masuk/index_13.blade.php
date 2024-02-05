@@ -390,6 +390,7 @@ $(document).ready(function(){
             document.body.style.overflow = 'hidden';
             KTApp.showPageLoading();
         }else{
+            document.body.style.overflow = 'scroll';
             KTApp.hidePageLoading();
             loadingEl.remove();
         }
