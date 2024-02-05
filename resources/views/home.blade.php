@@ -16,8 +16,8 @@
                 
                 <span class="text-primary">{{Auth::user()->name}}</span>
             </h4>
-            <h4 class="text-gray-800">Di Aplikasi SIMANSUR</h4>
-            <h4 class="text-gray-600">Sistem Informasi Manajemen Persuratan</h4>
+            <h4 class="text-gray-600">Di Aplikasi SIMANSUR</h4>
+            <h4 class="text-gray-600">(Sistem Informasi Manajemen Persuratan)</h4>
         </div>
     </div>
 
