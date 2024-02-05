@@ -104,17 +104,24 @@
                                             </div>
                                             <!--end::Input row-->
                                         </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                            <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
-                                                <option>Pilih tujuan surat</option>
-                                                @foreach($user as $row)
-                                                    <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
-                                                @endforeach
-                                            </select>
-
+                                        <div id="display-tujuan-internal">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                                    <option>Pilih tujuan surat</option>
+                                                    @foreach($user as $row)
+                                                        <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
-                                        
+
+                                        <div id="display-tujuan-external">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                                <input type="text" name="tujuan-external" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
+                                            </div>
+                                        </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
                                             <textarea class="form-control form-control-solid my_input" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required disabled></textarea>
@@ -240,6 +247,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+    document.getElementById("display-tujuan-internal").style.display = "none";
+    document.getElementById("display-tujuan-external").style.display = "none";
 
     var date = document.getElementById("tgl_surat");
     flatpickr(date, {
@@ -276,7 +285,7 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                        <div class="text-gray-800 mb-1">${data}</div>
+                        <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
                         </div>${a}`;
                 }
             },
@@ -288,7 +297,7 @@ $(document).ready(function(){
                         var show = `<a href="javascript:void(0)" id="daftar_tujuan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
                         return show;
                     }else{
-                        return '';
+                        return full['tujuan'];
                     }
                     
                 }
@@ -414,6 +423,24 @@ $(document).ready(function(){
             element.value = "0";
         });
     }
+
+    $("body").on("change", "input[name='penerima_surat']", function(){
+        console.log($(this).val())
+        var penerima = $(this).val();
+        //penerima eksternal
+        if(penerima == 2){
+            console.log("external")
+            $("#tujuan").val("")
+            document.getElementById("display-tujuan-internal").style.display = "none";
+            document.getElementById("display-tujuan-external").style.display = "inline-block";
+        }else{
+            console.log("internal")
+            $("#tujuan").val([]).trigger("change");
+            document.getElementById("display-tujuan-internal").style.display = "inline-block";
+            document.getElementById("display-tujuan-external").style.display = "none";
+        }
+
+    });
 
     $("#klasifikasi").change(function(){
         let id_ref_klasifikasi = $(this).val();
@@ -553,7 +580,8 @@ $(document).ready(function(){
         
         disabledAll();
         disabledList();
-        
+        document.getElementById("display-tujuan-internal").style.display = "none";
+        document.getElementById("display-tujuan-external").style.display = "none";
         document.querySelector(".save_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".save_surat_keluar").removeAttribute("disabled");
         document.getElementById("update_surat").style.display = "none";
@@ -665,15 +693,26 @@ $(document).ready(function(){
                     
                 }
 
-                let tujuan_surat = data.tujuan_surat.map(function (obj) {
-                    return obj.id_penerima;
-                });
+                document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
+
+                if(data.surat_keluar.internal == 1){
+                    let tujuan_surat = data.tujuan_surat.map(function (obj) {
+                        return obj.id_penerima;
+                    });
+
+                    document.getElementById("display-tujuan-internal").style.display = "inline-block";
+                    document.getElementById("display-tujuan-external").style.display = "none";
+                    $("#tujuan").val(tujuan_surat).trigger("change");
+                }else{
+                    document.getElementById("display-tujuan-internal").style.display = "none";
+                    document.getElementById("display-tujuan-external").style.display = "inline-block";
+                    $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
+                }
 
                 document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                 $("#nomenklatur_jabatan").val(data.id_nomenklatur);
                 $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
-                document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                $("#tujuan").val(tujuan_surat).trigger("change");
+                
                 $("#perihal").val(data.surat_keluar.perihal);
                 fp.setDate(data.surat_keluar.tgl_surat, true, "Y-m-d");
 

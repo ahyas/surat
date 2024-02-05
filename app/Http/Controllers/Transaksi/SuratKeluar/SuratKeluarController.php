@@ -220,7 +220,7 @@ class SuratKeluarController extends Controller
             $bulan = $this->getBulanRomawi($request["tgl_surat"]);
             $tahun = date("Y", $date); 
 
-            $count = DB::table("transaksi_surat_keluar")->max("id");
+            $count = DB::table("transaksi_surat_keluar")->count();
 
             $num = $count +1;
 
@@ -241,11 +241,17 @@ class SuratKeluarController extends Controller
         }
 
         if (empty($request["penerima_surat"])) {
-            $errors['penerima_surat'] = 'Penerima surat tidak boleh kosong';
-        }
-
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+            $errors['penerima_surat'] = 'Pilih penerima surat';
+        }else{
+            if($request["penerima_surat"] == 1){
+                if (empty($request["tujuan"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }else{
+                if (empty($request["tujuan-external"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }
         }
         
         if (empty($request["perihal"])) {
@@ -286,6 +292,7 @@ class SuratKeluarController extends Controller
                 "id_ref_kegiatan"=>$request["kegiatan"],
                 "id_ref_transaksi"=>$request["transaksi"],
                 "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
+                "no_agenda"=>$no_agenda,
                 "no_surat"=>$nomor_surat,
                 "internal"=>$request["penerima_surat"],
                 "perihal"=>$request["perihal"],
@@ -293,22 +300,33 @@ class SuratKeluarController extends Controller
                 "file"=>$fileName
             ]);
 
-            //detail transaksi surat
-            $tujuan = $request["tujuan"];
-            $value = array();
-            //get last id
-            $id_surat = DB::table("transaksi_surat_keluar")->max('id');
-            //get penerima surat
-            foreach($tujuan as $id_pegawai){
-                if(!empty($id_pegawai)){
-                    $value[] = [
-                        "id_surat"=>$id_surat,
-                        "id_penerima"=>$id_pegawai
-                    ];
+            $id_surat = DB::getPdo()->lastInsertId();
+            //internal
+            if($request["penerima_surat"] == 1){
+                //detail transaksi surat
+                $tujuan = $request["tujuan"];
+                $value = array();
+                //get last id
+                //get penerima surat
+                foreach($tujuan as $id_pegawai){
+                    if(!empty($id_pegawai)){
+                        $value[] = [
+                            "id_surat"=>$id_surat,
+                            "id_penerima"=>$id_pegawai
+                        ];
+                    }
                 }
+                //insert penerima surat
+                DB::table('detail_transaksi_surat')->insert($value);                
+            //eksternal
+            }else{
+                DB::table("transaksi_surat_keluar")
+                ->where("id", $id_surat)
+                ->update([
+                    "tujuan"=>$request["tujuan-external"]
+                ]);
             }
-            //insert penerima surat
-            DB::table('detail_transaksi_surat')->insert($value);
+
         }
 
         return response()->json($data);
