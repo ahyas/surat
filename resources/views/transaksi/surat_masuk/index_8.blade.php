@@ -643,7 +643,7 @@ $(document).ready(function(){
                     $("#kt_modal_add_disposisi").modal("show");
                 }else{
                     loadingPage(false);
-                    alert("Error: Surat ini sudah di disposisi");
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
                 }
             }
         });

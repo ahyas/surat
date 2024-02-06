@@ -261,7 +261,17 @@ $(document).ready(function(){
             {data:"perihal"},
             {data:"tgl_surat"},
             {data:"dari"},
-            {data:"status"},
+            {data:"status",
+                mRender:function(data, type, full){
+                    if(full['id_status'] == 3){
+                        return `<div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-primary">Selesai</span>`;
+                    }else{
+                        return `<div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-success">On-Process</span>`;
+                    }
+                }
+            },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     //status dinaikan
