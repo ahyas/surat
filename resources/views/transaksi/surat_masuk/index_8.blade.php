@@ -16,7 +16,7 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_surat_masuk">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-125px">No. Surat</th>
+                        <th>No. Surat</th>
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>
@@ -60,7 +60,7 @@
                                         <div class="table-responsive">
                                             <table class="table table-sm">
                                                 <tr>
-                                                    <td class="fw-bold fs-6 text-gray-800" width="200px">Nomor surat</td>
+                                                    <td class="fw-bold fs-6 text-gray-800">Nomor surat</td>
                                                     <td><span class="fs-6" class="fs-6" id="naikan-nomor_surat"></span></td>
                                                 </tr>
                                                 <tr>
@@ -68,7 +68,7 @@
                                                     <td><span class="fs-6" id="naikan-pengirim"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold fs-6 text-gray-800">Perihal / Isi ringkas</td>
+                                                    <td class="fw-bold fs-6 text-gray-800 text-nowrap">Perihal / Isi ringkas</td>
                                                     <td><span class="fs-6" id="naikan-perihal"></span></td>
                                                 </tr>
                                                 <tr>
