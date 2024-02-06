@@ -85,6 +85,7 @@ class SuratKeluarController extends Controller
             //login sebagai admin disposisi 1
             case 8:
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->whereNotIn("internal", [111]) //nomor tidak terpakai
                 ->where('detail_transaksi_surat.id_penerima', Auth::user()->id)
                 ->select(
                     "surat_keluar.id AS id_surat",
@@ -116,6 +117,7 @@ class SuratKeluarController extends Controller
 
             default:
             $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+            ->whereNotIn("internal", [111]) //nomor tidak terpakai
             ->select(
                 "surat_keluar.id AS id_surat",
                 "surat_keluar.id_ref_klasifikasi",
