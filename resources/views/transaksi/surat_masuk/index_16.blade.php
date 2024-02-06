@@ -73,39 +73,38 @@
                                                 <td><span class="fs-6" id="detail-tgl_surat"></span></td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Rahasia</td>
+                                                <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Ditindaklanjuti Oleh</td>
-                                                <td><span class="fs-6" id="detail-user_tindak_lanjut"></span> <span class="fw-bold fs-6 text-gray-800">Pada tanggal</span> <span class="fs-6" id="detail-tgl_tindak_lanjut"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Status</td>
-                                                <td><span class="fs-6" id="detail-status"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Eviden tindak lanjut</td>
-                                                <td><span class="fs-6" id="detail-eviden_tindak_lanjut"></span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Keterangan</td>
-                                                <td><span class="fs-6" id="detail-keterangan"></span></td>
                                             </tr>
                                         </table>
                                         <span class="fw-bold fs-6 text-gray-800">History</span>
-                                        <table class="table fs-6 gy-5" id="daftar_disposisi">
+                                        <table class="table table-striped table-row-bordered gy-5 gs-7 border rounded w-100 fs-6 daftar_disposisi" id="kt_datatable_column_rendering">
                                             <thead>
-                                                <tr class="fw-bold fs-6 text-gray-800">
-                                                    <th>Dari</th>
-                                                    <th>Kepada</th>
+                                                <tr class="fw-bold">
+                                                    <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
-                                                    <th class="text-end">Tanggal</th>
                                                 </tr>
                                             </thead>
-                                            <tbody class="text-gray-600 fw-semibold"></tbody>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-nowrap"><b>Status :</b> <span id="detail-status"></span></div>
+                                                        <div id="detail-tindak_lanjut" style="display:none;">
+                                                            <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
+                                                            <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
+                                                            <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
+                                                            <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
+                                </div>
+                                <div class="text-center pt-10">
+                                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
                                 </div>
                             </div>
                         </div>
@@ -295,7 +294,7 @@ $(document).ready(function(){
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${btn_balas}" id="disposisi_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Balas</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${btn_balas}" id="disposisi_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Disposisi</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -306,8 +305,8 @@ $(document).ready(function(){
     });
 
     function showDaftarDisposisi(id_surat){
-        $("#daftar_disposisi").DataTable().clear().destroy();
-        $("#daftar_disposisi").DataTable({
+        $(".daftar_disposisi").DataTable().clear().destroy();
+        $(".daftar_disposisi").DataTable({
             ajax        : {
                 url     :`{{url('transaksi/surat_masuk/disposisi/${id_surat}/daftar_disposisi')}}`,
                 dataSrc :""
@@ -320,9 +319,17 @@ $(document).ready(function(){
             info:false,
             columns     :
             [
-                {data:"nama_pengirim"},
-                {data:"nama_penerima"},
-                {data:"catatan",
+                {data:"nama_pengirim", 
+                    mRender:function(data, type, full){
+                        let penerima = full["nama_penerima"];
+                        let tanggal = full['tanggal'];
+                        let waktu = full["waktu"];
+                        return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
+                        <span style='white-space: nowrap'><b>Ke</b> : ${penerima}</span><br>
+                        <span style='white-space: nowrap'>${tanggal} / ${waktu}</span>`;
+                    }
+                },
+                {data:"catatan", className:"text-end",
                     mRender:function(data){
                         if(data == null){
                             return '<span> - </span>';
@@ -330,8 +337,7 @@ $(document).ready(function(){
                             return `<span> ${data} </span>`;
                         }
                     }
-                },
-                {data:"tanggal", className:"text-end"}
+                }
             ]
         });
     }
@@ -378,6 +384,12 @@ $(document).ready(function(){
             type:"GET",
             success:function(data){
                 console.log(data)
+                //status tindak lanjut
+                if(data[0].id_status == 3){
+                    document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
+                }else{
+                    document.getElementById("detail-tindak_lanjut").style.display = "none";
+                }
                 showDaftarDisposisi(id_surat);
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
