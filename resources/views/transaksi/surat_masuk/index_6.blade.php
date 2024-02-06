@@ -107,7 +107,7 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_surat_masuk">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th class="min-w-125px">No. Surat</th>
+                        <th>No. Surat</th>
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>

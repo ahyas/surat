@@ -56,7 +56,7 @@
                                     <div class="table-responsive">
                                         <table class="table table-sm">
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Nomor surat</td>
+                                                <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
                                                 <td><span class="fs-6" id="detail-nomor_surat"></span></td>
                                             </tr>
                                             <tr>
@@ -151,27 +151,29 @@
 
                                         <input type="hidden" name="id_surat_masuk" class="form-control" />
                                         <input type="hidden" name="id_status" class="form-control" />
-                                        <div class="fv-row mb-7" >
-                                            <label class="required fw-semibold fs-6 mb-2">Nomor surat</label>
-                                            <input type="text" name="nomor_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nomor surat" disabled/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Pengirim</label>
-                                            <input type="text" name="pengirim" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Pengirim surat" disabled/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
-                                            <textarea class="form-control form-control-solid" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" disabled></textarea>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-2">Tanggal surat</label>
-                                            <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tanggal surat" disabled/>
-                                        </div>
-                                        <div class="fv-row mb-7">
-                                            <div class="form-check">
-                                                <input type="checkbox" name="rahasia" class="form-check-input" id="rahasia" disabled>
-                                                <label class="fw-semibold fs-6 mb-2" for="rahasia">Rahasia</label>
-                                            </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
+                                                    <td><span class="fs-6" class="fs-6" id="nomor_surat"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
+                                                    <td><span class="fs-6" id="pengirim"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold fs-6 text-gray-800 text-nowrap">Perihal / Isi ringkas</td>
+                                                    <td><span class="fs-6" id="perihal"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold fs-6 text-gray-800">Tanggal surat</td>
+                                                    <td><span class="fs-6" id="tgl_surat"></span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="fw-bold fs-6 text-gray-800">Rahasia</td>
+                                                    <td><span class="fs-6" id="rahasia"></span></td>
+                                                </tr>
+                                            </table>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Disposisi kepada</label>
@@ -426,14 +428,16 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data.count_disposisi);
                 if(data.count_disposisi == 0){
-                    document.getElementById("preview_disposisi").src = url;        
-                    $("input[name='nomor_surat']").val(data.table[0].no_surat);
-                    $("input[name='pengirim']").val(data.table[0].pengirim);
-                    $("#perihal").val(data.table[0].perihal);
                     let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
                     $("#tujuan").val(id_penerima).trigger('change');
-                    fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
-                    document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
+
+                    document.getElementById("preview_disposisi").src = url;  
+                    document.getElementById("nomor_surat").innerHTML = data.table[0].no_surat;
+                    document.getElementById("pengirim").innerHTML = data.table[0].pengirim
+                    document.getElementById("perihal").innerHTML = data.table[0].perihal;
+                    document.getElementById("rahasia").innerHTML = data.table[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                    document.getElementById("tgl_surat").innerHTML = data.table[0].tgl_surat;
+
                     loadingPage(false);
                     $("#kt_modal_add_disposisi").modal("show");
                 }else{

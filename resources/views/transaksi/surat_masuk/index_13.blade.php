@@ -56,7 +56,7 @@
                                     <div class="table-responsive">
                                         <table class="table table-sm">
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Nomor surat</td>
+                                                <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
                                                 <td><span class="fs-6" id="detail-nomor_surat"></span></td>
                                             </tr>
                                             <tr>
