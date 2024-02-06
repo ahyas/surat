@@ -117,8 +117,9 @@ class SuratMasukController extends Controller
 
             //login sebagai admin disposisi 2
             case 10:
+                $id_user = Auth::user()->id;
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
-                ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                ->where("detail_surat_masuk.id_penerima", $id_user)
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -130,12 +131,11 @@ class SuratMasukController extends Controller
                     "surat_masuk.id_status",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw('COUNT(detail_surat_masuk.id_penerima) AS jumlah_tujuan'),
-                    "surat_masuk.id_status",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->groupBy(
-                    "surat_masuk.id", 
+                    "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
                     "surat_masuk.perihal",
@@ -567,11 +567,13 @@ class SuratMasukController extends Controller
         $id_role = Auth::user()->getRole()->id_role;
         if($id_role == 8 || $id_role == 6){
             $tujuan = $request["tujuan"];
+            $id_status = 2; //diteruskan
             if (empty($tujuan)) {
                 $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
             }
         }else{
             $tujuan = NULL;
+            $id_status= NULL;
         }
 
         if (empty($request["perihal"])) {
@@ -615,6 +617,7 @@ class SuratMasukController extends Controller
                 "pengirim"=>$request["pengirim"],
                 "perihal"=>$request["perihal"],
                 "rahasia"=>$rahasia,
+                "id_status"=>$id_status,
                 "tgl_surat"=>$request["tgl_surat"],
                 "created_by"=>Auth::user()->id,
                 "file"=>$fileName
@@ -625,7 +628,8 @@ class SuratMasukController extends Controller
             DB::table('detail_transaksi_surat_masuk')
             ->insert([
                 "id_surat"=>$id_surat,
-                "id_penerima"=>$tujuan
+                "id_penerima"=>$tujuan,
+                "status"=>$id_status,
             ]);
         }
 

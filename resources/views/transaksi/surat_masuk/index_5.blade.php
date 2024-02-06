@@ -99,7 +99,6 @@
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="text-end min-w-125px">Dibuat Oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -174,8 +173,7 @@ $(document).ready(function(){
                 mRender:function(data){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
-            },
-            {data:"dibuat_oleh", className:"text-end"}
+            }
         ]
     });
 

@@ -331,7 +331,7 @@ $(document).ready(function(){
                      //status disposisi
                      if(full["id_status"] == 1){
                         var btn_disposisi = '';
-                        var btn_tindaklanjut = 'disabled';
+                        var btn_tindaklanjut = '';
                         //status tindaklanjut
                     }else if(full["id_status"] == 3){
                         var btn_disposisi = 'disabled';
@@ -438,7 +438,7 @@ $(document).ready(function(){
                     $("#kt_modal_add_disposisi").modal("show");
                 }else{
                     loadingPage(false);
-                    alert("Error: Surat ini sudah di disposisi");
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
                 }
             }
         });
@@ -485,12 +485,27 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#tindak_lanjut_surat_masuk", function(){
-        console.log("tindak lanjut");
-        document.getElementById("tindaklanjut-title").innerHTML = `<h2 class="fw-bold">Add Tindak Lanjut</h2>`;
         var id_surat = $(this).data("id_surat_masuk");
         $("input[name='id_surat_masuk']").val(id_surat);
-        console.log(id_surat);
-        $("#kt_modal_add_tindaklanjut").modal("show");
+        loadingPage(true);
+        $.ajax({
+            url:`{{url('/transaksi/surat_masuk/${id_surat}/edit')}}`,
+            type:"GET",
+            dataType:"JSON",
+            success:function(data){
+                console.log(data.count_disposisi);
+                if(data.count_disposisi == 0){
+                    
+                    document.getElementById("tindaklanjut-title").innerHTML = `<h2 class="fw-bold">Add Tindak Lanjut</h2>`;
+                    loadingPage(false);
+                    $("#kt_modal_add_tindaklanjut").modal("show");
+                }else{
+                    loadingPage(false);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
+                }
+            }
+        });
+        
     });
 
     $("#save_tindaklanjut").click(function(e){
