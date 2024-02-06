@@ -172,7 +172,7 @@
                                             <thead>
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
-                                                    <th>Catatan / Pesan</th>
+                                                    <th class="text-nowrap">Catatan / Pesan</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -659,6 +659,7 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
+                console.log(data[0].rahasia )
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
@@ -669,7 +670,7 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == false ? 'Tidak' : 'Ya';
+                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
                 document.getElementById("detail-user_tindak_lanjut").innerHTML = data[0].tindaklanjut_oleh ? data[0].tindaklanjut_oleh : ' - ';
                 document.getElementById("detail-tgl_tindak_lanjut").innerHTML = data[0].tgl_tindak_lanjut ? data[0].tgl_tindak_lanjut : ' - ';

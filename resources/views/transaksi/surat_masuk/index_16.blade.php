@@ -99,7 +99,7 @@
                                                 <tr class="fw-bold fs-6 text-gray-800">
                                                     <th>Dari</th>
                                                     <th>Kepada</th>
-                                                    <th>Catatan / Pesan</th>
+                                                    <th class="text-nowrap">Catatan / Pesan</th>
                                                     <th class="text-end">Tanggal</th>
                                                 </tr>
                                             </thead>
@@ -373,7 +373,7 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == false ? 'Tidak' : 'Ya';
+                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
                 document.getElementById("detail-user_tindak_lanjut").innerHTML = data[0].tindaklanjut_oleh ? data[0].tindaklanjut_oleh : ' - ';
                 document.getElementById("detail-tgl_tindak_lanjut").innerHTML = data[0].tgl_tindak_lanjut ? data[0].tgl_tindak_lanjut : ' - ';
