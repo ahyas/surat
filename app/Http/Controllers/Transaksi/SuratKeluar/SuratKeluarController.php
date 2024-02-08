@@ -213,7 +213,6 @@ class SuratKeluarController extends Controller
         $errors = [];
         $data = [];
 
-            
         if (empty($request["nomenklatur_jabatan"])) {
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
         }else{
@@ -242,12 +241,18 @@ class SuratKeluarController extends Controller
             }
         }
 
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-        }
-        
-        if (empty($request["tujuan-external"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+        if(empty($request["penerima_surat"])){
+            $errors['penerima_surat'] = 'Penerima surat tidak boleh kosong';
+        }else{
+            if($request["penerima_surat"] == 1){
+                if (empty($request["tujuan"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }else{
+                if (empty($request["tujuan-external"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }
         }
                     
         if (empty($request["perihal"])) {
@@ -313,7 +318,8 @@ class SuratKeluarController extends Controller
                     }
                 }
                 //insert penerima surat
-                DB::table('detail_transaksi_surat')->insert($value);                
+                DB::table('detail_transaksi_surat')
+                ->insert($value);                
             //eksternal
             }else{
                 DB::table("transaksi_surat_keluar")
@@ -417,19 +423,17 @@ class SuratKeluarController extends Controller
             }
         }
 
-        if (empty($request["penerima_surat"])) {
-            $errors['penerima_surat'] = 'Pilih penerima surat';
+        
+        if($request["penerima_surat"] == 1){
+            if (empty($request["tujuan"])) {
+                $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+            }
         }else{
-            if($request["penerima_surat"] == 1){
-                if (empty($request["tujuan"])) {
-                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-                }
-            }else{
-                if (empty($request["tujuan-external"])) {
-                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-                }
+            if (empty($request["tujuan-external"])) {
+                $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
             }
         }
+        
 
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
@@ -456,7 +460,9 @@ class SuratKeluarController extends Controller
 
             if($request->hasFile('file_surat')){
                 //cari file lama
-                $old_file = DB::table("transaksi_surat_keluar")->select('file')->where('id',$id)->first();
+                $old_file = DB::table("transaksi_surat_keluar")->select('file')->where('id',$id)
+                ->first();
+
                 //overwrite file lama
                 if (file_exists( public_path('/uploads/surat_keluar/'.$old_file->file))) {
                     unlink(public_path('/uploads/surat_keluar/'.$old_file->file));
@@ -481,6 +487,9 @@ class SuratKeluarController extends Controller
                         "file"=>$fileName
                     ]
                 );
+
+                //internal
+            if($request["penerima_surat"] == 1){
                 //replace old data with new data
                 DB::table("detail_transaksi_surat")
                 ->where("id_surat", $id)
@@ -500,6 +509,13 @@ class SuratKeluarController extends Controller
                 }
 
                 DB::table('detail_transaksi_surat')->insert($value);
+            }else{
+                DB::table("transaksi_surat_keluar")
+                ->where("id", $id)
+                ->update([
+                    "tujuan"=>$request["tujuan-external"]
+                ]);
+            }
 
             }else{
                 DB::table("transaksi_surat_keluar")
@@ -516,26 +532,35 @@ class SuratKeluarController extends Controller
                         "tgl_surat"=>$request["tgl_surat"],
                     ]
                 );
+                 //internal
+                if($request["penerima_surat"] == 1){
+                    //replace old data with new data
+                    DB::table("detail_transaksi_surat")
+                    ->where("id_surat", $id)
+                    ->delete();
 
-                //replace old data with new data
-                DB::table("detail_transaksi_surat")
-                ->where("id_surat", $id)
-                ->delete();
-
-                //detail transaksi surat
-                $tujuan = $request["tujuan"];
-                $value = array();
-                
-                foreach($tujuan as $id_pegawai){
-                    if(!empty($id_pegawai)){
-                        $value[] = [
-                            "id_surat"=>$id,
-                            "id_penerima"=>$id_pegawai
-                        ];
+                    //detail transaksi surat
+                    $tujuan = $request["tujuan"];
+                    $value = array();
+                    
+                    foreach($tujuan as $id_pegawai){
+                        if(!empty($id_pegawai)){
+                            $value[] = [
+                                "id_surat"=>$id,
+                                "id_penerima"=>$id_pegawai
+                            ];
+                        }
                     }
-                }
 
-                DB::table('detail_transaksi_surat')->insert($value);
+                    DB::table('detail_transaksi_surat')
+                    ->insert($value);
+                }else{
+                    DB::table("transaksi_surat_keluar")
+                    ->where("id", $id)
+                    ->update([
+                        "tujuan"=>$request["tujuan-external"]
+                    ]);
+                }
                 
             }
     

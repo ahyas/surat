@@ -695,9 +695,13 @@ $(document).ready(function(){
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                document.querySelector("#kt_modal_update_role_option_1").disabled=true;
-                document.querySelector("#kt_modal_update_role_option_0").disabled=true;
+                
                 if(data.surat_keluar.internal == 1){
+                    
+                    document.querySelector("#kt_modal_update_role_option_1").disabled=true;
+                    document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
+                    document.querySelector("#kt_modal_update_role_option_0").checked;
+
                     let tujuan_surat = data.tujuan_surat.map(function (obj) {
                         return obj.id_penerima;
                     });
@@ -707,6 +711,10 @@ $(document).ready(function(){
                     $("#tujuan").val(tujuan_surat).trigger("change");
                     
                 }else{
+                    document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
+                    document.querySelector("#kt_modal_update_role_option_1").checked;
+                    document.querySelector("#kt_modal_update_role_option_0").disabled=true; 
+
                     document.getElementById("display-tujuan-internal").style.display = "none";
                     document.getElementById("display-tujuan-external").style.display = "inline-block";
                     $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
