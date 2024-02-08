@@ -553,7 +553,6 @@ $(document).ready(function(){
                     return false;
                 }
                 
-                console.log("data: 0");
                 document.getElementById("transaksi").setAttribute("disabled", "disabled");
                 $("#transaksi").val(0);
 
@@ -580,6 +579,8 @@ $(document).ready(function(){
         
         disabledAll();
         disabledList();
+        document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
+        document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
         document.querySelector(".save_surat_keluar").setAttribute("data-kt-indicator", "off");
@@ -685,6 +686,8 @@ $(document).ready(function(){
                 }
 
                 if(data.ref_transaksi.length>0){
+                    console.log("Transaksi length "+data.ref_transaksi.length)
+                    document.getElementById("row-transaksi").style.display = 'inline-block';
                     document.getElementById("transaksi").removeAttribute("disabled");
                     document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
                     for(var i=0; i<data.ref_transaksi.length; i++){
@@ -692,6 +695,8 @@ $(document).ready(function(){
                         document.getElementById("transaksi").innerHTML += `<option ${selected} value='${data.ref_transaksi[i].id_transaksi}' data-kode_transaksi='${data.ref_transaksi[i].kode_transaksi}'>${data.ref_transaksi[i].kode_transaksi} - ${data.ref_transaksi[i].deskripsi_transaksi}</option>`;
                     }
                     
+                }else{
+                    document.getElementById("row-transaksi").style.display = 'none';
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
