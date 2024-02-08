@@ -428,14 +428,14 @@ $(document).ready(function(){
         console.log($(this).val())
         var penerima = $(this).val();
         //penerima eksternal
+        $("#tujuan").val([]).trigger("change");
+        $("input[name='tujuan-external']").val("");
         if(penerima == 2){
             console.log("external")
-            $("#tujuan").val("")
             document.getElementById("display-tujuan-internal").style.display = "none";
             document.getElementById("display-tujuan-external").style.display = "inline-block";
         }else{
             console.log("internal")
-            $("#tujuan").val([]).trigger("change");
             document.getElementById("display-tujuan-internal").style.display = "inline-block";
             document.getElementById("display-tujuan-external").style.display = "none";
         }
@@ -643,6 +643,7 @@ $(document).ready(function(){
         document.getElementById("update_surat").style.display = "inline-block";
         document.querySelector(".update_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".update_surat_keluar").removeAttribute("disabled");
+        
         document.getElementById("save_surat").style.display = "none";
         document.getElementById("file").classList.remove("required");
         document.getElementById("file_surat").removeAttribute("required");
@@ -694,7 +695,8 @@ $(document).ready(function(){
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-
+                document.querySelector("#kt_modal_update_role_option_1").disabled=true;
+                document.querySelector("#kt_modal_update_role_option_0").disabled=true;
                 if(data.surat_keluar.internal == 1){
                     let tujuan_surat = data.tujuan_surat.map(function (obj) {
                         return obj.id_penerima;
@@ -703,10 +705,12 @@ $(document).ready(function(){
                     document.getElementById("display-tujuan-internal").style.display = "inline-block";
                     document.getElementById("display-tujuan-external").style.display = "none";
                     $("#tujuan").val(tujuan_surat).trigger("change");
+                    
                 }else{
                     document.getElementById("display-tujuan-internal").style.display = "none";
                     document.getElementById("display-tujuan-external").style.display = "inline-block";
                     $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
+                    
                 }
 
                 document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
@@ -744,12 +748,12 @@ $(document).ready(function(){
                     if (!data.success) {
                         let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
                         let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
-                        let err_penerima_surat = data.errors.penerima_surat  ? `<li>${data.errors.penerima_surat}</li>` : ``;
+                        
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_penerima_surat+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                         $("#file_surat").val("");

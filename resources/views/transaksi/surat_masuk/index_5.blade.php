@@ -98,7 +98,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
-                        <th>Lampiran</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -126,6 +126,67 @@
         </div>
     </div>      
 </div>
+
+<!--Start::detail-->
+<div class="modal fade" id="kt_modal_detail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header" id="kt_modal_detail_header">
+                    <div id="preview-title"></div>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                </div>
+                <div class="modal-body px-5 my-7">
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <div class="col-lg-6">
+                                <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                    <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;">
+                                        <iframe id="preview_detail" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="text-center pt-10"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <tr>
+                                                <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
+                                                <td><span class="fs-6" id="detail-nomor_surat"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
+                                                <td><span class="fs-6" id="detail-pengirim"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold fs-6 text-gray-800 text-nowrap" >Perihal / Isi ringkas</td>
+                                                <td><span class="fs-6" id="detail-perihal"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold fs-6 text-gray-800">Tanggal surat</td>
+                                                <td><span class="fs-6" id="detail-tgl_surat"></span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
+                                                <td><span class="fs-6" id="detail-rahasia"></span></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="text-center pt-10">
+                            <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @push('scripts')
 
@@ -148,6 +209,7 @@ $(document).ready(function(){
         },
         serverSide  : false,
         ordering    :false,
+        responsive  : true,
         drawCallback:function(settings){
             loadingPage(false);
             document.body.style.overflow = 'visible';
@@ -169,17 +231,53 @@ $(document).ready(function(){
             {data:"pengirim"},
             {data:"perihal"},
             {data:"tgl_surat"},
-            {data:"file", className: "text-end",
-                mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
+            {data:"id", className: "text-end",
+                mRender:function(data, type, full){
+                    var file = full["file"];
+
+                    return`<div class="dropdown">
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Detail</a>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>`;
                 }
             }
+            
         ]
     });
 
     $("body").on("click", "#lampiran", function(){
         $("#kt_modal_scrollable_2").modal("show");
         document.getElementById("preview").src = $(this).data("url")
+    });
+
+    $("body").on("click","#detail_surat_masuk", function(){
+        document.getElementById("preview-title").innerHTML = `<h2 class="fw-bold">Detail surat</h2>`;
+        var id_surat = $(this).data("id_surat_masuk");
+        var url = $(this).data("url");
+        loadingPage(true);
+        $.ajax({
+            url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
+            type:"GET",
+            success:function(data){
+                console.log(data);
+                document.getElementById("preview_detail").src = url;  
+                document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
+                document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
+                document.getElementById("detail-perihal").innerHTML = data[0].perihal;
+                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
+
+                loadingPage(false);
+                $("#kt_modal_detail").modal("show");
+                console.log(data);
+            }
+        });
     });
 
     $("body").on("click","#add_surat_masuk", function(){

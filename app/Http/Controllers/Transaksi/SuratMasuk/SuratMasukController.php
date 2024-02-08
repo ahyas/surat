@@ -276,6 +276,27 @@ class SuratMasukController extends Controller
     public function daftarDisposisi($id_surat_masuk){
         $id_role = Auth::user()->getRole()->id_role;
         switch($id_role){
+            //admin surat
+            case 6:
+                $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
+                ->where("detail_surat_masuk.id_surat", $id_surat_masuk)
+                ->whereNotIn("detail_surat_masuk.status", [4,5])//sembunyikan status diteruskan dan dari pimpinan
+                ->select(
+                    "penerima.name AS nama_penerima",
+                    "pengirim.name AS nama_pengirim",
+                    "detail_surat_masuk.catatan",
+                    DB::raw("(CASE WHEN detail_surat_masuk.status = 1 THEN 'Disposisi' WHEN detail_surat_masuk.status = 2 THEN 'Diteruskan' WHEN detail_surat_masuk.status = 3 THEN 'Tindak lanjut' WHEN detail_surat_masuk.status = 4 THEN 'Dinaikan' WHEN detail_surat_masuk.status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
+                    DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu")
+                )
+                ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
+                ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
+                ->orderBy("detail_surat_masuk.created_at","ASC")
+                ->get();
+
+                return response()->json($table);
+            break;
+
             //admin disposisi 2 kabag/panmud
             case 10:
                 $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
@@ -445,12 +466,8 @@ class SuratMasukController extends Controller
         $error = [];
         $data = [];
 
-        if(empty($request["teruskan-catatan"])){
-            $error["err_catatan"] = "Catatan tidak boleh kosong";
-        }
-
-        if(empty($request["teruskan-tujuan"])){
-            $error["err_tujuan"] = "Tujuan disposisi tidak boleh kosong";
+        if(empty($request["tujuan"])){
+            $error["err_tujuan"] = "Tujuan tidak boleh kosong";
         }
 
         if(!empty($error)){
@@ -463,15 +480,17 @@ class SuratMasukController extends Controller
             DB::table("transaksi_surat_masuk")
             ->where("id", $request["teruskan-id_surat_masuk"])
             ->update([
-                "id_status"=>2 //1 on process, 2 tindak lanjut/selesai
+                "id_status"=>2 //diteruskan
             ]);
-             //insert penerima surat
-             DB::table('detail_transaksi_surat_masuk')->insertOrIgnore([
-                "id_surat"=>$request["teruskan-id_surat_masuk"],
-                "id_asal"=>Auth::user()->id,
-                "id_penerima"=>$request["teruskan-tujuan"],
-                "catatan"=>$request["teruskan-catatan"],
-                "status"=>2, //status disposisi
+            //insert penerima surat
+            DB::table('detail_transaksi_surat_masuk')
+            ->insert(
+            [
+                "id_surat" => $request["teruskan-id_surat_masuk"],
+                "id_asal" =>Auth::user()->id,
+                "id_penerima" =>$request["tujuan"],
+                "catatan" =>$request["catatan"],
+                "status" =>2, //status disposisi
             ]);
         }
 
@@ -564,18 +583,6 @@ class SuratMasukController extends Controller
             $errors['pengirim'] = 'Pihak pengirim tidak boleh kosong';
         }
 
-        $id_role = Auth::user()->getRole()->id_role;
-        if($id_role == 8 || $id_role == 6){
-            $tujuan = $request["tujuan"];
-            $id_status = 2; //diteruskan
-            if (empty($tujuan)) {
-                $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-            }
-        }else{
-            $tujuan = NULL;
-            $id_status= NULL;
-        }
-
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
         }
@@ -617,20 +624,11 @@ class SuratMasukController extends Controller
                 "pengirim"=>$request["pengirim"],
                 "perihal"=>$request["perihal"],
                 "rahasia"=>$rahasia,
-                "id_status"=>$id_status,
                 "tgl_surat"=>$request["tgl_surat"],
                 "created_by"=>Auth::user()->id,
                 "file"=>$fileName
             ]);
 
-            $id_surat = DB::getPdo()->lastInsertId();
-            
-            DB::table('detail_transaksi_surat_masuk')
-            ->insert([
-                "id_surat"=>$id_surat,
-                "id_penerima"=>$tujuan,
-                "status"=>$id_status,
-            ]);
         }
 
         return response()->json($data);
@@ -671,10 +669,6 @@ class SuratMasukController extends Controller
 
         if (empty($request["pengirim"])) {
             $errors['pengirim'] = 'Pihak pengirim tidak boleh kosong';
-        }
-
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
         }
 
         if (empty($request["perihal"])) {
@@ -721,18 +715,9 @@ class SuratMasukController extends Controller
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                         "rahasia"=>isset($request["rahasia"]) ? 'true' : 'false',
-                        "file"=>$fileName,
-                        "id_status"=>2
+                        "file"=>$fileName
                     ]
                 );
-
-                DB::table('detail_transaksi_surat_masuk')
-                ->insertOrIgnore([
-                    "id_surat"=>$id,
-                    "id_asal"=>Auth::user()->id,
-                    "id_penerima"=>$request["tujuan"],
-                    "status"=>2, //status diteruskan
-                ]);
 
             }else{
                 DB::table("transaksi_surat_masuk")
@@ -744,17 +729,8 @@ class SuratMasukController extends Controller
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                         "rahasia"=>isset($request["rahasia"]) ? 'true' : 'false',
-                        "id_status"=>2
                     ]
                 );
-
-                 DB::table('detail_transaksi_surat_masuk')
-                 ->insertOrIgnore([
-                     "id_surat"=>$id,
-                     "id_asal"=>Auth::user()->id,
-                     "id_penerima"=>$request["tujuan"],
-                     "status"=>2, //status diteruskan
-                 ]);
             }
     
         }

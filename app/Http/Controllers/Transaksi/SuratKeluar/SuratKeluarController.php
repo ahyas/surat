@@ -242,20 +242,14 @@ class SuratKeluarController extends Controller
             }
         }
 
-        if (empty($request["penerima_surat"])) {
-            $errors['penerima_surat'] = 'Pilih penerima surat';
-        }else{
-            if($request["penerima_surat"] == 1){
-                if (empty($request["tujuan"])) {
-                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-                }
-            }else{
-                if (empty($request["tujuan-external"])) {
-                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-                }
-            }
+        if (empty($request["tujuan"])) {
+            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
         }
         
+        if (empty($request["tujuan-external"])) {
+            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+        }
+                    
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
         }
@@ -424,11 +418,17 @@ class SuratKeluarController extends Controller
         }
 
         if (empty($request["penerima_surat"])) {
-            $errors['penerima_surat'] = 'Penerima surat tidak boleh kosong';
-        }
-
-        if (empty($request["tujuan"])) {
-            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+            $errors['penerima_surat'] = 'Pilih penerima surat';
+        }else{
+            if($request["penerima_surat"] == 1){
+                if (empty($request["tujuan"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }else{
+                if (empty($request["tujuan-external"])) {
+                    $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+                }
+            }
         }
 
         if (empty($request["perihal"])) {
@@ -476,7 +476,6 @@ class SuratKeluarController extends Controller
                         "id_ref_transaksi"=>$request["transaksi"],
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                         "no_surat"=>$nomor_surat,
-                        "internal"=>$request["penerima_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                         "file"=>$fileName
@@ -513,7 +512,6 @@ class SuratKeluarController extends Controller
                         "id_ref_transaksi"=>$request["transaksi"],
                         "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                         "no_surat"=>$nomor_surat,
-                        "internal"=>$request["penerima_surat"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
                     ]
