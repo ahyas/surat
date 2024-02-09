@@ -102,10 +102,10 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="text-center pt-10">
-                                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
-                                </div>
                             </div>
+                        </div>
+                        <div class="text-center pt-10">
+                            <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                     <!--end::Form-->

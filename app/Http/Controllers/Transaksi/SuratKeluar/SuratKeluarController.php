@@ -221,7 +221,7 @@ class SuratKeluarController extends Controller
             $bulan = $this->getBulanRomawi($request["tgl_surat"]);
             $tahun = date("Y", $date); 
 
-            $count = DB::table("transaksi_surat_keluar")->count();
+            $count = DB::table("transaksi_surat_keluar")->max("no_agenda");
 
             $num = $count +1;
 
@@ -293,7 +293,7 @@ class SuratKeluarController extends Controller
                 "id_ref_kegiatan"=>$request["kegiatan"],
                 "id_ref_transaksi"=>$request["transaksi"],
                 "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
-                "no_agenda"=>$no_agenda,
+                "no_agenda"=>$num,
                 "no_surat"=>$nomor_surat,
                 "internal"=>$request["penerima_surat"],
                 "perihal"=>$request["perihal"],
