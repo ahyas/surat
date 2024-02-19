@@ -268,9 +268,9 @@ $(document).ready(function(){
             info:false,
             columns     :
             [
-                {data:"nama_pengirim", 
+                {data:"jab_pengirim", 
                     mRender:function(data, type, full){
-                        let penerima = full["nama_penerima"];
+                        let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>

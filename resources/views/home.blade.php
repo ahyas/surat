@@ -19,9 +19,9 @@
             </h4>
             <h4 style="color:#C62828">Di Aplikasi SIMANSUR</h4>
             <h4 class="text-gray-600">(Sistem Informasi Manajemen Persuratan)</h4>
-            <div style="display:grid">
+            <!--<div style="display:grid">
                 <img src="{{asset('public/assets/media/illustrations/dozzy-1/16.png')}}" style="position:absolute; bottom:0px; right:0px; width:500px; margin-bottom:25px;" />
-            </div>
+            </div>-->
         </div>
     </div>
 

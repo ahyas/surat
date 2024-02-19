@@ -103,10 +103,11 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="text-center pt-10">
-                                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
-                                </div>
+                                
                             </div>
+                        </div>
+                        <div class="text-center pt-10">
+                            <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                     <!--end::Form-->
@@ -180,7 +181,7 @@
                                             <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user as $row)
-                                                    <option value="{{$row->id_parent_user}}">{{$row->nama_pegawai}}</option>
+                                                    <option value="{{$row->id_parent_user}}">{{$row->jabatan_pegawai}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -385,9 +386,9 @@ $(document).ready(function(){
             info:false,
             columns     :
             [
-                {data:"nama_pengirim", 
+                {data:"jab_pengirim", 
                     mRender:function(data, type, full){
-                        let penerima = full["nama_penerima"];
+                        let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>

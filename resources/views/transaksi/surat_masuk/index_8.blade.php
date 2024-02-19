@@ -89,7 +89,7 @@
                                             <select name="naikan-tujuan" id="naikan-tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user_pimpinan as $row)
-                                                    <option value="{{$row->id}}">{{$row->nama_pegawai}}</option>
+                                                    <option value="{{$row->id}}">{{$row->jabatan_pegawai}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -193,11 +193,12 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="text-center pt-10">
-                                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
-                                </div>
+
                             </div>
                         </div>
+                    </div>
+                    <div class="text-center pt-10">
+                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
                     </div>
                     <!--end::Form-->
                 </div>
@@ -272,7 +273,7 @@
                                             <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user as $row)
-                                                    <option value="{{$row->id_parent_user}}">{{$row->nama_pegawai}}</option>
+                                                    <option value="{{$row->id_parent_user}}">{{$row->jabatan_pegawai}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -485,13 +486,13 @@ $(document).ready(function(){
             ordering    : false,
             responsive  : true,
             bPaginate   : false,
-            searching: false,
-            info:false,
+            searching   : false,
+            info        :false,
             columns     :
             [
-                {data:"nama_pengirim", 
+                {data:"jab_pengirim", 
                     mRender:function(data, type, full){
-                        let penerima = full["nama_penerima"];
+                        let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
@@ -560,7 +561,8 @@ $(document).ready(function(){
     $("body").on("click", "#naikan_surat_masuk", function(){
         $("input[name='naikan-id_status']").val("2"); //status 1 disposisi, status 2 dinaikan
         document.getElementById("naikan-title").innerHTML = `<h2 class="fw-bold">Naikan surat</h2>`;
-        $("#kt_modal_naikan_form").trigger("reset");
+        $("#naikan-catatan").val("");
+        $("#naikan-tujuan").val("").trigger("change");
         var id_surat = $(this).data("id_surat_masuk");
         $("input[name='naikan-id_surat_masuk']").val(id_surat);
         var url = $(this).data("url");

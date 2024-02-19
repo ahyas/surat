@@ -67,6 +67,9 @@ class Controller extends BaseController
                             ],
                             'Referensi'=>[
                                 'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
+                            ],
+                            'Arsip'=>[
+                                'Surat masuk' => route('arsip.surat_masuk.index')
                             ]
                         ];
                         
@@ -78,6 +81,9 @@ class Controller extends BaseController
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                             ],
+                            'Arsip'=>[
+                                'Surat masuk' => route('arsip.surat_masuk.index')
+                            ]
                         ];
                         
                         break;
@@ -88,6 +94,9 @@ class Controller extends BaseController
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                             ],
+                            'Arsip'=>[
+                                'Surat masuk' => route('arsip.surat_masuk.index')
+                            ]
                         ];
                         
                         break;
@@ -98,6 +107,9 @@ class Controller extends BaseController
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                             ],
+                            'Arsip'=>[
+                                'Surat masuk' => route('arsip.surat_masuk.index')
+                            ]
                         ];
                         
                         break;
@@ -108,6 +120,9 @@ class Controller extends BaseController
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                             ],
+                            'Arsip'=>[
+                                'Surat masuk' => route('arsip.surat_masuk.index')
+                            ]
                         ];
                         
                         break;

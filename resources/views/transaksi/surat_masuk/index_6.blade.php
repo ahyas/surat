@@ -207,7 +207,7 @@
             <div class="modal-content">
                 <!--begin::Modal header-->
                 <div class="modal-header" id="kt_modal_add_surat_masuk_header">
-                    <div id="title"></div>
+                    <div id="title"><h2>Teruskan surat</h2></div>
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                         <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                     </div>
@@ -455,6 +455,7 @@ $(document).ready(function(){
         document.querySelector(".kirim_teruskan").setAttribute("data-kt-indicator", "off");
         document.querySelector(".kirim_teruskan").removeAttribute("disabled");
         $("#tujuan").val("").trigger("change");
+        $("#catatan").val("");
         loadingPage(true);
 
         $.ajax({

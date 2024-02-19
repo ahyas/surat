@@ -106,6 +106,9 @@ Auth::routes();
         Route::get('/transaksi/surat_masuk/{id}/detail', 'Transaksi\SuratMasuk\SuratMasukController@detail')->name('transaksi.surat_masuk.detail');
         //End::Transaksi surat masuk
 
+        Route::get('/arsip/surat_masuk', 'Arsip\ArsipSuratMasukController@index')->name('arsip.surat_masuk.index');
+        Route::get('/arsip/surat_masuk/get_data','Arsip\ArsipSuratMasukController@getData')->name('arsip.surat_masuk.get_data');
+
         //Begin::disposisi
         Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
         Route::post('/transaksi/surat_masuk/disposisi/kirim', 'Transaksi\SuratMasuk\SuratMasukController@kirim')->name('transaksi.surat_masuk.disposisi.kirim');

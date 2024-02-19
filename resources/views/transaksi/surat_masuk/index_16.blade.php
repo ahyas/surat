@@ -103,10 +103,10 @@
                                         </table>
                                     </div>
                                 </div>
-                                <div class="text-center pt-10">
-                                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
-                                </div>
                             </div>
+                        </div>
+                        <div class="text-center pt-10">
+                            <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                     <!--end::Form-->
@@ -319,9 +319,9 @@ $(document).ready(function(){
             info:false,
             columns     :
             [
-                {data:"nama_pengirim", 
+                {data:"jab_pengirim", 
                     mRender:function(data, type, full){
-                        let penerima = full["nama_penerima"];
+                        let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
@@ -359,12 +359,12 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
-                document.getElementById("preview_disposisi").src = url;        
+                document.getElementById("preview_disposisi").src = url; 
                 $("input[name='nomor_surat']").val(data.table[0].no_surat);
                 $("input[name='pengirim']").val(data.table[0].pengirim);
                 $("#perihal").val(data.table[0].perihal);
                 let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
-                $("#tujuan").val(id_penerima).trigger('change');
+                $("#tujuan").val(id_penerima).trigger('change');    
                 fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
                 document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
                 loadingPage(false);
