@@ -82,6 +82,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
+                                                    <th class="text-nowrap">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -96,6 +97,7 @@
                                                             <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
                                                         </div>
                                                     </td>
+                                                    <td></td>
                                                     <td></td>
                                                 </tr>
                                             </tfoot>
@@ -286,7 +288,16 @@ $(document).ready(function(){
                             return `<span> ${data} </span>`;
                         }
                     }
-                }
+                },
+                {data:"petunjuk",
+                    mRender:function(data){
+                        if(data == null){
+                            return '<span> - </span>';
+                        }else{
+                            return `<span> ${data} </span>`;
+                        }
+                    }
+                },
             ]
         });
     }

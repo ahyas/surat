@@ -50,7 +50,7 @@
                                             <label class="required fw-semibold fs-6 mb-2">Parent user</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <select name="parent_user" id="parent_user" class="form-select" data-control="select2" data-placeholder="Select an option">
+                                            <select name="parent_user" id="parent_user" data-close-on-select="true" class="form-select" data-control="select2" data-placeholder="Select an option">
                                                 <option></option>
                                                 @foreach($user as $row)
                                                 <option value="{{$row->id}}">{{$row->nama_pegawai}}</option>

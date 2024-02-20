@@ -32,7 +32,7 @@ class ArsipSuratMasukController extends Controller
                     "surat_masuk.id_status",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )->leftJoin("users", "surat_masuk.created_by","=","users.id")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -63,13 +63,13 @@ class ArsipSuratMasukController extends Controller
                 ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
                 ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
                 ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
             break;
             
-            //login sebagai admin disposisi 1
+            //login sebagai admin disposisi 1/Kasubag
             default:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
@@ -94,7 +94,7 @@ class ArsipSuratMasukController extends Controller
                 ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
                 ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
                 ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);

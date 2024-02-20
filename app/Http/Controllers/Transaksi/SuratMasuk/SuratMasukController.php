@@ -23,6 +23,8 @@ class SuratMasukController extends Controller
         ->leftJoin("ref_jabatan", "daftar_pegawai.id_jabatan", "=","ref_jabatan.id")
         ->get();
 
+        $petunjuk = DB::table("ref_petunjuk_disposisi")->select("id","name AS petunjuk_disposisi")->get();
+
         switch ($id_role){
             //login sebagai operator surat
             case 5:
@@ -44,15 +46,13 @@ class SuratMasukController extends Controller
 
                 $bidang = DB::table("bidang")->select("id AS id_bidang","nama AS bidang")->whereIn('id', [2])->get();
 
-                $petunjuk = DB::table("ref_petunjuk_disposisi")->select("id","name AS petunjuk_disposisi")->get();
-
                 return view('transaksi/surat_masuk/index_8', compact("user","user_pimpinan","bidang","petunjuk"));
             break;
 
             //login sebagai admin disposisi 2
             case 10:
 
-                return view('transaksi/surat_masuk/index_10', compact("user"));
+                return view('transaksi/surat_masuk/index_10', compact("user","petunjuk"));
             break;
 
             //login sebagai admin disposisi 3
@@ -64,7 +64,7 @@ class SuratMasukController extends Controller
             //login sebagai ketua
             case 16:
 
-                return view('transaksi/surat_masuk/index_16', compact("user"));
+                return view('transaksi/surat_masuk/index_16', compact("user", "petunjuk"));
             break;
 
             //login sebagai admin monitoring
@@ -96,7 +96,7 @@ class SuratMasukController extends Controller
                     "users.name AS dibuat_oleh",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->leftJoin("users", "surat_masuk.created_by","=","users.id")
                 ->get();
 
@@ -121,7 +121,7 @@ class SuratMasukController extends Controller
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -146,7 +146,7 @@ class SuratMasukController extends Controller
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -170,7 +170,7 @@ class SuratMasukController extends Controller
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -195,7 +195,7 @@ class SuratMasukController extends Controller
                     "users.name AS dari"
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -219,7 +219,7 @@ class SuratMasukController extends Controller
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->leftJoin("users", "surat_masuk.created_by","=","users.id")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->orderBy("surat_masuk.created_at","ASC")
                 ->get();
 
                 return response()->json($table);
@@ -270,10 +270,18 @@ class SuratMasukController extends Controller
                     "detail_surat_masuk.catatan",
                     DB::raw("(CASE WHEN detail_surat_masuk.status = 1 THEN 'Disposisi' WHEN detail_surat_masuk.status = 2 THEN 'Diteruskan' WHEN detail_surat_masuk.status = 3 THEN 'Tindak lanjut' WHEN detail_surat_masuk.status = 4 THEN 'Dinaikan' WHEN detail_surat_masuk.status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
-                    DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu")
+                    DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu"),
+                    "jabatan_penerima.nama AS jab_penerima",
+                    "jabatan_pengirim.nama AS jab_pengirim",
+                    "ref_petunjuk_disposisi.name AS petunjuk"
                 )
                 ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
                 ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
+                ->leftJoin("daftar_pegawai AS pegawai_penerima", "penerima.id", "=", "pegawai_penerima.id_user")
+                ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
+                ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
+                ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
+                ->leftJoin("ref_petunjuk_disposisi", "detail_surat_masuk.petunjuk","=","ref_petunjuk_disposisi.id")
                 ->orderBy("detail_surat_masuk.created_at","ASC")
                 ->get();
 
@@ -293,7 +301,8 @@ class SuratMasukController extends Controller
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu"),
                     "jabatan_penerima.nama AS jab_penerima",
-                    "jabatan_pengirim.nama AS jab_pengirim"
+                    "jabatan_pengirim.nama AS jab_pengirim",
+                    "ref_petunjuk_disposisi.name AS petunjuk"
                 )
                 ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
                 ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
@@ -301,6 +310,7 @@ class SuratMasukController extends Controller
                 ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
                 ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
                 ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
+                ->leftJoin("ref_petunjuk_disposisi", "detail_surat_masuk.petunjuk","=","ref_petunjuk_disposisi.id")
                 ->orderBy("detail_surat_masuk.created_at","ASC")
                 ->get();
 
@@ -319,7 +329,8 @@ class SuratMasukController extends Controller
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu"),
                     "jabatan_penerima.nama AS jab_penerima",
-                    "jabatan_pengirim.nama AS jab_pengirim"
+                    "jabatan_pengirim.nama AS jab_pengirim",
+                    "ref_petunjuk_disposisi.name AS petunjuk"
                 )
                 ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
                 ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
@@ -327,6 +338,7 @@ class SuratMasukController extends Controller
                 ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
                 ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
                 ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
+                ->leftJoin("ref_petunjuk_disposisi", "detail_surat_masuk.petunjuk","=","ref_petunjuk_disposisi.id")
                 ->orderBy("detail_surat_masuk.created_at","ASC")
                 ->get();
 
@@ -345,7 +357,8 @@ class SuratMasukController extends Controller
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
                     DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu"),
                     "jabatan_penerima.nama AS jab_penerima",
-                    "jabatan_pengirim.nama AS jab_pengirim"
+                    "jabatan_pengirim.nama AS jab_pengirim",
+                    "ref_petunjuk_disposisi.name AS petunjuk"
                 )
                 ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
                 ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
@@ -353,6 +366,7 @@ class SuratMasukController extends Controller
                 ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
                 ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
                 ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
+                ->leftJoin("ref_petunjuk_disposisi", "detail_surat_masuk.petunjuk","=","ref_petunjuk_disposisi.id")
                 ->orderBy("detail_surat_masuk.created_at","ASC")
                 ->get();
 
@@ -423,6 +437,10 @@ class SuratMasukController extends Controller
             $error["err_catatan"] = "Catatan tidak boleh kosong";
         }
 
+        if(empty($request["petunjuk"])){
+            $error["err_petunjuk"] = "Pilih petunjuk disposisi yang sesuai";
+        }
+
         if(empty($request["tujuan"])){
             $error["err_tujuan"] = "Tujuan disposisi tidak boleh kosong";
         }else{
@@ -455,6 +473,7 @@ class SuratMasukController extends Controller
                 "id_surat"=>$request["id_surat_masuk"],
                 "id_asal"=>Auth::user()->id,
                 "id_penerima"=>$request["tujuan"],
+                "petunjuk"=>$request["petunjuk"],
                 "catatan"=>$request["catatan"],
                 "status"=>Auth::user()->getRole()->id_role == 16 ? 5 : 1 //bila sebagai ketua status diturunkan
             ]);

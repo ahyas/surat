@@ -165,6 +165,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
+                                                    <th class="text-nowrap">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -179,6 +180,7 @@
                                                             <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
                                                         </div>
                                                     </td>
+                                                    <td></td>
                                                     <td></td>
                                                 </tr>
                                             </tfoot>
@@ -260,10 +262,10 @@
 
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Teruskan kepada</label>
-                                            <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
+                                            <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user as $row)
-                                                    <option value="{{$row->id_parent_user}}">{{$row->nama_pegawai}}</option>
+                                                    <option value="{{$row->id_parent_user}}">{{$row->jabatan_pegawai}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -528,9 +530,9 @@ $(document).ready(function(){
             info        :false,
             columns     :
             [
-                {data:"nama_pengirim", 
+                {data:"jab_pengirim", 
                     mRender:function(data, type, full){
-                        let penerima = full["nama_penerima"];
+                        let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
@@ -546,7 +548,16 @@ $(document).ready(function(){
                             return `<span> ${data} </span>`;
                         }
                     }
-                }
+                },
+                {data:"petunjuk",
+                    mRender:function(data){
+                        if(data == null){
+                            return '<span> - </span>';
+                        }else{
+                            return `<span> ${data} </span>`;
+                        }
+                    }
+                },
             ]
         });
     }

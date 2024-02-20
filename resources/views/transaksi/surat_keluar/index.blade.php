@@ -107,7 +107,7 @@
                                         <div id="display-tujuan-internal">
                                             <div class="fv-row mb-7">
                                                 <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
                                                     <option>Pilih tujuan surat</option>
                                                     @foreach($user as $row)
                                                         <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>

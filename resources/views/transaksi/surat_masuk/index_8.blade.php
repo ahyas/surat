@@ -86,7 +86,7 @@
                                         <input type="hidden" name="naikan-id_status" class="form-control" />
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Naikan ke</label>
-                                            <select name="naikan-tujuan" id="naikan-tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
+                                            <select name="naikan-tujuan" id="naikan-tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user_pimpinan as $row)
                                                     <option value="{{$row->id}}">{{$row->jabatan_pegawai}}</option>
@@ -173,6 +173,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
+                                                    <th class="text-nowrap">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -187,6 +188,7 @@
                                                             <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
                                                         </div>
                                                     </td>
+                                                    <td></td>
                                                     <td></td>
                                                 </tr>
                                             </tfoot>
@@ -270,10 +272,19 @@
 
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Disposisi kepada</label>
-                                            <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" required >
+                                            <select name="tujuan" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" required >
                                                 <option value="">Pilih tujuan surat</option>
                                                 @foreach($user as $row)
                                                     <option value="{{$row->id_parent_user}}">{{$row->jabatan_pegawai}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Petunjuk</label>
+                                            <select name="petunjuk" id="petunjuk" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" required >
+                                                <option value="">Pilih petunjuk surat</option>
+                                                @foreach($petunjuk as $row)
+                                                    <option value="{{$row->id}}">{{$row->petunjuk_disposisi}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -500,7 +511,7 @@ $(document).ready(function(){
                         <span style='white-space: nowrap'>${tanggal} / ${waktu}</span>`;
                     }
                 },
-                {data:"catatan", className:"text-end",
+                {data:"catatan",
                     mRender:function(data){
                         if(data == null){
                             return '<span> - </span>';
@@ -508,7 +519,16 @@ $(document).ready(function(){
                             return `<span> ${data} </span>`;
                         }
                     }
-                }
+                },
+                {data:"petunjuk",
+                    mRender:function(data){
+                        if(data == null){
+                            return '<span> - </span>';
+                        }else{
+                            return `<span> ${data} </span>`;
+                        }
+                    }
+                },
             ]
         });
     }
@@ -624,6 +644,7 @@ $(document).ready(function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Disposisi</h2>`;
         document.getElementById("notification").innerHTML ='';
         $("#kt_modal_add_disposisi_form").trigger("reset");
+        $("#petunjuk").val("").trigger('change');
         $("input[name='id_status']").val("1"); //status 1 disposisi, status 2 dinaikan
         let id_surat = $(this).data("id_surat_masuk");
         $("input[name='id_surat_masuk']").val(id_surat);
@@ -710,9 +731,10 @@ $(document).ready(function(){
                 if(!data.success){
                     let err_catatan = data.message.err_catatan  ? `<li>${data.message.err_catatan}</li>` : ``;
                     let err_tujuan = data.message.err_tujuan  ? `<li>${data.message.err_tujuan}</li>` : ``;
+                    let err_petunjuk = data.message.err_petunjuk ? `<li>${data.message.err_petunjuk}</li>` : ``;
                     let err_disposisi = data.message.err_disposisi  ? `<li>${data.message.err_disposisi}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_catatan+err_tujuan+err_disposisi+"</div></div>";  
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_catatan+err_tujuan+err_petunjuk+err_disposisi+"</div></div>";  
 
                     setButtonSpinner(".kirim_disposisi", "off");
                     
