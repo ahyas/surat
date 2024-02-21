@@ -104,6 +104,7 @@
                                                         <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
                                                         <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
                                                         <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        <span><a href="#">Cetak</a></span>
                                                     </div>
                                                 </td>
                                                 <td></td>

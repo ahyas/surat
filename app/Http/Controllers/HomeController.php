@@ -21,6 +21,9 @@ class HomeController extends Controller
         $count_surat_keluar = DB::table("transaksi_surat_keluar")->count();
         $count_surat_keluar_internal = DB::table("transaksi_surat_keluar")->where("internal", 1)->count();
         $count_surat_keluar_eksternal = DB::table("transaksi_surat_keluar")->where("internal", 2)->count();
+        $count_unprocess = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
+        $count_onprocess = DB::table("transaksi_surat_masuk")->whereIn("id_status",[1,2,4,5])->count();
+        $count_selesai = DB::table("transaksi_surat_masuk")->where("id_status",3)->count();
 
         $count_surat_masuk = DB::table("transaksi_surat_masuk")->count();
 
@@ -69,7 +72,10 @@ class HomeController extends Controller
                 "top_3_surat",
                 "count_pimpinan",
                 "count_kesekretariatan",
-                "count_kepaniteraan"
+                "count_kepaniteraan",
+                "count_unprocess",
+                "count_onprocess",
+                "count_selesai"
             )
         );
     }
