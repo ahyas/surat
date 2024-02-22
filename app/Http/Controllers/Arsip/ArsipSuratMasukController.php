@@ -16,6 +16,31 @@ class ArsipSuratMasukController extends Controller
     public function getData(){
         $id_role = Auth::user()->getRole()->id_role;
         switch ($id_role){
+            //login sebagai operator surat
+            case 5:
+                $table=DB::table("transaksi_surat_masuk AS surat_masuk")
+                ->where("surat_masuk.id_status",3)
+                ->where("surat_masuk.rahasia", "false")
+                ->where("daftar_pegawai.id_jabatan", 17)
+                ->select(
+                    "surat_masuk.id",
+                    "surat_masuk.no_surat",
+                    "surat_masuk.pengirim",
+                    "surat_masuk.rahasia",
+                    "surat_masuk.perihal",
+                    "surat_masuk.tgl_surat",
+                    "surat_masuk.file",
+                    "users.name AS dibuat_oleh",
+                    "surat_masuk.id_status",
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                )->leftJoin("users", "surat_masuk.created_by","=","users.id")
+                ->leftJoin("daftar_pegawai","surat_masuk.created_by","=","daftar_pegawai.id_user")
+                ->orderBy("surat_masuk.created_at","ASC")
+                ->get();
+
+                return response()->json($table);
+            break;
+
             //login sebagai admin tata usaha
             case 6:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")

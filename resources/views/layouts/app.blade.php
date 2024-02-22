@@ -418,7 +418,11 @@ License: For each use you must have a valid license purchased only from above li
 																	<span class="menu-bullet">
 																		<span class="bullet bullet-dot"></span>
 																	</span>
-																	<span class="menu-title">{{$sub_key}}</span>
+																	<span class="menu-title">{{$sub_key}} @if($sub_key == 'Surat Masuk' && $key == 'Transaksi')
+																	&nbsp;
+																	@if($data['tot_count']>0)<span class="badge badge-circle badge-danger">{{$data['tot_count']}}</span>@endif
+																		@endif
+																	</span>
 																</a>
 																<!--end:Menu link-->
 															</div>
