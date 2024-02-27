@@ -16,7 +16,7 @@ License: For each use you must have a valid license purchased only from above li
 	<!--begin::Head-->
 	<head>
 <base href="../" />
-		<title>Simansur - Sistem Informasi Manajemen Persuratan</title>
+		<title>Simisol - Sistem Aplikasi Manajemen Surat Online</title>
 		<meta charset="utf-8" />
 		<meta name="description" content="The most advanced Bootstrap 5 Admin Theme with 40 unique prebuilt layouts on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel versions. Grab your copy now and get life-time updates for free." />
 		<meta name="keywords" content="metronic, bootstrap, bootstrap 5, angular, VueJs, React, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel starter kits, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
@@ -84,7 +84,7 @@ License: For each use you must have a valid license purchased only from above li
 								
 								<a href="{{route('home')}}">
 									<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
-									<span style="color:white; font-size: 20px; font-weight:bold">Simansur</span>
+									<span style="color:white; font-size: 20px; font-weight:bold">Simisol</span>
 								</a>
 								<!--end::Logo-->
 								<!--begin::Nav-->

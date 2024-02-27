@@ -35,6 +35,13 @@ class Controller extends BaseController
                 switch($id_role){
                     //login as super admin
                     case 1 :
+                        $tot_count=DB::table("transaksi_surat_masuk AS surat_masuk")
+                        ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                        ->whereNotIn("surat_masuk.id_status",[3])
+                        ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                        ->orderBy("surat_masuk.created_at","ASC")
+                        ->count();
+                        
                         $menu = 
                         [
                             'Manajemen Pengguna'=>[
