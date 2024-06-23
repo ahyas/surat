@@ -384,15 +384,29 @@ class TemplateSuratKeluarController extends Controller
     public function deleteSurat($id_surat_keluar){
         $old_file = DB::table("template_transaksi")->where('id_surat_keluar',$id_surat_keluar)
         ->first();
-
-        if($old_file->file !== null){    
-            //overwrite file lama
-            if (file_exists( public_path('/storage/'.$old_file->file))) {
-                unlink(public_path('/storage/'.$old_file->file));
-            }
+        //delete file
+     
+        if (file_exists(storage_path($old_file->file))) {
+            unlink(storage_path($old_file->file));
         }
 
         DB::table("template_sk")
+        ->where("id_surat_keluar",$id_surat_keluar)
+        ->delete();
+
+        DB::table("template_sk_menetapkan")
+        ->where("id_surat_keluar",$id_surat_keluar)
+        ->delete();
+
+        DB::table("template_sk_mengingat")
+        ->where("id_surat_keluar",$id_surat_keluar)
+        ->delete();
+
+        DB::table("template_sk_menimbang")
+        ->where("id_surat_keluar",$id_surat_keluar)
+        ->delete();
+
+        DB::table("template_sk_nominatif")
         ->where("id_surat_keluar",$id_surat_keluar)
         ->delete();
 
