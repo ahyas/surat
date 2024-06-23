@@ -98,7 +98,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
-                        <th></th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>

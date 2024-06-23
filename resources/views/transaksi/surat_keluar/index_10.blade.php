@@ -64,7 +64,7 @@
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Kode Kegiatan</label>
                                             <select name="kegiatan" id="kegiatan" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true" disabled>
-                                                <option disabled selected value="0">Pilih kategori kegiatan</option>
+                                                <option disabled selected value="0">Pilih kategory kegiatan</option>
                                             </select>
                                         </div>
                                         <div class="fv-row mb-7" id="row-transaksi">
@@ -82,7 +82,7 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                       
+
                                         <div class="fv-row mb-7" id="display-penerima">
                                             <label class="required fw-semibold fs-6 mb-5">Penerima</label>
                                             <div class="d-flex fv-row">
@@ -104,36 +104,37 @@
                                             </div>
                                             <!--end::Input row-->
                                         </div>
-                                        <div id="display-tujuan-internal" id="display-tujuan-internal">
-                                            <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
-                                                    <option>Pilih tujuan surat</option>
-                                                    @foreach($user as $row)
-                                                        <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+
+                                        <div class="fv-row mb-7" id="display-tujuan-internal">
+                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                            <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                                <option>Pilih tujuan surat</option>
+                                                @foreach($user as $row)
+                                                    <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
-                                        <div id="display-tujuan-external">
-                                            <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                                <input type="text" name="tujuan-external" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
-                                            </div>
+                                        <div class="fv-row mb-7" id="display-tujuan-external">
+                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                            <input type="text" name="tujuan-external" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
                                         </div>
+
                                         <div class="fv-row mb-7" id="display-perihal">
-                                            <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
+                                            <label class="required fw-semibold fs-6 mb-2">Perihal / Tentang</label>
                                             <textarea class="form-control form-control-solid my_input" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required disabled></textarea>
                                         </div>
+
                                         <div class="fv-row mb-7" id="display-tgl_surat">
                                             <label class="required fw-semibold fs-6 mb-2">Tanggal surat</label>
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tanggal surat" required disabled/>
                                         </div>
+
                                         <div class="fv-row mb-7" id="display-file">
                                             <label class="fw-semibold fs-6 mb-2" id="file">File</label>
                                             <input class="form-control form-control-solid mb-3 mb-lg-0 my_input" name="file_surat" type="file" id="file_surat" required disabled>
                                         </div>
+
                                     </div>
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
@@ -205,12 +206,11 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th>Perihal/Isi ringkas</th>
+                        <th>Perihal/Tentang</th>
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th>Status</th>
-                        <th>Dibuat oleh</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -289,8 +289,8 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                        <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
-                        ${full['deskripsi']}
+                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
+                            <div>${full['deskripsi']}</div>
                         </div>${a}`;
                 }
             },
@@ -326,15 +326,10 @@ $(document).ready(function(){
                     }
                 }
             },
-            {data:"dibuat_oleh"},
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
-                    if(full["id_role"] !== 6){
-                        var disabled = "disabled";
-                    }
-
                     return`<div class="dropdown">
-                            <button class="btn btn-light-success btn-sm" type="button" ${disabled} data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
@@ -419,7 +414,6 @@ $(document).ready(function(){
     function enabledAll(){
         document.querySelectorAll(".my_input").forEach(element=>{
             element.removeAttribute("disabled");
-            
         });
     }
 
@@ -601,7 +595,7 @@ $(document).ready(function(){
         
         disabledAll();
         disabledList();
-        
+
         document.getElementById("klasifikasi").disabled = false;
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
@@ -653,7 +647,6 @@ $(document).ready(function(){
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
-                        
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                         location.reload();
@@ -664,6 +657,7 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_surat_keluar", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Surat Keluar</h2>`;
+        
         document.getElementById("klasifikasi").disabled = true;
         document.getElementById("fungsi").disabled = true;
         document.getElementById("kegiatan").disabled = true;
@@ -699,9 +693,11 @@ $(document).ready(function(){
                 enabledAll();
                 disabledList();
 
+                console.log("asd ",data)
+
                 $("#klasifikasi").val(data.id_klasifikasi);
                 if(data.ref_fungsi.length>0){
-                    
+
                     document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
                     for(var i=0; i<data.ref_fungsi.length; i++){
                         let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
@@ -711,7 +707,6 @@ $(document).ready(function(){
                 }
                 
                 if(data.ref_kegiatan.length>0){
-                    
                     document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
                     for(var i=0; i<data.ref_kegiatan.length; i++){
                         let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
@@ -723,7 +718,6 @@ $(document).ready(function(){
                 if(data.ref_transaksi.length>0){
                     console.log("Transaksi length "+data.ref_transaksi.length)
                     document.getElementById("row-transaksi").style.display = 'inline-block';
-                    document.getElementById("transaksi").removeAttribute("disabled");
                     document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
                     for(var i=0; i<data.ref_transaksi.length; i++){
                         let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
@@ -735,7 +729,7 @@ $(document).ready(function(){
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                
+                console.log("Internal? ",data.surat_keluar.internal)
                 if(data.surat_keluar.internal == 1){
                     
                     document.querySelector("#kt_modal_update_role_option_1").disabled=true;
@@ -798,26 +792,26 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 
-                    console.log(data);
-                    if (!data.success) {
-                        let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
-                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
-                        
-                        let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
-                        let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
-                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+            console.log(data);
+            if (!data.success) {
+                let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
+                
+                let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
+                let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
+                let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
-                        btn.setAttribute("data-kt-indicator", "off");
-                        btn.removeAttribute("disabled");
-                        $("#file_surat").val("");
-                        
-                        return false;
-                    } 
-                        loadingPage(true);
-                        $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                        $("#kt_modal_add_surat_keluar").modal("hide");
-                        alert("Surat berhasil diarsipkan");
+                document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                btn.setAttribute("data-kt-indicator", "off");
+                btn.removeAttribute("disabled");
+                $("#file_surat").val("");
+                
+                return false;
+            } 
+                loadingPage(true);
+                $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                $("#kt_modal_add_surat_keluar").modal("hide");
+                alert("Surat berhasil diarsipkan");
             },error:function(){
                 if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                     location.reload();

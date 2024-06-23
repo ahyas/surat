@@ -103,7 +103,7 @@
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Status</th>
                         <th class="min-w-150px">Dibuat Oleh</th>
-                        <th class="text-end min-w-100px"></th>
+                        <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -165,7 +165,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
-                                                    <th class="text-nowrap">Petunjuk</th>
+                                                    <th class="text-nowrap min-w-200px">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

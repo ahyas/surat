@@ -29,7 +29,7 @@ License: For each use you must have a valid license purchased only from above li
 		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
 		<link rel="shortcut icon" href="{{asset('public/assets/media/logos/favicon.ico')}}" />
 		<!--begin::Fonts(mandatory for all pages)-->
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+		<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />-->
 		<!--end::Fonts-->
 		<!--begin::Vendor Stylesheets(used for this page only)-->
 		<link href="{{asset('public/assets/css/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css" />
@@ -42,8 +42,9 @@ License: For each use you must have a valid license purchased only from above li
 		<script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 		<style>
 			table.dataTable tbody td {
-			vertical-align: top;
+				vertical-align: top;
 			}
+			.form-select { cursor: pointer; }
 		</style>
 	</head>
 	<!--end::Head-->

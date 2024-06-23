@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function(){
     return redirect()->route('login');
 });
+Route::get('/document', Document::class)->name('document');
 Auth::routes();
+    Route::get("/test","TestController@index");
+
     Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 18, 101'], function(){
         Route::get('home', 'HomeController@index')->name('home');
     });
@@ -108,6 +111,8 @@ Auth::routes();
 
         Route::get('/arsip/surat_masuk', 'Arsip\ArsipSuratMasukController@index')->name('arsip.surat_masuk.index');
         Route::get('/arsip/surat_masuk/get_data','Arsip\ArsipSuratMasukController@getData')->name('arsip.surat_masuk.get_data');
+        Route::get('/arsip/surat_keluar','Arsip\ArsipsuratKeluarController@index')->name('arsip.surat_keluar.index');
+        Route::get('/arsip/surat_keluar/get_data','Arsip\ArsipsuratKeluarController@getData')->name('arsip.surat_keluar.get_data');
 
         //Begin::disposisi
         Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
@@ -123,8 +128,8 @@ Auth::routes();
         Route::post('/transaksi/surat_masuk/tindak_lanjut','Transaksi\SuratMasuk\SuratMasukController@tindakLanjut')->name('transaksi.surat_masuk.tindak_lanjut');
         //End::tindak lanjut
     });
-//login sebagai admin tata usaha
-    Route::group(['middleware'=>'role:6, 8, 101'], function(){
+
+    Route::group(['middleware'=>'role:6, 8, 10,101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
         Route::post('/transaksi/surat_keluar/save', 'Transaksi\SuratKeluar\SuratKeluarController@save')->name('transaksi.surat_keluar.save');
@@ -136,7 +141,43 @@ Auth::routes();
         Route::get('/referensi/{id_ref_fungsi}/get_kegiatan_list', 'Transaksi\SuratKeluar\SuratKeluarController@getKegiatanList')->name('transaksi.surat_keluar.get_kegiatan_list');
         Route::get('/referensi/{id_ref_kegiatan}/get_transaksi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getTransaksiList')->name('transaksi.surat_keluar.get_transaksi_list');
 
+        Route::get("/template/surat_keluar", "Template\SuratKeluar\TemplateSuratKeluarController@index")->name("template.surat_keluar");
+        Route::get("/template/surat_keluar/get_data", "Template\SuratKeluar\TemplateSuratKeluarController@getData")->name("template.surat_keluar.get_data");
+        Route::get("/template/surat_keluar/count", "Template\SuratKeluar\TemplateSuratKeluarController@count")->name("template.surat_keluar.count");
+        Route::post("/template/surat_keluar/save", "Template\SuratKeluar\TemplateSuratKeluarController@save")->name("template.surat_keluar.save");
+        Route::get("/template/surat_keluar/{id}/detail", "Template\SuratKeluar\TemplateSuratKeluarController@detailSurat")->name("template.surat_keluar.detail_surat");
+        Route::get("/template/surat_keluar/{id}/edit", "Template\SuratKeluar\TemplateSuratKeluarController@editSurat")->name("template.surat_keluar.edit_surat");
+        Route::post("/template/surat_keluar/{id}/update", "Template\SuratKeluar\TemplateSuratKeluarController@updateSurat")->name("template.surat_keluar.update_surat");
+        Route::get("/template/surat_keluar/{id}/delete", "Template\SuratKeluar\TemplateSuratKeluarController@deleteSurat")->name("template.surat_keluar.delete_surat");
+
+        Route::get("/template/surat_keluar/{id}/get_menimbang","Template\SuratKeluar\TemplateSuratKeluarController@getMenimbang");
+        Route::post("/template/surat_keluar/{id}/menimbang/save","Template\SuratKeluar\TemplateSuratKeluarController@saveMenimbang");
+        Route::get("/template/surat_keluar/{id}/menimbang/edit","Template\SuratKeluar\TemplateSuratKeluarController@editMenimbang");
+        Route::post("/template/surat_keluar/{id}/menimbang/update","Template\SuratKeluar\TemplateSuratKeluarController@updateMenimbang");
+        Route::get("/template/surat_keluar/{id}/menimbang/delete","Template\SuratKeluar\TemplateSuratKeluarController@deleteMenimbang");
+        
+        Route::get("/template/surat_keluar/{id}/get_mengingat","Template\SuratKeluar\TemplateSuratKeluarController@getMengingat");
+        Route::post("/template/surat_keluar/{id}/mengingat/save","Template\SuratKeluar\TemplateSuratKeluarController@saveMengingat");
+        Route::get("/template/surat_keluar/{id}/mengingat/edit","Template\SuratKeluar\TemplateSuratKeluarController@editMengingat");
+        Route::post("/template/surat_keluar/{id}/mengingat/update","Template\SuratKeluar\TemplateSuratKeluarController@updateMengingat");
+        Route::get("/template/surat_keluar/{id}/mengingat/delete","Template\SuratKeluar\TemplateSuratKeluarController@deleteMengingat");
+        
+        Route::get("/template/surat_keluar/{id}/get_menetapkan","Template\SuratKeluar\TemplateSuratKeluarController@getMenetapkan");
+        Route::post("/template/surat_keluar/{id}/menetapkan/save","Template\SuratKeluar\TemplateSuratKeluarController@saveMenetapkan");
+        Route::get("/template/surat_keluar/{id}/menetapkan/edit","Template\SuratKeluar\TemplateSuratKeluarController@editMenetapkan");
+        Route::post("/template/surat_keluar/{id}/menetapkan/update","Template\SuratKeluar\TemplateSuratKeluarController@updateMenetapkan");
+        Route::get("/template/surat_keluar/{id}/menetapkan/delete","Template\SuratKeluar\TemplateSuratKeluarController@deleteMenetapkan");
+
+        Route::get("/template/surat_keluar/{id}/nominatif","Template\SuratKeluar\TemplateSuratKeluarController@getNominatif");
+        Route::post("/template/surat_keluar/{id}/nominatif/save","Template\SuratKeluar\TemplateSuratKeluarController@saveNominatif");
+        Route::get("/template/surat_keluar/{id_surat_keluar}/{id_user}/nominatif/delete","Template\SuratKeluar\TemplateSuratKeluarController@deleteNominatif");
+        Route::get("/template/surat_keluar/{id_surat_keluar}/{id_user}/nominatif/edit","Template\SuratKeluar\TemplateSuratKeluarController@editNominatif");
+        Route::post("/template/surat_keluar/{id_surat_keluar}/{id_user}/nominatif/update","Template\SuratKeluar\TemplateSuratKeluarController@updateNominatif");
     });
-    
+
+    Route::group(['middleware'=>'role:6,8,10, 16,18, 101'], function(){
+        Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
+        Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
+    });
     
 Auth::routes();

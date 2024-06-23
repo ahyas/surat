@@ -10,7 +10,7 @@ use Auth;
 class ArsipSuratMasukController extends Controller
 {
     public function index(){
-        return view('arsip/index');
+        return view('arsip/surat_masuk/index');
     }
 
     public function getData(){

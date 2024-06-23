@@ -32,7 +32,9 @@ class UserController extends Controller
             "bidang.nama AS bidang",
             "users.email",
             "bidang.id AS id_bidang",
-            "ref_jabatan.nama AS jabatan")
+            "ref_jabatan.nama AS jabatan",
+            "daftar_pegawai.nip"
+        )
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->leftJoin("ref_jabatan","daftar_pegawai.id_jabatan","=","ref_jabatan.id")
@@ -110,7 +112,8 @@ class UserController extends Controller
             "users.name AS nama",
             "bidang.id AS id_bidang",
             "users.email",
-            "daftar_pegawai.id_jabatan"
+            "daftar_pegawai.id_jabatan",
+            "daftar_pegawai.nip"
         )
         ->leftJoin("permission", "users.id","=","permission.id_user")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
@@ -154,15 +157,15 @@ class UserController extends Controller
             DB::table("daftar_pegawai")
             ->updateOrInsert(["id_user"=>$id_user], [
                 "id_user"=>$id_user,
-                "id_jabatan"=>$request["jabatan"]
+                "id_jabatan"=>$request["jabatan"],
+                "nip"=>$request["nip"]
             ]);
 
             DB::table("permission")
             ->updateOrInsert([
                 "id_user"=>$id_user
             ], [
-                "id_user"=>$id_user,
-                "id_role"=>18
+                "id_user"=>$id_user
             ]);
 
         }

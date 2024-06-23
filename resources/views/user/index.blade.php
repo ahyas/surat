@@ -62,6 +62,14 @@
                                             <!--end::Input-->
                                         </div>
                                         <!--end::Input group-->
+                                        <div class="fv-row mb-7">
+                                            <!--begin::Label-->
+                                            <label class="fw-semibold fs-6 mb-2">NIP</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <input type="text" name="nip" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="NIP" />
+                                            <!--end::Input-->
+                                        </div>
                                         <!--begin::Input group-->
                                         <div class="fv-row mb-7">
                                             <!--begin::Label-->
@@ -139,6 +147,7 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">User</th>
+                        <th>NIP</th>
                         <th class="min-w-125px">Bidang</th>
                         <th>Jabatan</th>
                         <th class="text-end min-w-125px"></th>
@@ -180,6 +189,7 @@ $(document).ready(function(){
                             </div>`;
                 }
             },
+            {data:"nip"},
             {data:"bidang",
                 mRender:function(data, type, full){
                     if(full['id_bidang'] == 1){
@@ -239,6 +249,7 @@ $(document).ready(function(){
             success:function(data){
                 console.log(data);
                 $("input[name='id_user']").val(id_user);
+                $("input[name='nip']").val(data.nip);
                 $("input[name='name']").val(data.nama);
                 $("input[name='email']").val(data.email);
                 $("#bidang").val(data.id_bidang).trigger('change');

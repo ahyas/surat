@@ -83,7 +83,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
-                                                    <th class="text-nowrap">Petunjuk</th>
+                                                    <th class="text-nowrap min-w-200px">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>

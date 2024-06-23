@@ -89,11 +89,15 @@ class Controller extends BaseController
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                                 'Surat Keluar' => route('transaksi.surat_keluar')
                             ],
+                            'Template'=>[
+                                'Surat keluar' => route("template.surat_keluar")
+                            ],
                             'Referensi'=>[
                                 'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
                             ],
                             'Arsip'=>[
-                                'Surat Masuk' => route('arsip.surat_masuk.index')
+                                'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                'Surat Keluar' => route('arsip.surat_keluar.index'),
                             ]
                         ];
                         
@@ -112,6 +116,7 @@ class Controller extends BaseController
                         [
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => route('transaksi.surat_keluar'),
                             ],
                             'Arsip'=>[
                                 'Surat Masuk' => route('arsip.surat_masuk.index')
@@ -138,9 +143,14 @@ class Controller extends BaseController
                         [
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => route('transaksi.surat_keluar'),
+                            ],
+                            'Template'=>[
+                                'Surat keluar' => route("template.surat_keluar")
                             ],
                             'Arsip'=>[
-                                'Surat Masuk' => route('arsip.surat_masuk.index')
+                                'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                'Surat Keluar' => route('arsip.surat_keluar.index'),
                             ]
                         ];
                         
@@ -175,6 +185,7 @@ class Controller extends BaseController
                         [
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => route('transaksi.surat_keluar'),
                             ],
                             'Arsip'=>[
                                 'Surat Masuk' => route('arsip.surat_masuk.index')
@@ -191,7 +202,7 @@ class Controller extends BaseController
                         $menu = 
                         [
                             'Transaksi'=>[
-                                'Surat Masuk' => '',
+                                'Surat keluar' => route('transaksi.surat_keluar'),
                             ],
                         ];
                         
