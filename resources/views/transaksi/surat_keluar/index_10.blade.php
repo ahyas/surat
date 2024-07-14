@@ -429,7 +429,7 @@ $(document).ready(function(){
             document.getElementById("preview").src = url;
         }else{
             $("#office_preview").modal("show");
-            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=https://pta-papuabarat.go.id/wp-content/uploads/2024/07/3.docx`;
+            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
         }
     });
 
