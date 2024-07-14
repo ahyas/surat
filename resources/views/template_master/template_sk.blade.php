@@ -5,17 +5,16 @@
 <div class="content flex-column-fluid" id="kt_content">
     
     <!--begin::Card-->
-    <div class="card">
+    <div class="card" id="top-most">
         <!--begin::Card header-->
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Edit template</p>
+                <p>Edit template Surat Keputusan</p>
             </div>
         </div>
         <?php $id_surat_keluar = request()->route('id'); ?>
-        <form class="form" action="{{route('template.surat_keluar.update_surat',['id'=>$id_surat_keluar])}}" method="POST">
-        {{csrf_field()}}
+        
             <div class="card-body">
                 <!--end::Card header-->
                 <!--begin::Card body-->
@@ -36,41 +35,110 @@
                         <!--end::Content-->
                     </div>
                     <!--end::Wrapper-->
-
-                    <!--begin::Close-->
-                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                        <i class="ki-duotone ki-cross fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i>
-                    </button>
-                    <!--end::Close-->
                 </div>
                 <!--end::Alert-->
+                <form class="form" method="POST" id="form_update_template_sk">
+                
+                {{csrf_field()}} {{ method_field('POST') }}
 
                 <div id="notification"></div>
 
                 <input type="hidden" name="id_surat" class="form-control form-control-solid" value="{{$table->id_surat}}"/>
+
                 <div class="fv-row mb-7">
-                    <label class="fw-semibold fs-6 mb-2">Nomor surat</label>
-                    <input type="text" name="nomor_surat" class="form-control form-control-solid" value="{{$table->no_surat}}" readonly/>
-                </div>
-                <div class="fv-row mb-7">
-                    <label class="fw-semibold fs-6 mb-2">Nomenklatur jabatan</label>
-                    <select name="nomenklatur_jabatan" id="nomenklatur_jabatan" class="form-select form-select-solid my_list" data-placeholder="Select an option" disabled data-hide-search="true" >
-                        <option selected value="">Pilih nomenklatur jabatan yang sesuai</option>
-                        @foreach($nomenklatur_jabatan as $row)
-                        @if($row->id == $table->id_nomenklatur_jabatan)
-                            <option selected value="{{$row->id}}">{{$row->nomenklatur}}</option>
-                        @endif
-                        <option value="{{$row->id}}">{{$row->nomenklatur}}</option>
+                    <label class="required fw-semibold fs-6 mb-2">Kode Klasifikasi</label>
+                    <select name="klasifikasi" id="klasifikasi" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" >
+                        <option disabled selected value="0">Pilih kategori klasifikasi</option>
+                        @foreach($klasifikasi as $row)
+                            <option <?php echo old('klasifikasi', $table->id_ref_klasifikasi) == $row->id_klasifikasi ? 'selected':''; ?> value="{{$row->id_klasifikasi}}">{{$row->kode_klasifikasi}} - {{$row->deskripsi_klasifikasi}}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="fv-row mb-7">
+                    <label class="required fw-semibold fs-6 mb-2">Kode Fungsi</label>
+                    <select name="fungsi" id="fungsi" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true" >
+                    @if($errors->template->first('fungsi'))
+                        <option disabled selected value="0">Pilih kategori fungsi</option>
+                        @foreach($fungsi as $key => $row)
+                            <option value="{{$row->id_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
+                        @endforeach
+                    @else
+                        <option disabled selected value="0">Pilih kategori fungsi</option>
+                        @foreach($fungsi as $key => $row)
+                            <option <?php echo old('fungsi', $table->id_ref_fungsi) == $row->id_fungsi ? 'selected':''; ?> value="{{$row->id_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
+                        @endforeach
+                    @endif
+                        
+                    </select>
+                </div>
+                <div class="fv-row mb-7">
+                    <label class="required fw-semibold fs-6 mb-2">Kode Kegiatan</label>
+                    <select name="kegiatan" id="kegiatan" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true">
+                        @if($errors->template->first('kegiatan'))
+                            <option disabled selected value="0">Pilih kategory kegiatan</option>
+                            @foreach($kegiatan as $row)
+                                <option value="{{$row->id_kegiatan}}">{{$row->kode_kegiatan}} - {{$row->deskripsi_kegiatan}}</option>
+                            @endforeach
+                        @else
+                            <option disabled selected value="0">Pilih kategory kegiatan</option>
+                            @foreach($kegiatan as $row)
+                                <option <?php echo old('kegiatan', $table->id_ref_kegiatan) == $row->id_kegiatan ? 'selected':''; ?> value="{{$row->id_kegiatan}}">{{$row->kode_kegiatan}} - {{$row->deskripsi_kegiatan}}</option>
+                            @endforeach
+                        @endif
+
+                    </select>
+                </div>
+                <div class="fv-row mb-7" id="row-transaksi">
+                    <label class="required fw-semibold fs-6 mb-2">Kode Transaksi</label>
+                    <select name="transaksi" id="transaksi" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true">
+                    @if($errors->template->first('transaksi'))
+                    <option disabled selected value="null">Pilih kategori transaksi</option>
+                        @foreach($transaksi as $row)
+                            <option value="{{$row->id_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
+                        @endforeach
+                    @else
+                    <option disabled selected value="0">Pilih kategori transaksi</option>
+                        @foreach($transaksi as $row)
+                            <option <?php echo old('transaksi', $table->id_ref_transaksi) == $row->id_transaksi ? 'selected':''; ?> value="{{$row->id_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
+                        @endforeach
+                    @endif
+                    </select>
+                </div>
+
+                <div class="fv-row mb-7">
+                    <label class="required fw-semibold fs-6 mb-2">Nomenklatur jabatan</label>
+                    <select name="nomenklatur_jabatan" id="nomenklatur_jabatan" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true" >
+                    @if($errors->template->first('nomenklatur_jabatan'))
+                    <option disabled selected value="0">Pilih nomenklatur jabatan yang sesuai</option>
+                        @foreach($nomenklatur_jabatan as $row)
+                            <option value="{{$row->id}}">{{$row->nomenklatur}}</option>
+                        @endforeach
+                    @else
+                    <option disabled selected value="0">Pilih nomenklatur jabatan yang sesuai</option>
+                        @foreach($nomenklatur_jabatan as $row)
+                            <option <?php echo old('nomenklatur_jabatan', $table->id_nomenklatur_jabatan) == $row->id ? 'selected':''; ?> value="{{$row->id}}">{{$row->nomenklatur}}</option>
+                        @endforeach
+                    @endif
+                    </select>
+                </div>
+                <div id="display-tujuan-internal">
+                    <div class="fv-row mb-7">
+                        <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                        <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required>
+                            <option>Pilih tujuan surat</option>
+                            @foreach($user as $row)
+                                <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="fv-row mb-7">
                     <label class="required fw-semibold fs-6 mb-2">Tentang/perihal</label>
-                    <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" name="perihal" required>{{$table->perihal}}</textarea>                    
+                    <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" name="perihal">{{old('perihal', $table->perihal)}}</textarea>                    
                 </div>
                 <div class="fv-row mb-7" id="display-tgl_surat">
                     <label class="required fw-semibold fs-6 mb-2">Tanggal surat</label>
-                    <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tanggal surat" value="{{$table->tgl_surat}}" required/>
+                    <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tanggal surat" value="{{$table->tgl_surat}}"/>
                 </div>
                 
                 <div class="fv-row mb-7">
@@ -81,6 +149,7 @@
                         <!--end::Add user-->
                     </div>
                     <label class="required fw-semibold fs-6 mb-2">Poin menimbang</label>
+                        <input type="text" name="count_menimbang" id="count_menimbang" value="{{$count_menimbang}}" class="form-control form-control-solid mb-3 mb-lg-0" hidden/>
                         <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_menimbang">
                             <thead>
                                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -99,6 +168,7 @@
                         <!--end::Add user-->
                     </div>
                     <label class="required fw-semibold fs-6 mb-2">Poin mengingat</label>
+                    <input type="text" name="count_mengingat" id="count_mengingat" value="{{$count_mengingat}}" class="form-control form-control-solid mb-3 mb-lg-0" hidden/>
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_mengingat">
                         <thead>
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -111,7 +181,7 @@
                 </div>
                 <div class="fv-row mb-7" id="display-tgl_surat">
                     <label class="required fw-semibold fs-6 mb-2">Menetapkan</label>
-                    <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" placeholder="Menetapkan" name="menetapkan" required>{{$table->menetapkan}}</textarea>
+                    <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" placeholder="Menetapkan" name="menetapkan" > {{old('menetapkan', $table->menetapkan)}}</textarea>
                 </div>
                 <div class="fv-row mb-7">
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
@@ -121,6 +191,7 @@
                     </div>
                 
                     <label class="required fw-semibold fs-6 mb-2">Poin penetapan</label>
+                    <input type="text" name="count_menetapkan" id="count_menetapkan" value="{{$count_menetapkan}}" class="form-control form-control-solid mb-3 mb-lg-0" hidden/>
                     <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_menetapkan">
                         <thead>
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -172,7 +243,7 @@
                 </div>
             </div>
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary mr-2">Update</button>
+                <button type="submit" class="btn btn-primary mr-2" id="update_template_surat">Update</button>
                 <button type="button" id="cancel" class="btn btn-light-danger">Cancel</button>
             </div>
         </form>
@@ -195,15 +266,15 @@
                 </div>
             </div>
             <div class="modal-body px-5 my-7">
-                <form id="kt_modal_add_rincian_menimbang" name="add_surat_keluar_form" class="form" method="POST">
-                {{csrf_field()}}
+                <form id="kt_modal_add_rincian_menimbang" name="add_surat_keluar_form" class="form">
+                {{csrf_field()}} {{ method_field('POST') }}
                     <!--begin::Scroll-->
                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
 
                         <div id="notification-menimbang"></div>
                         <div class="fv-row mb-7" id="display-perihal">
                             <label class="required fw-semibold fs-6 mb-2">Rincian</label>
-                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_menimbang" name="rincian_menimbang" rows="3" required ></textarea>
+                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_menimbang" name="rincian_menimbang" rows="3" ></textarea>
                         </div>
 
                     </div>
@@ -263,7 +334,7 @@
                             </div>
                             <div class="fv-row mb-7">
                                 <label class="required fw-semibold fs-6 mb-2">Jabatan dalam tim</label>
-                                <textarea class="form-control form-control-solid" placeholder="Jabatan dalam tim" id="jabatan_tim" name="jabatan_tim" rows="3" required ></textarea>
+                                <textarea class="form-control form-control-solid" placeholder="Jabatan dalam tim" id="jabatan_tim" name="jabatan_tim" rows="3" ></textarea>
                             </div>
                         </div>
                     <!--end::Scroll-->
@@ -314,7 +385,7 @@
                         <div id="notification-mengingat"></div>
                         <div class="fv-row mb-7" id="display-perihal">
                             <label class="required fw-semibold fs-6 mb-2">Rincian</label>
-                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_mengingat" name="rincian_mengingat" rows="3" required ></textarea>
+                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_mengingat" name="rincian_mengingat" rows="3" ></textarea>
                         </div>
                     </div>
                     <!--end::Scroll-->
@@ -365,7 +436,7 @@
                         <div id="notification-menetapkan"></div>
                         <div class="fv-row mb-7" id="display-perihal">
                             <label class="required fw-semibold fs-6 mb-2">Rincian</label>
-                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_menetapkan" name="rincian_menetapkan" rows="3" required ></textarea>
+                            <textarea class="form-control form-control-solid my_input" placeholder="Rincian" id="rincian_menetapkan" name="rincian_menetapkan" rows="3" ></textarea>
                         </div>
                     </div>
                     <!--end::Scroll-->
@@ -408,6 +479,69 @@ $(document).ready(function(){
         window.location.href = "{{url('template/surat_keluar')}}";
     });
 
+    var id_surat_keluar = "{{request()->route('id')}}";
+    //set initial form value
+    $.ajax({
+        url:`{{url('transaksi/surat_keluar/${id_surat_keluar}/edit')}}`,
+        type:"GET",
+        dataType:"JSON",
+        success:function(data){
+            console.log(data);
+            let tujuan_surat = data.tujuan_surat.map(function (obj) {
+                return obj.id_penerima;
+            });
+
+            if(data.ref_transaksi.length == 0){
+                document.getElementById("row-transaksi").style.display = 'none';
+            }
+
+            $("#tujuan").val(tujuan_surat).trigger("change");
+        }
+    })
+    //set selectde penerima surat value
+
+    $("body").on("click","#update_template_surat", function(e){
+        e.preventDefault();
+        console.log("Update template surat keluar")
+
+        var formData = new FormData(document.getElementById("form_update_template_sk"));
+        $.ajax({
+            url:`{{url('template/surat_keluar/${id_surat_keluar}/update')}}`,
+            type:"POST",
+            data:formData,
+            dataType:"JSON",
+            cache:false,
+            contentType:false,
+            processData:false,
+            success:function(data){
+                console.log(data);
+                if(data.data.success === false){
+                    console.log(data.data.errors)
+                    let err_nomenklatur_jabatan = data.data.errors.nomenklatur_jabatan ? `<li>${data.data.errors.nomenklatur_jabatan}</li>` : ``;
+                    let err_tujuan = data.data.errors.tujuan  ? `<li>${data.data.errors.tujuan}</li>` : ``;
+                    let err_perihal = data.data.errors.perihal  ? `<li>${data.data.errors.perihal}</li>` : ``;
+                    let err_tgl_surat = data.data.errors.tgl_surat  ? `<li>${data.data.errors.tgl_surat}</li>` : ``;
+                    let err_menetapkan = data.data.errors.menetapkan  ? `<li>${data.data.errors.menetapkan}</li>` : ``;
+                    let err_poin_menetapkan = data.data.errors.count_menetapkan  ? `<li>${data.data.errors.count_menetapkan}</li>` : ``;
+                    let err_mengingat = data.data.errors.count_mengingat  ? `<li>${data.data.errors.count_mengingat}</li>` : ``;
+                    let err_menimbang = data.data.errors.count_menimbang  ? `<li>${data.data.errors.count_menimbang}</li>` : ``;
+                    
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_mengingat+err_menimbang+err_menetapkan+err_poin_menetapkan+"</div></div>";      
+
+                    //scroll view to the top to see errors message
+                    $('html,body').animate({
+                        scrollTop: $("#top-most").offset().top},
+                    'slow');
+
+                    return false;
+                }
+
+                window.location.href = "{{url('transaksi/surat_keluar')}}";
+            }
+
+        });
+    });
+
     $("body").on("click","#add_menimbang",function(){
         document.querySelector(".save_menimbang").setAttribute("data-kt-indicator", "off");
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add poin menimbang</h2>`;
@@ -435,11 +569,14 @@ $(document).ready(function(){
     var arr_id_mengingat = [""];
     var arr_id_user = [];
 
-    var id_surat_keluar = "{{request()->route('id')}}";
-    var tb_surat_keluar = $("#tb_menimbang").DataTable({
-        ajax        : {
+    var tb_menimbang = $("#tb_menimbang").DataTable({
+        ajax : {
             url:`${id_surat_keluar}/get_menimbang`,
             dataSrc:""
+        },
+        drawCallback:function(settings){
+            var api = this.api();
+            $("#count_menimbang").val(api.rows().count());
         },
         serverSide  : false,
         ordering    : false,
@@ -608,7 +745,7 @@ $(document).ready(function(){
             contentType: false,
             processData: false,
             success:function(data){
-                
+
                 if(data.success == false){
                     let err_menimbang = data.msg.menimbang ? `<li>${data.msg.menimbang}</li>` : ``;
 
@@ -684,6 +821,10 @@ $(document).ready(function(){
         ajax        : {
             url:`{{url('template/surat_keluar/${id_surat_keluar}/get_mengingat')}}`,
             dataSrc:""
+        },
+        drawCallback:function(settings){
+            var api = this.api();
+            $("#count_mengingat").val(api.rows().count());
         },
         serverSide  : false,
         ordering    : false,
@@ -808,10 +949,14 @@ $(document).ready(function(){
         }
     });
 
-    var tb_menetaapkan = $("#tb_menetapkan").DataTable({
+    var tb_menetapkan = $("#tb_menetapkan").DataTable({
         ajax        : {
             url:`{{url('template/surat_keluar/${id_surat_keluar}/get_menetapkan')}}`,
             dataSrc:""
+        },
+        drawCallback:function(settings){
+            var api = this.api();
+            $("#count_menetapkan").val(api.rows().count());
         },
         serverSide  : false,
         ordering    : false,
@@ -934,6 +1079,133 @@ $(document).ready(function(){
                 }
             });
         }
+    });
+
+    $("#klasifikasi").change(function(){
+        let id_ref_klasifikasi = $(this).val();
+        console.log(id_ref_klasifikasi);
+        $.ajax({
+            url:`{{url('referensi/${id_ref_klasifikasi}/get_fungsi_list')}}`,
+            type:"GET",
+            dataType:"JSON",
+            success:function(data){
+                
+                if(data.length>0){
+                    //me-reset daftar kategori sebelumnya
+                    console.log("data: ",data.length)
+                    document.getElementById("fungsi").removeAttribute("disabled");
+                    $("#fungsi").find("option").remove();
+                    document.getElementById("kegiatan").setAttribute("disabled", "disabled");
+                    $("#kegiatan").val(0);
+                    document.getElementById("transaksi").setAttribute("disabled", "disabled");
+                    $("#transaksi").val(0);
+                    document.getElementById("row-transaksi").style.display = 'block';
+                    document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
+                    $("#nomenklatur_jabatan").val(0);
+
+                    document.getElementById("fungsi").innerHTML = `<option disabled selected value='0'>Pilih kategori fungsi</option>`;
+                    for(var i=0; i<data.length; i++){                    
+                        document.getElementById("fungsi").innerHTML += `<option class='fungsi-list' value='${data[i].id_fungsi}' data-kode_fungsi='${data[i].kode_fungsi}'>${data[i].kode_fungsi} - ${data[i].deskripsi_fungsi}</option>`; 
+                    }
+                    return false;
+                }
+                alert("Maaf, data tidak ditemukan. Periksa kembali klasifikasi surat anda atau pilih Kode klasifikasi yang lain")
+                console.log("data: 0")
+                document.getElementById("fungsi").setAttribute("disabled", "disabled");
+                $("#fungsi").val(0);
+                document.getElementById("kegiatan").setAttribute("disabled", "disabled");
+                $("#kegiatan").val(0);
+                document.getElementById("transaksi").setAttribute("disabled", "disabled");
+                $("#transaksi").val(0);
+                document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
+                $("#nomenklatur_jabatan").val(0);
+                document.getElementById("row-transaksi").style.display = 'block';
+
+                disabledAll();
+
+            }
+        });
+    });
+
+    $("#fungsi").change(function(){
+        let id_ref_fungsi = $(this).val();
+        let kode_fungsi = $(this).find(':selected').data('kode_fungsi');
+        $("input[name='kode_surat']").val(kode_fungsi);
+       
+        $.ajax({
+            url:`{{url('referensi/${id_ref_fungsi}/get_kegiatan_list')}}`,
+            type:"GET",
+            success:function(data){
+               
+                if(data.length > 0){
+                    console.log("data: ",data.length)
+                    document.getElementById("kegiatan").removeAttribute("disabled");
+                    $("#kegiatan").find("option").remove();
+                    document.getElementById("transaksi").setAttribute("disabled", "disabled");
+                    $("#transaksi").val(0);
+                    document.getElementById("row-transaksi").style.display = 'block';
+                    document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
+                    $("#nomenklatur_jabatan").val(0);
+                   
+                    document.getElementById("kegiatan").innerHTML = `<option disabled selected value='0'>Pilih kategori kegiatan</option>`;
+                    for(var i=0; i<data.length; i++){                    
+                        document.getElementById("kegiatan").innerHTML += `<option class='kegiatan-list' value='${data[i].id_kegiatan}' data-kode_kegiatan='${data[i].kode_kegiatan}'>${data[i].kode_kegiatan} - ${data[i].deskripsi_kegiatan}</option>`; 
+                    }
+                    return false;
+                }
+                alert("Maaf, data tidak ditemukan. Periksa kembali klasifikasi surat anda atau pilih Kode fungsi yang lain")
+                console.log("data: 0")  
+                document.getElementById("kegiatan").setAttribute("disabled", "disabled");
+                $("#kegiatan").val(0);
+                document.getElementById("transaksi").setAttribute("disabled", "disabled");
+                $("#transaksi").val(0);
+                document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
+                $("#nomenklatur_jabatan").val(0);
+                document.getElementById("row-transaksi").style.display = 'block';
+                
+            }
+        });
+    });
+
+    $("#kegiatan").change(function(){
+        let id_ref_kegiatan = $(this).val();
+        let kode_kegiatan = $(this).find(':selected').data('kode_kegiatan');
+        $("input[name='kode_surat']").val(kode_kegiatan);
+       
+        $.ajax({
+            url:`{{url('referensi/${id_ref_kegiatan}/get_transaksi_list')}}`,
+            type:"GET",
+            success:function(data){
+
+                if(data.length >0){  
+                    console.log("data: ",data.length)
+                    document.getElementById("transaksi").removeAttribute("disabled");
+                    $("#transaksi").val(0);
+                    document.getElementById("row-transaksi").style.display = 'block';
+                    document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
+                    $("#nomenklatur_jabatan").val(0);
+                    document.getElementById("transaksi").innerHTML = `<option disabled selected value='0'>Pilih kategori transaksi</option>`;
+                    for(var i=0; i<data.length; i++){                    
+                        document.getElementById("transaksi").innerHTML += `<option class='transaksi-list' value='${data[i].id_transaksi}' data-kode_transaksi='${data[i].kode_transaksi}'>${data[i].kode_transaksi} - ${data[i].deskripsi_transaksi}</option>`; 
+                    }
+                    return false;
+                }
+                
+                document.getElementById("transaksi").setAttribute("disabled", "disabled");
+                $("#transaksi").val(0);
+
+                document.getElementById("row-transaksi").style.display = 'none';
+                document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
+                $("#nomenklatur_jabatan").val(0);
+            }
+        });
+    });
+
+    $("#transaksi").change(function(){
+        let kode_transaksi = $(this).find(':selected').data('kode_transaksi');
+        $("input[name='kode_surat']").val(kode_transaksi);
+        $("#nomenklatur_jabatan").val(0);
+        document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
     });
 
 });

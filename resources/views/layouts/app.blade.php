@@ -44,7 +44,7 @@ License: For each use you must have a valid license purchased only from above li
 			table.dataTable tbody td {
 				vertical-align: top;
 			}
-			.form-select { cursor: pointer; }
+			.form-check-input, .form-select { cursor: pointer; }
 		</style>
 	</head>
 	<!--end::Head-->

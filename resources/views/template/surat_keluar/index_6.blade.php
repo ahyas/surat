@@ -158,12 +158,6 @@
                         <!--end::Content-->
                     </div>
                     <!--end::Wrapper-->
-
-                    <!--begin::Close-->
-                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                        <i class="ki-duotone ki-cross fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i>
-                    </button>
-                    <!--end::Close-->
                 </div>
                 <!--end::Alert-->
             <!--begin::Table-->

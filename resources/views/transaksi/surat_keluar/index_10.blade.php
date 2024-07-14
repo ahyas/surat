@@ -82,8 +82,8 @@
                                                 @endforeach
                                             </select>
                                         </div>
-
-                                        <div class="fv-row mb-7" id="display-penerima">
+                                       
+                                        <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-5">Penerima</label>
                                             <div class="d-flex fv-row">
                                                 <!--begin::Radio-->
@@ -104,37 +104,70 @@
                                             </div>
                                             <!--end::Input row-->
                                         </div>
-
-                                        <div class="fv-row mb-7" id="display-tujuan-internal">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                            <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
-                                                <option>Pilih tujuan surat</option>
-                                                @foreach($user as $row)
-                                                    <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
-                                                @endforeach
-                                            </select>
+                                        <div id="display-tujuan-internal">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
+                                                    <option>Pilih tujuan surat</option>
+                                                    @foreach($user as $row)
+                                                        <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         </div>
 
-                                        <div class="fv-row mb-7" id="display-tujuan-external">
-                                            <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                            <input type="text" name="tujuan-external" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
+                                        <div id="display-tujuan-external">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                                <input type="text" name="tujuan-external" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
+                                            </div>
                                         </div>
-
-                                        <div class="fv-row mb-7" id="display-perihal">
-                                            <label class="required fw-semibold fs-6 mb-2">Perihal / Tentang</label>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
                                             <textarea class="form-control form-control-solid my_input" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required disabled></textarea>
                                         </div>
-
-                                        <div class="fv-row mb-7" id="display-tgl_surat">
+                                        <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Tanggal surat</label>
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tanggal surat" required disabled/>
                                         </div>
-
-                                        <div class="fv-row mb-7" id="display-file">
-                                            <label class="fw-semibold fs-6 mb-2" id="file">File</label>
-                                            <input class="form-control form-control-solid mb-3 mb-lg-0 my_input" name="file_surat" type="file" id="file_surat" required disabled>
+                                        <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-5" id="data_sukung">Data dukung</label>
+                                            <div class="d-flex fv-row">
+                                                <!--begin::Radio-->
+                                                <div class="form-check form-check-custom form-check-solid">
+                                                    <!--begin::Input-->
+                                                    <input class="form-check-input me-3" name="data_dukung" type="radio" value="1" id="kt_data_dukung_0" disabled/>
+                                                    <label class="form-check-label" for="kt_data_dukung_0">
+                                                        <div class="fw-bold text-gray-800">Upload manual</div>
+                                                    </label>
+                                                    
+                                                    <input class="form-check-input me-3" name="data_dukung" type="radio" value="2" id="kt_data_dukung_1" style="margin-left:20px" disabled/>
+                                                    <label class="form-check-label" for="kt_data_dukung_1">
+                                                        <div class="fw-bold text-gray-800">Gunakan Template</div>
+                                                    </label>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Radio-->
+                                            </div>
+                                            <!--end::Input row-->
                                         </div>
-
+                                        <div id="display-upload-file">
+                                            <div class="fv-row mb-7">
+                                                <label class="fw-semibold fs-6 mb-2" id="file">File</label>
+                                                <input class="form-control form-control-solid mb-3 mb-lg-0 my_input" name="file_surat" type="file" id="file_surat" required disabled>
+                                            </div>
+                                        </div>
+                                        <div id="display-choose-template">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Template</label>
+                                                <select name="template_surat_keluar" id="template_surat_keluar" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true">
+                                                    <option disabled selected value="0">Pilih template surat keluar</option>
+                                                    @foreach($template_surat_keluar as $row)
+                                                        <option class='transaksi-list' value="{{$row->id}}">{{$row->keterangan}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
                                     </div>
                                     <!--end::Scroll-->
                                     <!--begin::Actions-->
@@ -202,15 +235,14 @@
         <!--begin::Card body-->
         <div class="card-body py-4">
             <!--begin::Table-->
-            <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
+            <table class="table table-hover align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th>Perihal/Tentang</th>
+                        <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -223,6 +255,7 @@
     <!--end::Card-->
 </div>
 <!--end::Post-->
+<!--Preview file PDF-->
 <div class="modal fade" id="modal_preview" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
         <div class="modal-content">
@@ -242,7 +275,26 @@
         </div>
     </div>      
 </div>
+<!--Preview file docx-->
+<div class="modal fade" id="office_preview" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Preview</h2>
 
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            
+            <div class="modal-body" >
+                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+            </div>
+        </div>
+    </div>      
+</div>
 @endsection
 @push('scripts')
 
@@ -250,9 +302,8 @@
 $(document).ready(function(){
     document.getElementById("display-tujuan-internal").style.display = "none";
     document.getElementById("display-tujuan-external").style.display = "none";
-    document.getElementById("display-file").style.display = "none";
-    document.getElementById("display-perihal").style.display = "none";
-    document.getElementById("display-penerima").style.display = "none";
+    document.getElementById("display-upload-file").style.display = "none";
+    document.getElementById("display-choose-template").style.display = "none";
 
     var date = document.getElementById("tgl_surat");
     flatpickr(date, {
@@ -290,7 +341,7 @@ $(document).ready(function(){
 
                     return`<div class="d-flex flex-column">
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
-                            <div>${full['deskripsi']}</div>
+                        ${full["deskripsi"]}
                         </div>${a}`;
                 }
             },
@@ -309,21 +360,9 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data){
-                    if(data !== null){
-                        //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                        return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
-                    }else{
-                        return '';
-                    }
-                }
-            },
-            {data:"status",
-                mRender:function(data, type, full){
-                    if(full['id_status'] == 1){
-                        return`<span class="badge badge-light-danger">${data}</span>`;
-                    }else{
-                        return`<span class="badge badge-light-success">${data}</span>`;
-                    }
+
+                    //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
+                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
             {data:"id_surat", className: "text-end",
@@ -379,8 +418,19 @@ $(document).ready(function(){
     });
 
     $("body").on("click", "#lampiran", function(){
-        $("#modal_preview").modal("show");
-        document.getElementById("preview").src = $(this).data("url")
+        
+        console.log($(this).data("filename"));
+        var filename = $(this).data("filename");
+        var extension = filename.substr(filename.indexOf('.')); 
+        var url = $(this).data("url");
+        console.log($(this).data("url"))
+        if(extension == '.pdf'){
+            $("#modal_preview").modal("show");
+            document.getElementById("preview").src = url;
+        }else{
+            $("#office_preview").modal("show");
+            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=https://pta-papuabarat.go.id/wp-content/uploads/2024/07/3.docx`;
+        }
     });
 
     $(("body")).on("click","#tujuan", function(){
@@ -414,12 +464,14 @@ $(document).ready(function(){
     function enabledAll(){
         document.querySelectorAll(".my_input").forEach(element=>{
             element.removeAttribute("disabled");
+            
         });
     }
 
     function disabledAll(){
         $("#tujuan").val([]).trigger("change");
         $("input[name='penerima_surat']").prop('checked',false);
+        $("input[name='data_dukung']").prop('checked', false);
         document.querySelectorAll(".my_input").forEach(element=>{
             element.value = "";
             element.setAttribute("disabled", "disabled");
@@ -454,6 +506,24 @@ $(document).ready(function(){
             console.log("internal")
             document.getElementById("display-tujuan-internal").style.display = "inline-block";
             document.getElementById("display-tujuan-external").style.display = "none";
+        }
+
+    });
+
+    $("body").on("change", "input[name='data_dukung']", function(){
+        console.log($(this).val())
+        var data_dukung = $(this).val();
+        //penerima eksternal
+        //$("#tujuan").val([]).trigger("change");
+        //$("input[name='tujuan-external']").val("");
+        if(data_dukung == 2){
+            console.log("Gunakan template")
+            document.getElementById("display-upload-file").style.display = "none";
+            document.getElementById("display-choose-template").style.display = "inline-block";
+        }else{
+            console.log("Upload manual")
+            document.getElementById("display-upload-file").style.display = "inline-block";
+            document.getElementById("display-choose-template").style.display = "none";
         }
 
     });
@@ -524,7 +594,7 @@ $(document).ready(function(){
                     document.getElementById("row-transaksi").style.display = 'inline-block';
                     document.getElementById("nomenklatur_jabatan").setAttribute("disabled", "disabled");
                     $("#nomenklatur_jabatan").val(0);
-                   
+                    
                     document.getElementById("kegiatan").innerHTML = `<option disabled selected value='0'>Pilih kategori kegiatan</option>`;
                     for(var i=0; i<data.length; i++){                    
                         document.getElementById("kegiatan").innerHTML += `<option class='kegiatan-list' value='${data[i].id_kegiatan}' data-kode_kegiatan='${data[i].kode_kegiatan}'>${data[i].kode_kegiatan} - ${data[i].deskripsi_kegiatan}</option>`; 
@@ -596,13 +666,15 @@ $(document).ready(function(){
         disabledAll();
         disabledList();
 
-        document.getElementById("klasifikasi").disabled = false;
+        document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
+        document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
+        document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
+        document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
-        document.getElementById("display-file").style.display = "none";
-        document.getElementById("display-perihal").style.display = "none";
-        document.getElementById("display-penerima").style.display = "none";
-
+        document.getElementById("display-upload-file").style.display = "none";
+        document.getElementById("display-choose-template").style.display = "none";
         document.querySelector(".save_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".save_surat_keluar").removeAttribute("disabled");
         document.getElementById("update_surat").style.display = "none";
@@ -610,6 +682,13 @@ $(document).ready(function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Surat Keluar</h2>`;
         document.getElementById("klasifikasi").value = 0;
         document.getElementById("notification").innerHTML ='';
+        document.getElementById("file").classList.add("required");
+        document.getElementById("file_surat").setAttribute("required", "required");
+
+        document.getElementById("data_sukung").classList.add("required");
+        
+        let today = new Date();
+        fp.setDate(today, true, "Y-m-d");
         
         $("#kt_modal_add_surat_keluar").modal("show");
     });
@@ -618,7 +697,8 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
-        
+       
+
         var formData = new FormData(document.getElementById("kt_modal_add_surat_keluar_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_keluar.save')}}`,
@@ -636,17 +716,26 @@ $(document).ready(function(){
                         let err_penerima_surat = data.errors.penerima_surat  ? `<li>${data.errors.penerima_surat}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
-                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+                        let err_data_dukung = data.errors.err_data_dukung ? `<li>${data.errors.err_data_dukung}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_data_dukung+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
 
+                        //scroll to the top to see errors message
+                        var scroll = document.querySelector("#kt_modal_add_user_scroll");
+                        scroll.scrollTop = 0;
+
                         return false;
-                    } 
+                    }
+                    
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                         $("#kt_modal_add_surat_keluar").modal("hide");
+                    //bila yang dipilih menggunakan template maka diarahkan menu template
+                    if(data.id_surat_keluar !== null){
+                        window.location.href = `{{url('template/surat_keluar/${data.id_surat_keluar}/edit')}}`;
+                    }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                         location.reload();
@@ -657,19 +746,6 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_surat_keluar", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Surat Keluar</h2>`;
-        
-        document.getElementById("klasifikasi").disabled = true;
-        document.getElementById("fungsi").disabled = true;
-        document.getElementById("kegiatan").disabled = true;
-        document.getElementById("transaksi").disabled = true;
-        document.getElementById("nomenklatur_jabatan").disabled = true;
-        document.getElementById("display-tujuan-internal").style.display = "inline-block";
-        document.getElementById("display-tujuan-external").style.display = "inline-block";
-        document.getElementById("display-file").style.display = "inline-block";
-       
-        document.getElementById("display-perihal").style.display = "inline-block";
-        document.getElementById("display-penerima").style.display = "inline-block";
-
         document.getElementById("update_surat").style.display = "inline-block";
         document.querySelector(".update_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".update_surat_keluar").removeAttribute("disabled");
@@ -677,27 +753,37 @@ $(document).ready(function(){
         document.getElementById("save_surat").style.display = "none";
         document.getElementById("file").classList.remove("required");
         document.getElementById("file_surat").removeAttribute("required");
+        document.getElementById("data_sukung").classList.remove("required");
         document.getElementById("notification").innerHTML ='';
         document.getElementById("row-transaksi").style.display = 'inline-block';
-        let id_surat = $(this).data("id_surat_keluar");
+        var id_surat = $(this).data("id_surat_keluar");
         $("input[name='id_surat_keluar']").val(id_surat);
         $("input[name='kode_surat']").val($(this).data("kode_surat"));
         
         $("#file_surat").val("");
+        $("#template_surat_keluar").val("0");
         loadingPage(true);
         $.ajax({
             url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
             type:"GET",
             dataType:"JSON",
             success:function(data){
+            //memakai data dukung manual
+            if(data.data.use_template === false){
+                console.log("Non template")
                 enabledAll();
                 disabledList();
 
-                console.log("asd ",data)
+                document.querySelector("#kt_data_dukung_1").disabled=true;
+                document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+                document.getElementById("kt_data_dukung_0").checked =true;
+
+                document.getElementById("display-upload-file").style.display = "inline-block";
+                document.getElementById("display-choose-template").style.display = "none";
 
                 $("#klasifikasi").val(data.id_klasifikasi);
                 if(data.ref_fungsi.length>0){
-
+                    document.getElementById("fungsi").removeAttribute("disabled");
                     document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
                     for(var i=0; i<data.ref_fungsi.length; i++){
                         let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
@@ -707,6 +793,7 @@ $(document).ready(function(){
                 }
                 
                 if(data.ref_kegiatan.length>0){
+                    document.getElementById("kegiatan").removeAttribute("disabled");
                     document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
                     for(var i=0; i<data.ref_kegiatan.length; i++){
                         let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
@@ -718,6 +805,7 @@ $(document).ready(function(){
                 if(data.ref_transaksi.length>0){
                     console.log("Transaksi length "+data.ref_transaksi.length)
                     document.getElementById("row-transaksi").style.display = 'inline-block';
+                    document.getElementById("transaksi").removeAttribute("disabled");
                     document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
                     for(var i=0; i<data.ref_transaksi.length; i++){
                         let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
@@ -729,7 +817,7 @@ $(document).ready(function(){
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                console.log("Internal? ",data.surat_keluar.internal)
+                
                 if(data.surat_keluar.internal == 1){
                     
                     document.querySelector("#kt_modal_update_role_option_1").disabled=true;
@@ -744,7 +832,7 @@ $(document).ready(function(){
                     document.getElementById("display-tujuan-external").style.display = "none";
                     $("#tujuan").val(tujuan_surat).trigger("change");
                     
-                }else if(data.surat_keluar.internal == 2){
+                }else{
                     document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
                     document.querySelector("#kt_modal_update_role_option_1").checked;
                     document.querySelector("#kt_modal_update_role_option_0").disabled=true; 
@@ -753,15 +841,9 @@ $(document).ready(function(){
                     document.getElementById("display-tujuan-external").style.display = "inline-block";
                     $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
                     
-                }else{
-                    document.getElementById("display-tujuan-internal").style.display = "none";
-                    document.getElementById("display-tujuan-external").style.display = "none";
-                    document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
-                    document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
-                    document.querySelector("#kt_modal_update_role_option_0").checked = false;
-                    document.querySelector("#kt_modal_update_role_option_1").checked = false;
                 }
 
+                document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                 $("#nomenklatur_jabatan").val(data.id_nomenklatur);
                 $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
                 
@@ -770,6 +852,18 @@ $(document).ready(function(){
 
                 loadingPage(false);
                 $("#kt_modal_add_surat_keluar").modal("show");
+            }else{
+                document.querySelector("#kt_data_dukung_0").disabled=true;
+                document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
+                document.getElementById("kt_data_dukung_1").checked =true;
+
+                document.getElementById("display-upload-file").style.display = "none";
+                document.getElementById("display-choose-template").style.display = "inline-block";
+
+                console.log("With template")
+                window.location.href = `{{url('template/surat_keluar/${id_surat}/edit')}}`;
+            }
+                
             }
         });
     });
@@ -792,26 +886,29 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 
-            console.log(data);
-            if (!data.success) {
-                let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
-                let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
-                
-                let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
-                let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
-                let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+                    console.log(data);
+                    if (!data.success) {
+                        let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
+                        
+                        let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
+                        let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
+                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
-                btn.setAttribute("data-kt-indicator", "off");
-                btn.removeAttribute("disabled");
-                $("#file_surat").val("");
-                
-                return false;
-            } 
-                loadingPage(true);
-                $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                $("#kt_modal_add_surat_keluar").modal("hide");
-                alert("Surat berhasil diarsipkan");
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        btn.setAttribute("data-kt-indicator", "off");
+                        btn.removeAttribute("disabled");
+                        $("#file_surat").val("");
+
+                        //scroll to the top to see errors message
+                        var scroll = document.querySelector("#kt_modal_add_user_scroll");
+                        scroll.scrollTop = 0;
+                        
+                        return false;
+                    } 
+                        loadingPage(true);
+                        $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                        $("#kt_modal_add_surat_keluar").modal("hide");
             },error:function(){
                 if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
                     location.reload();

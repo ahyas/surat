@@ -1,1 +1,1 @@
-Test
+<iframe src='https://view.officeapps.live.com/op/embed.aspx?src=https://pta-papuabarat.go.id/wp-content/uploads/2024/07/3.docx' width='100%' height='650px' frameborder='0'></iframe>

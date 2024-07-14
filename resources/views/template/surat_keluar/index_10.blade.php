@@ -83,7 +83,7 @@
                                         <button type="submit" class="btn btn-primary btn-sm save_surat_keluar" id="save_surat" data-kt-indicator="on">
                                             <span class="indicator-progress">
                                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                            Save
+                                            Save and Proceed
                                         </button>
                                         <button type="submit" class="btn btn-primary btn-sm update_surat_keluar" id="update_surat" data-kt-indicator="off">
                                             <span class="indicator-progress">
@@ -154,16 +154,10 @@
                         <h4 class="fw-semibold">Perhatian!</h4>
                         <!--end::Title-->
                         <!--begin::Content-->
-                        <span>Sebelum membuat template surat keluar, pastikan Anda sudah membuat nomor surat terlebih dahulu.</span>
+                        <span>Sebelum membuat template surat keluar, pastikan Anda sudah membuat nomor surat keluar terlebih dahulu.</span>
                         <!--end::Content-->
                     </div>
                     <!--end::Wrapper-->
-
-                    <!--begin::Close-->
-                    <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
-                        <i class="ki-duotone ki-cross fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i>
-                    </button>
-                    <!--end::Close-->
                 </div>
                 <!--end::Alert-->
             <!--begin::Table-->

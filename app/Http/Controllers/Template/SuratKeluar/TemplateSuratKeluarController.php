@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use PhpOffice\PhpWord\TemplateProcessor;
+use Validator;
+use PDF;
 
 class TemplateSuratKeluarController extends Controller
 {
@@ -153,13 +155,13 @@ class TemplateSuratKeluarController extends Controller
     }
 
     public function editSurat($id){
-        $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
-        ->select("id","nomenklatur")
-        ->get();
-
         $table= DB::table("transaksi_surat_keluar")
         ->select(
             "transaksi_surat_keluar.id AS id_surat",
+            "transaksi_surat_keluar.id_ref_klasifikasi",
+            "transaksi_surat_keluar.id_ref_fungsi",
+            "transaksi_surat_keluar.id_ref_kegiatan",
+            "transaksi_surat_keluar.id_ref_transaksi",
             "transaksi_surat_keluar.no_surat",
             "transaksi_surat_keluar.perihal",
             "transaksi_surat_keluar.id_nomenklatur_jabatan",
@@ -171,11 +173,65 @@ class TemplateSuratKeluarController extends Controller
         ->join("template_sk", "transaksi_surat_keluar.id","=","template_sk.id_surat_keluar")
         ->first();
 
+        $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
+        ->select("id","nomenklatur")
+        ->get();
+
+        $klasifikasi = DB::table("ref_klasifikasi")
+        ->select(
+            "id AS id_klasifikasi",
+            "kode AS kode_klasifikasi",
+            "deskripsi AS deskripsi_klasifikasi"
+        )->get();
+
+        $fungsi = DB::table("ref_fungsi")
+        ->where("id_ref_klasifikasi", $table->id_ref_klasifikasi)
+        ->select(
+            "id AS id_fungsi",
+            "kode AS kode_fungsi",
+            "deskripsi AS deskripsi_fungsi"
+        )->get();
+
+        $kegiatan = DB::table("ref_kegiatan")
+        ->where("id_ref_fungsi", $table->id_ref_fungsi)
+        ->select(
+            "id AS id_kegiatan",
+            "kode AS kode_kegiatan",
+            "deskripsi AS deskripsi_kegiatan"
+        )->get();
+
+        $transaksi = DB::table("ref_transaksi")
+        ->where("id_ref_kegiatan", $table->id_ref_kegiatan)
+        ->select(
+            "id AS id_transaksi",
+            "kode AS kode_transaksi",
+            "deskripsi AS deskripsi_transaksi"
+        )->get();
+
         $pegawai = DB::table("users")
         ->select("id","name")
         ->get();
 
-        return view("template_master.template_sk", compact("table","nomenklatur_jabatan","pegawai"));
+        $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
+
+        $count_menimbang = DB::table("template_sk_menimbang")->where("id_surat_keluar",$id)->count();
+        $count_mengingat = DB::table("template_sk_mengingat")->where("id_surat_keluar",$id)->count();
+        $count_menetapkan = DB::table("template_sk_menetapkan")->where("id_surat_keluar",$id)->count();
+
+        return view("template_master.template_sk", 
+        compact(
+            "table",
+            "nomenklatur_jabatan",
+            "pegawai",
+            "count_menimbang",
+            "count_mengingat",
+            "count_menetapkan",
+            "klasifikasi",
+            "fungsi",
+            "kegiatan",
+            "transaksi",
+            "user")
+        );
     }
 
     public function getNominatif($id_surat_keluar){
@@ -278,43 +334,166 @@ class TemplateSuratKeluarController extends Controller
         return response()->json($data);
     }
 
+    public function getBulanRomawi($tgl_surat){
+        $date = strtotime($tgl_surat);
+        
+        $bulan =  ltrim(date("m", $date), "0"); 
+
+        switch($bulan){
+            case 1:
+                return "I";
+            break;
+            case 2:
+                return "II";
+            break;
+            case 3:
+                return "III";
+            break;
+            case 4:
+                return "IV";
+            break;
+            case 5:
+                return "V";
+            break;
+            case 6:
+                return "VI";
+            break;
+            case 7:
+                return "VII";
+            break;
+            case 8:
+                return "VIII";
+            break;
+            case 9:
+                return "IX";
+            break;
+            case 10:
+                return "X";
+            break;
+            case 11:
+                return "XI";
+            break;
+            case 12:
+                return "XII";
+            break;
+            default:
+
+                return "";
+
+        }
+    }
+
     public function updateSurat(Request $request, $id){  
         $errors = [];
         $data = [];
 
+        if (empty($request["nomenklatur_jabatan"])) {
+            $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
+        }else{
+            $date = strtotime($request["tgl_surat"]);
+            $bulan = $this->getBulanRomawi($request["tgl_surat"]);
+            $tahun = date("Y", $date); 
+
+            $agenda = DB::table("transaksi_surat_keluar")
+            ->where("id",$id)
+            ->select(
+                "no_agenda"
+            )->first();
+
+            $no_agenda = sprintf('%03d', $agenda->no_agenda);
+
+            if($request["nomenklatur_jabatan"] == 1){
+                $nomor_surat =  $no_agenda."/KPTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
+            }
+
+            if($request["nomenklatur_jabatan"] == 2){
+                $nomor_surat = $no_agenda."/PAN.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
+            }
+
+            if($request["nomenklatur_jabatan"] == 3){
+                $nomor_surat = $no_agenda."/SEK.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
+                
+            }
+        }
+
+      
+        if (empty($request["tujuan"])) {
+            $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
+        }
+
         if (empty($request["perihal"])) {
-            $errors['perihal'] = 'perihal surat harus diisi.';
+            $errors['perihal'] = 'Perihal surat tidak boleh kosong';
         }
 
         if (empty($request["tgl_surat"])) {
-            $errors['tgl_surat'] = 'Tanggal surat harus diisi.';
+            $errors['tgl_surat'] = 'Tanggal surat tidak boleh kosong';
+        }
+
+        if (empty($request["count_menetapkan"])) {
+            $errors['count_menetapkan'] = 'Menetapkan surat tidak boleh kosong';
+        }
+
+        if (empty($request["count_mengingat"])) {
+            $errors['count_mengingat'] = 'Mengingat tidak boleh kosong';
+        }
+
+        if (empty($request["count_menimbang"])) {
+            $errors['count_menimbang'] = 'Menimbang tidak boleh kosong';
         }
 
         if (empty($request["menetapkan"])) {
-            $errors['menetapkan'] = 'Tanggal surat harus diisi.';
+            $errors['menetapkan'] = 'Menetapkan tidak boleh kosong';
         }
 
-        if(!empty($errors)){
-            $data["success"] = false;
-            $data["errors"] = $errors;
-        }else{
+        //-----
+
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['errors'] = $errors;
+        } else {
             $data['success'] = true;
             $data['message'] = 'Success!';
+            //--------start save daftar penerima surat-------------
+            DB::table("detail_transaksi_surat")
+            ->where("id_surat", $id)
+            ->delete();
 
+            $tujuan = $request["tujuan"];
+            $value = array();
+            
+            foreach($tujuan as $id_pegawai){
+                if(!empty($id_pegawai)){
+                    $value[] = [
+                        "id_surat"=>$id,
+                        "id_penerima"=>$id_pegawai
+                    ];
+                }
+            }
+
+            DB::table('detail_transaksi_surat')->insert($value);
+            //--------end save daftar penerima surat-------------
+            
             DB::table("template_sk")
             ->where("id_surat_keluar",$id)
             ->update([
                 "menetapkan"=>$request["menetapkan"]
             ]);
 
+            $filename = $id.".docx";
+
             DB::table("transaksi_surat_keluar")
             ->where("id",$id)
             ->update([
+                "id_ref_klasifikasi"=>$request["klasifikasi"],
+                "id_ref_fungsi"=>$request["fungsi"],
+                "id_ref_kegiatan"=>$request["kegiatan"],
+                "id_ref_transaksi"=>$request["transaksi"],
+                "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                 "perihal"=>$request["perihal"],
                 "tgl_surat"=>$request["tgl_surat"],
+                "file"=>$filename
             ]);
-
-            $filename = $id.".docx";
 
             DB::table("template_transaksi")
             ->where("id_surat_keluar", $id)
@@ -351,7 +530,8 @@ class TemplateSuratKeluarController extends Controller
                 "daftar_pegawai.nip"
                 )
             ->get();
-
+            
+            //load template file
             $file = public_path('template.docx');
             $templateProcessor = new TemplateProcessor($file);
             $templateProcessor->setValue('nomor_surat', $request["nomor_surat"]);
@@ -375,10 +555,13 @@ class TemplateSuratKeluarController extends Controller
             $templateProcessor->cloneRowAndSetValues('pegawai', $daftar_nominatif);
             
             $templateProcessor->setValue('pageBreakHere', '</w:t></w:r>'.'<w:r><w:br w:type="page"/></w:r>'.'<w:r><w:t>');
-            $templateProcessor->saveAs(storage_path($filename));
+            //$templateProcessor->saveAs(storage_path($filename));
+            $templateProcessor->saveAs(public_path('/uploads/surat_keluar/'.$filename));
 
-            return redirect()->route("template.surat_keluar", compact("data"));
         }
+
+        return response()->json(["data"=>$data,"request"=>$request]);
+
     }
 
     public function deleteSurat($id_surat_keluar){
@@ -446,6 +629,8 @@ class TemplateSuratKeluarController extends Controller
                 "id_surat_keluar"=>$id,
                 "keterangan"=>$request["rincian_menimbang"]
             ]);
+            
+            //$data['count'] = DB::table("template_sk_menimbang")->where("id_surat_keluar",$id)->count();
         }
 
         return response()->json($data);

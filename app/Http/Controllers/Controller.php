@@ -89,9 +89,6 @@ class Controller extends BaseController
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                                 'Surat Keluar' => route('transaksi.surat_keluar')
                             ],
-                            'Template'=>[
-                                'Surat keluar' => route("template.surat_keluar")
-                            ],
                             'Referensi'=>[
                                 'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
                             ],
@@ -144,9 +141,6 @@ class Controller extends BaseController
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
                                 'Surat Keluar' => route('transaksi.surat_keluar'),
-                            ],
-                            'Template'=>[
-                                'Surat keluar' => route("template.surat_keluar")
                             ],
                             'Arsip'=>[
                                 'Surat Masuk' => route('arsip.surat_masuk.index'),
