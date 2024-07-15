@@ -129,7 +129,7 @@ Auth::routes();
         //End::tindak lanjut
     });
 
-    Route::group(['middleware'=>'role:6, 8, 10,101'], function(){
+    Route::group(['middleware'=>'role:6, 8, 10, 13, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
         Route::post('/transaksi/surat_keluar/save', 'Transaksi\SuratKeluar\SuratKeluarController@save')->name('transaksi.surat_keluar.save');
@@ -175,7 +175,7 @@ Auth::routes();
         Route::post("/template/surat_keluar/{id_surat_keluar}/{id_user}/nominatif/update","Template\SuratKeluar\TemplateSuratKeluarController@updateNominatif");
     });
 
-    Route::group(['middleware'=>'role:6,8,10, 16,18, 101'], function(){
+    Route::group(['middleware'=>'role:6,8,10, 13, 16,18, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
     });

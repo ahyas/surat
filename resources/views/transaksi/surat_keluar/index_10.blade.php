@@ -243,6 +243,7 @@
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
+                        <th>Dibuat Oleh</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -365,10 +366,18 @@ $(document).ready(function(){
                     return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
+            {data:"dibuat_oleh"},
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
+                    var current_user_id = "{{Auth::user()->id}}";
+                    if(full["id_user"] == current_user_id){
+                        var disabled = "";
+                    }else{
+                        var disabled = "disabled";
+                    }
+
                     return`<div class="dropdown">
-                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                            <button ${disabled} class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">

@@ -149,7 +149,7 @@ class Controller extends BaseController
                         ];
                         
                         break;
-                         //login as admin disposisi 3
+                         //login as admin disposisi 3/kasubag
                     case 13 :
                         $tot_count=DB::table("transaksi_surat_masuk AS surat_masuk")
                         ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
@@ -162,6 +162,7 @@ class Controller extends BaseController
                         [
                             'Transaksi'=>[
                                 'Surat Masuk' => route('transaksi.surat_masuk'),
+                                'Surat Keluar' => route('transaksi.surat_keluar'),
                             ],
                             'Arsip'=>[
                                 'Surat Masuk' => route('arsip.surat_masuk.index')
