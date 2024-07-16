@@ -114,6 +114,7 @@ class SuratKeluarController extends Controller
             case 8:
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->where('surat_keluar.id_nomenklatur_jabatan', $id_nomenklatur_jabatan)
+                ->whereNotIn("surat_keluar.internal",[111])
                 ->select(
                     "surat_keluar.id AS id_surat",
                     "surat_keluar.id_ref_klasifikasi",
@@ -146,6 +147,7 @@ class SuratKeluarController extends Controller
             case 10:
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->whereIn("permission.id_role",[10,13])
+                ->whereNotIn("surat_keluar.internal",[111])
                 ->where("surat_keluar.id_status",1)
                 ->select(
                     "surat_keluar.id AS id_surat",
@@ -207,6 +209,7 @@ class SuratKeluarController extends Controller
             case 13:
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->whereIn("permission.id_role",[13])
+                ->whereNotIn("surat_keluar.internal",[111])
                 ->where("surat_keluar.id_status",1)
                 ->select(
                     "surat_keluar.id AS id_surat",
@@ -268,6 +271,7 @@ class SuratKeluarController extends Controller
             //login sebagai ketua
             case 16:
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->whereNotIn("surat_keluar.internal",[111])
                 ->select(
                     "surat_keluar.id AS id_surat",
                     "surat_keluar.id_ref_klasifikasi",
@@ -300,6 +304,7 @@ class SuratKeluarController extends Controller
                 $id_user = Auth::user()->id;
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->where('detail_transaksi_surat.id_penerima', Auth::user()->id)
+                ->whereNotIn("surat_keluar.internal",[111])
                 ->select(
                     "surat_keluar.id AS id_surat",
                     "surat_keluar.id_ref_klasifikasi",
@@ -331,6 +336,7 @@ class SuratKeluarController extends Controller
             default:
             $table = DB::table("transaksi_surat_keluar AS surat_keluar")
             ->where("surat_keluar.id_status",1)
+            ->whereNotIn("surat_keluar.internal",[111])
             ->select(
                 "surat_keluar.id AS id_surat",
                 "surat_keluar.id_ref_klasifikasi",
