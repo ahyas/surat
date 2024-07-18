@@ -97,7 +97,8 @@ class UserController extends Controller
             DB::table("daftar_pegawai")
             ->insert([
                 "id_user"=>$userId,
-                "id_jabatan"=>$request["jabatan"]
+                "id_jabatan"=>$request["jabatan"],
+                "nip"=>$request["nip"]
             ]);
         }
 
