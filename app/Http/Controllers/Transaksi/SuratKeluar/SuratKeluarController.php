@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use DataTables;
 
 class SuratKeluarController extends Controller
 {
@@ -390,7 +391,8 @@ class SuratKeluarController extends Controller
                 "permission.id_role")
             ->orderBy("surat_keluar.created_at","DESC")->get();
 
-            return response()->json($table);
+            //return response()->json($table);
+            return Datatables::of($table)->make(true);
 
         }
     }

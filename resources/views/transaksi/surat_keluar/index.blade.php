@@ -316,11 +316,9 @@ $(document).ready(function(){
     var id_role = `{{$data['id_role']}}`;
 
     let tb_surat_keluar = $("#tb_surat_keluar").DataTable({
-        ajax        : {
-            url:"{{route('transaksi.surat_keluar.get_data')}}",
-            dataSrc:""
-        },
-        serverSide  : false,
+        ajax        : "{{route('transaksi.surat_keluar.get_data')}}",
+        serverSide  : true,
+        processing  : true,
         ordering    : false,
         responsive  : true,
         drawCallback:function(settings){
