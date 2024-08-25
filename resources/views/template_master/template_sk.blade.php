@@ -10,7 +10,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Edit template Surat Keputusan</p>
+                <p>Edit Template Surat Keputusan</p>
             </div>
         </div>
         <?php $id_surat_keluar = request()->route('id'); ?>
@@ -44,7 +44,7 @@
                 <div id="notification"></div>
 
                 <input type="hidden" name="id_surat" class="form-control form-control-solid" value="{{$table->id_surat}}"/>
-
+                <input type="text" name="kode_surat" class="form-control" value="{{$table->kode_surat}}"/>
                 <div class="fv-row mb-7">
                     <label class="required fw-semibold fs-6 mb-2">Kode Klasifikasi</label>
                     <select name="klasifikasi" id="klasifikasi" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" >
@@ -476,7 +476,7 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#cancel", function(){
-        window.location.href = "{{url('template/surat_keluar')}}";
+        window.location.href = "{{url('transaksi/surat_keluar')}}";
     });
 
     var id_surat_keluar = "{{request()->route('id')}}";

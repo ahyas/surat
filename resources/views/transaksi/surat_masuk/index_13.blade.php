@@ -187,7 +187,6 @@ $(document).ready(function(){
             url:"{{route('transaksi.surat_masuk.get_data')}}",
             dataSrc:""
         },
-        serverSide  : false,
         ordering    : false,
         responsive  : true,
         drawCallback:function(settings){

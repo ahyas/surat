@@ -156,6 +156,7 @@ class TemplateSuratKeluarController extends Controller
 
     public function editSurat($id){
         $table= DB::table("transaksi_surat_keluar")
+        ->where("transaksi_surat_keluar.id",$id)
         ->select(
             "transaksi_surat_keluar.id AS id_surat",
             "transaksi_surat_keluar.id_ref_klasifikasi",
@@ -167,9 +168,11 @@ class TemplateSuratKeluarController extends Controller
             "transaksi_surat_keluar.id_nomenklatur_jabatan",
             "transaksi_surat_keluar.tgl_surat",
             "template_sk.menetapkan",
-            "transaksi_surat_keluar.perihal"
+            "transaksi_surat_keluar.perihal",
+            DB::raw("(CASE WHEN transaksi_surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
             )
-        ->where("transaksi_surat_keluar.id",$id)
+        ->leftJoin("ref_kegiatan", "transaksi_surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+        ->leftJoin("ref_transaksi", "transaksi_surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
         ->join("template_sk", "transaksi_surat_keluar.id","=","template_sk.id_surat_keluar")
         ->first();
 
@@ -490,6 +493,7 @@ class TemplateSuratKeluarController extends Controller
                 "id_ref_kegiatan"=>$request["kegiatan"],
                 "id_ref_transaksi"=>$request["transaksi"],
                 "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
+                "no_surat"=>$nomor_surat,
                 "perihal"=>$request["perihal"],
                 "tgl_surat"=>$request["tgl_surat"],
                 "file"=>$filename
@@ -534,7 +538,7 @@ class TemplateSuratKeluarController extends Controller
             //load template file
             $file = public_path('template.docx');
             $templateProcessor = new TemplateProcessor($file);
-            $templateProcessor->setValue('nomor_surat', $request["nomor_surat"]);
+            $templateProcessor->setValue('nomor_surat', $nomor_surat);
             $templateProcessor->setValue('perihal', $request["perihal"]);
             foreach($menimbang AS $row){
                 $list_menimbang[]= array('menimbang' => $row->menimbang);

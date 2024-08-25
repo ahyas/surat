@@ -27,7 +27,7 @@
                         <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th class="text-end min-w-125px"></th>
+                        <th class="min-w-125px">Dibuat Oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -104,9 +104,9 @@ $(document).ready(function(){
     $("#tb_surat_keluar").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_keluar.get_data')}}",
-            dataSrc:""
         },
-        serverSide  :false,
+        serverSide  :true,
+        processing  :true,
         ordering    :false,
         responsive  :true,
         columns     :
@@ -122,7 +122,8 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                        <div class="text-gray-800 mb-1">${data}</div>
+                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
+                        ${full["deskripsi"]}
                         </div>${a}`;
                 }
             },
@@ -135,6 +136,7 @@ $(document).ready(function(){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
+            {data:"dibuat_oleh"}
         ]
     });
 

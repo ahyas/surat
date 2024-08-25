@@ -358,8 +358,13 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data){
-                    //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                    if(data){
+                        //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
+                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                    }else{
+                        return`<span class="badge badge-light-danger">Kosong</span>`;
+                    }
+                    
                 }
             },
             {data:"dibuat_oleh"},
@@ -700,8 +705,6 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_keluar");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
-       
-
         var formData = new FormData(document.getElementById("kt_modal_add_surat_keluar_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_keluar.save')}}`,
