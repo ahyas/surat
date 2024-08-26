@@ -130,36 +130,46 @@
                                             <label class="required fw-semibold fs-6 mb-2">Tanggal surat</label>
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0 my_input" placeholder="Tanggal surat" required disabled/>
                                         </div>
+                                        <div id="display-lampiran">
                                         <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-5" id="data_sukung">Data dukung</label>
+                                            <label class="fw-semibold fs-6 mb-5" id="data_dukung">Lampiran</label>
                                             <div class="d-flex fv-row">
+                                                
                                                 <!--begin::Radio-->
                                                 <div class="form-check form-check-custom form-check-solid">
                                                     <!--begin::Input-->
-                                                    <input class="form-check-input me-3" name="data_dukung" type="radio" value="1" id="kt_data_dukung_0" disabled/>
-                                                    <label class="form-check-label" for="kt_data_dukung_0">
-                                                        <div class="fw-bold text-gray-800">Upload manual</div>
-                                                    </label>
+                                                    <div id="display-gunakan-template">
+                                                        <label class="form-check-label">
+                                                            <div class="fw-bold text-gray-800">Gunakan Template ?</div>
+                                                        </label>
+                                                        
+                                                        <input class="form-check-input me-3" name="data_dukung" type="radio" value="1" id="kt_data_dukung_1" style="margin-left:10px" disabled/>
+                                                        <label class="form-check-label" for="kt_data_dukung_1">
+                                                            <div class="fw-bold text-gray-800">Ya</div>
+                                                        </label>
+
+                                                        <input class="form-check-input me-3" name="data_dukung" type="radio" value="2" id="kt_data_dukung_2" style="margin-left:25px" disabled/>
+                                                        <label class="form-check-label" for="kt_data_dukung_2">
+                                                            <div class="fw-bold text-gray-800">Tidak</div>
+                                                        </label>
                                                     
-                                                    <input class="form-check-input me-3" name="data_dukung" type="radio" value="2" id="kt_data_dukung_1" style="margin-left:20px" disabled/>
-                                                    <label class="form-check-label" for="kt_data_dukung_1">
-                                                        <div class="fw-bold text-gray-800">Gunakan Template</div>
-                                                    </label>
+                                                    </div>
                                                     <!--end::Label-->
                                                 </div>
                                                 <!--end::Radio-->
+                                                
                                             </div>
-                                            <!--end::Input row-->
+                                        </div>
                                         </div>
                                         <div id="display-upload-file">
                                             <div class="fv-row mb-7">
-                                                <label class="fw-semibold fs-6 mb-2" id="file">File</label>
+                                                <!--<label class="fw-light fs-6 mb-2" id="file">Upload File</label>-->
                                                 <input class="form-control form-control-solid mb-3 mb-lg-0 my_input" name="file_surat" type="file" id="file_surat" required disabled>
                                             </div>
                                         </div>
                                         <div id="display-choose-template">
                                             <div class="fv-row mb-7">
-                                                <label class="required fw-semibold fs-6 mb-2">Template</label>
+                                                <!--<label class="required fw-semibold fs-6 mb-2">Template</label>-->
                                                 <select name="template_surat_keluar" id="template_surat_keluar" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true">
                                                     <option disabled selected value="0">Pilih template surat keluar</option>
                                                     @foreach($template_surat_keluar as $row)
@@ -280,8 +290,10 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header">
+            <div class="d-flex flex-row" style="gap:20px">
                 <h2 class="modal-title">Preview</h2>
-
+                <a href="#" id="download_office" target="_blank" class="btn btn-light-success btn-sm">Download</a>
+            </div>
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
@@ -438,6 +450,7 @@ $(document).ready(function(){
         }else{
             $("#office_preview").modal("show");
             document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+            document.getElementById("download_office").href = url;
         }
     });
 
@@ -472,8 +485,11 @@ $(document).ready(function(){
     function enabledAll(){
         document.querySelectorAll(".my_input").forEach(element=>{
             element.removeAttribute("disabled");
-            
         });
+        document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
+        document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
+        document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
+        document.querySelector("#kt_data_dukung_2").removeAttribute("disabled");
     }
 
     function disabledAll(){
@@ -524,7 +540,7 @@ $(document).ready(function(){
         //penerima eksternal
         //$("#tujuan").val([]).trigger("change");
         //$("input[name='tujuan-external']").val("");
-        if(data_dukung == 2){
+        if(data_dukung == 1){
             console.log("Gunakan template")
             document.getElementById("display-upload-file").style.display = "none";
             document.getElementById("display-choose-template").style.display = "inline-block";
@@ -674,10 +690,10 @@ $(document).ready(function(){
         disabledAll();
         disabledList();
 
-        document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
-        document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
-        document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
-        document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+        // document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
+        // document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
+        // document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
+        // document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
 
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
@@ -690,10 +706,10 @@ $(document).ready(function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Surat Keluar</h2>`;
         document.getElementById("klasifikasi").value = 0;
         document.getElementById("notification").innerHTML ='';
-        document.getElementById("file").classList.add("required");
+
         document.getElementById("file_surat").setAttribute("required", "required");
 
-        document.getElementById("data_sukung").classList.add("required");
+        //document.getElementById("data_sukung").classList.add("required");
         
         let today = new Date();
         fp.setDate(today, true, "Y-m-d");
@@ -734,12 +750,14 @@ $(document).ready(function(){
                         return false;
                     }
                     
-                        loadingPage(true);
-                        $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                        $("#kt_modal_add_surat_keluar").modal("hide");
                     //bila yang dipilih menggunakan template maka diarahkan menu template
                     if(data.id_surat_keluar !== null){
                         window.location.href = `{{url('template/surat_keluar/${data.id_surat_keluar}/edit')}}`;
+                    }else{
+                        loadingPage(true);
+                        $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                        $("#kt_modal_add_surat_keluar").modal("hide");
+                        confirm("Surat berhasil disimpan. Jangan lupa melampirkan data dukung.")
                     }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){
@@ -754,11 +772,10 @@ $(document).ready(function(){
         document.getElementById("update_surat").style.display = "inline-block";
         document.querySelector(".update_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".update_surat_keluar").removeAttribute("disabled");
-        
+        document.getElementById("display-lampiran").style.display = "inline-block";
         document.getElementById("save_surat").style.display = "none";
-        document.getElementById("file").classList.remove("required");
         document.getElementById("file_surat").removeAttribute("required");
-        document.getElementById("data_sukung").classList.remove("required");
+        document.getElementById("data_dukung").classList.remove("required");
         document.getElementById("notification").innerHTML ='';
         document.getElementById("row-transaksi").style.display = 'inline-block';
         var id_surat = $(this).data("id_surat_keluar");
@@ -779,10 +796,11 @@ $(document).ready(function(){
                 enabledAll();
                 disabledList();
 
-                document.querySelector("#kt_data_dukung_1").disabled=true;
-                document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
-                document.getElementById("kt_data_dukung_0").checked =true;
+                // document.querySelector("#kt_data_dukung_1").disabled=true;
+                // document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+                // document.getElementById("kt_data_dukung_0").checked =true;
 
+                document.getElementById("display-gunakan-template").style.display = "none";
                 document.getElementById("display-upload-file").style.display = "inline-block";
                 document.getElementById("display-choose-template").style.display = "none";
 
@@ -802,7 +820,7 @@ $(document).ready(function(){
                     document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
                     for(var i=0; i<data.ref_kegiatan.length; i++){
                         let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
-                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_fungsi='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
+                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_kegiatan='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
                     }
                     
                 }
@@ -858,9 +876,9 @@ $(document).ready(function(){
                 loadingPage(false);
                 $("#kt_modal_add_surat_keluar").modal("show");
             }else{
-                document.querySelector("#kt_data_dukung_0").disabled=true;
-                document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
-                document.getElementById("kt_data_dukung_1").checked =true;
+                // document.querySelector("#kt_data_dukung_0").disabled=true;
+                // document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
+                // document.getElementById("kt_data_dukung_1").checked =true;
 
                 document.getElementById("display-upload-file").style.display = "none";
                 document.getElementById("display-choose-template").style.display = "inline-block";

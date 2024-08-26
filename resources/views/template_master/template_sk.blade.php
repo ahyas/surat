@@ -44,7 +44,7 @@
                 <div id="notification"></div>
 
                 <input type="hidden" name="id_surat" class="form-control form-control-solid" value="{{$table->id_surat}}"/>
-                <input type="text" name="kode_surat" class="form-control" value="{{$table->kode_surat}}"/>
+                <input type="hidden" name="kode_surat" class="form-control" value="{{$table->kode_surat}}"/>
                 <div class="fv-row mb-7">
                     <label class="required fw-semibold fs-6 mb-2">Kode Klasifikasi</label>
                     <select name="klasifikasi" id="klasifikasi" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" >
@@ -60,12 +60,12 @@
                     @if($errors->template->first('fungsi'))
                         <option disabled selected value="0">Pilih kategori fungsi</option>
                         @foreach($fungsi as $key => $row)
-                            <option value="{{$row->id_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
+                            <option value="{{$row->id_fungsi}}" data-kode_fungsi="{{$row->kode_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
                         @endforeach
                     @else
                         <option disabled selected value="0">Pilih kategori fungsi</option>
                         @foreach($fungsi as $key => $row)
-                            <option <?php echo old('fungsi', $table->id_ref_fungsi) == $row->id_fungsi ? 'selected':''; ?> value="{{$row->id_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
+                            <option <?php echo old('fungsi', $table->id_ref_fungsi) == $row->id_fungsi ? 'selected':''; ?> value="{{$row->id_fungsi}}" data-kode_fungsi="{{$row->kode_fungsi}}">{{$row->kode_fungsi}} - {{$row->deskripsi_fungsi}}</option>
                         @endforeach
                     @endif
                         
@@ -82,7 +82,7 @@
                         @else
                             <option disabled selected value="0">Pilih kategory kegiatan</option>
                             @foreach($kegiatan as $row)
-                                <option <?php echo old('kegiatan', $table->id_ref_kegiatan) == $row->id_kegiatan ? 'selected':''; ?> value="{{$row->id_kegiatan}}">{{$row->kode_kegiatan}} - {{$row->deskripsi_kegiatan}}</option>
+                                <option <?php echo old('kegiatan', $table->id_ref_kegiatan) == $row->id_kegiatan ? 'selected':''; ?> value="{{$row->id_kegiatan}}" data-kode_kegiatan="{{$row->kode_kegiatan}}">{{$row->kode_kegiatan}} - {{$row->deskripsi_kegiatan}}</option>
                             @endforeach
                         @endif
 
@@ -92,14 +92,14 @@
                     <label class="required fw-semibold fs-6 mb-2">Kode Transaksi</label>
                     <select name="transaksi" id="transaksi" class="form-select form-select-solid my_list" data-placeholder="Select an option" data-hide-search="true">
                     @if($errors->template->first('transaksi'))
-                    <option disabled selected value="null">Pilih kategori transaksi</option>
+                    <option disabled selected value="0">Pilih kategori transaksi</option>
                         @foreach($transaksi as $row)
-                            <option value="{{$row->id_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
+                            <option value="{{$row->id_transaksi}}" data-kode_transaksi="{{$row->kode_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
                         @endforeach
                     @else
                     <option disabled selected value="0">Pilih kategori transaksi</option>
                         @foreach($transaksi as $row)
-                            <option <?php echo old('transaksi', $table->id_ref_transaksi) == $row->id_transaksi ? 'selected':''; ?> value="{{$row->id_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
+                            <option <?php echo old('transaksi', $table->id_ref_transaksi) == $row->id_transaksi ? 'selected':''; ?> value="{{$row->id_transaksi}}" data-kode_transaksi="{{$row->kode_transaksi}}">{{$row->kode_transaksi}} - {{$row->deskripsi_transaksi}}</option>
                         @endforeach
                     @endif
                     </select>
@@ -1171,7 +1171,7 @@ $(document).ready(function(){
         let id_ref_kegiatan = $(this).val();
         let kode_kegiatan = $(this).find(':selected').data('kode_kegiatan');
         $("input[name='kode_surat']").val(kode_kegiatan);
-       
+        console.log("kode kegiatan ",kode_kegiatan)
         $.ajax({
             url:`{{url('referensi/${id_ref_kegiatan}/get_transaksi_list')}}`,
             type:"GET",
@@ -1203,6 +1203,7 @@ $(document).ready(function(){
 
     $("#transaksi").change(function(){
         let kode_transaksi = $(this).find(':selected').data('kode_transaksi');
+        console.log(kode_transaksi)
         $("input[name='kode_surat']").val(kode_transaksi);
         $("#nomenklatur_jabatan").val(0);
         document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");

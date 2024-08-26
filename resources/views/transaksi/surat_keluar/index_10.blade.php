@@ -45,7 +45,7 @@
                                         <div id="notification"></div>
 
                                         <input type="hidden" name="id_surat_keluar" class="form-control" />
-                                        <input type="text" name="kode_surat" class="form-control" />
+                                        <input type="hidden" name="kode_surat" class="form-control" />
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Kode Klasifikasi</label>
                                             <select name="klasifikasi" id="klasifikasi" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true">
@@ -656,7 +656,7 @@ $(document).ready(function(){
         let id_ref_kegiatan = $(this).val();
         let kode_kegiatan = $(this).find(':selected').data('kode_kegiatan');
         $("input[name='kode_surat']").val(kode_kegiatan);
-       
+        console.log("kode kegiatan ",kode_kegiatan)
         $.ajax({
             url:`{{url('referensi/${id_ref_kegiatan}/get_transaksi_list')}}`,
             type:"GET",
@@ -835,7 +835,7 @@ $(document).ready(function(){
                     document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
                     for(var i=0; i<data.ref_kegiatan.length; i++){
                         let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
-                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_fungsi='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
+                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
                     }
                     
                 }
