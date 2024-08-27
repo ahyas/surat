@@ -555,10 +555,12 @@ $(document).ready(function(){
         //$("input[name='tujuan-external']").val("");
         if(data_dukung == 1){
             console.log("Gunakan template")
+            $("#file_surat").val("")
             document.getElementById("display-upload-file").style.display = "none";
             document.getElementById("display-choose-template").style.display = "inline-block";
         }else{
             console.log("Upload manual")
+            $("#template_surat_keluar").val(0)
             document.getElementById("display-upload-file").style.display = "inline-block";
             document.getElementById("display-choose-template").style.display = "none";
         }
@@ -752,9 +754,11 @@ $(document).ready(function(){
                         let err_penerima_surat = data.errors.penerima_surat  ? `<li>${data.errors.penerima_surat}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
-                        //let err_data_dukung = data.errors.err_data_dukung ? `<li>${data.errors.err_data_dukung}</li>` : ``;
+                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+                        let err_empty_file = data.errors.empty_file  ? `<li>${data.errors.empty_file}</li>` : ``;
+                        let err_template_surat_keluar = data.errors.template_surat_keluar  ? `<li>${data.errors.template_surat_keluar}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+err_template_surat_keluar+err_empty_file+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
 
@@ -772,8 +776,6 @@ $(document).ready(function(){
                     }else{
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                        $("#kt_modal_add_surat_keluar").modal("hide");
-                        confirm("Surat berhasil disimpan. Jangan lupa melampirkan data dukung.")
                     }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){

@@ -270,8 +270,10 @@
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header">
+            <div class="d-flex flex-row" style="gap:20px">
                 <h2 class="modal-title">Preview</h2>
-
+                <a href="#" id="download_pdf" target="_blank" class="btn btn-light-success btn-sm">Download</a>
+            </div>
                 <!--begin::Close-->
                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                     <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
@@ -447,6 +449,7 @@ $(document).ready(function(){
         if(extension == '.pdf'){
             $("#modal_preview").modal("show");
             document.getElementById("preview").src = url;
+            document.getElementById("download_pdf").href = url;
         }else{
             $("#office_preview").modal("show");
             document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
@@ -694,7 +697,7 @@ $(document).ready(function(){
         // document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
         // document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
         // document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
-
+        document.getElementById("display-gunakan-template").style.display = "inline-block";
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
         document.getElementById("display-upload-file").style.display = "none";
@@ -738,9 +741,11 @@ $(document).ready(function(){
                         let err_penerima_surat = data.errors.penerima_surat  ? `<li>${data.errors.penerima_surat}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
-                        let err_data_dukung = data.errors.err_data_dukung ? `<li>${data.errors.err_data_dukung}</li>` : ``;
+                        let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+                        let err_empty_file = data.errors.empty_file  ? `<li>${data.errors.empty_file}</li>` : ``;
+                        let err_template_surat_keluar = data.errors.template_surat_keluar  ? `<li>${data.errors.template_surat_keluar}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_data_dukung+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+err_template_surat_keluar+err_empty_file+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                         //scroll to the top to see errors message
@@ -756,8 +761,6 @@ $(document).ready(function(){
                     }else{
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                        $("#kt_modal_add_surat_keluar").modal("hide");
-                        confirm("Surat berhasil disimpan. Jangan lupa melampirkan data dukung.")
                     }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){

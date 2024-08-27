@@ -526,26 +526,6 @@ class SuratKeluarController extends Controller
                 }
             }
         }
-
-        // if(empty($request["data_dukung"])){
-        //     $errors["err_data_dukung"] = 'Data dukung tidak boleh kosong';
-        // }else{
-        //     if($request["data_dukung"] == 1){
-        //         if(empty($request->hasFile('file_surat'))){
-        //             $errors["err_data_dukung"] = 'File tidak tidak boleh kosong';
-        //         }else{
-        //             $allowed = ["pdf"];
-        //             $ext = strtolower($request->file_surat->extension());
-        //             if(!in_array($ext, $allowed)){
-        //                 $errors["err_data_dukung"] = 'Jenis file yang diupload harus PDF';
-        //             }
-        //         }
-        //     }else{
-        //         if(empty($request["template_surat_keluar"])){
-        //             $errors["err_data_dukung"] = 'Pilih template yang sesuai';
-        //         }
-        //     }
-        // }
                     
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
@@ -553,6 +533,26 @@ class SuratKeluarController extends Controller
 
         if (empty($request["tgl_surat"])) {
             $errors['tgl_surat'] = 'Tanggal surat tidak boleh kosong';
+        }
+
+        if($request->hasFile('file_surat')){
+            $allowed = ["pdf"];
+            $ext = strtolower($request->file_surat->extension());
+            if(!in_array($ext, $allowed)){
+                $errors['file_surat'] = 'Jenis file harus PDF';
+            }
+        }
+
+        if($request["data_dukung"] == 1){
+            if(empty($request["template_surat_keluar"])){
+                $errors['template_surat_keluar'] = 'Pilih template yang sesuai';
+            }
+        }
+        
+        if($request["data_dukung"] == 2){
+            if(empty($request["file_surat"])){
+                $errors['empty_file'] = 'Masukan file lampiran yang sesuai';
+            }
         }
 
         if (!empty($errors)) {
@@ -624,7 +624,17 @@ class SuratKeluarController extends Controller
                 $data['id_surat_keluar'] = $id_surat;
                 
             }else{
-                //masukan transaksi surat
+                //non template
+                if($request->hasFile('file_surat')){
+        
+                    $fileName = time().'.'.$request->file_surat->extension();
+
+                    $tujuan_upload = public_path('/uploads/surat_keluar');
+                    $request->file_surat->move($tujuan_upload, $fileName);
+                }else{
+                    $fileName = null;
+                }
+                
                 DB::table("transaksi_surat_keluar")
                 ->insert([
                     "id_ref_klasifikasi"=>$request["klasifikasi"],
@@ -637,7 +647,7 @@ class SuratKeluarController extends Controller
                     "internal"=>$request["penerima_surat"],
                     "perihal"=>$request["perihal"],
                     "tgl_surat"=>$request["tgl_surat"],
-                    "file"=>null,
+                    "file"=>$fileName,
                     "created_by"=>Auth::user()->id
                 ]);
     
