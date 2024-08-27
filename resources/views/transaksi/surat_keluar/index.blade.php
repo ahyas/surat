@@ -545,10 +545,12 @@ $(document).ready(function(){
         //$("input[name='tujuan-external']").val("");
         if(data_dukung == 1){
             console.log("Gunakan template")
+            $("#file_surat").val("")
             document.getElementById("display-upload-file").style.display = "none";
             document.getElementById("display-choose-template").style.display = "inline-block";
         }else{
             console.log("Upload manual")
+            $("#template_surat_keluar").val(0)
             document.getElementById("display-upload-file").style.display = "inline-block";
             document.getElementById("display-choose-template").style.display = "none";
         }

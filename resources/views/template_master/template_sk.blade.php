@@ -181,7 +181,7 @@
                 </div>
                 <div class="fv-row mb-7" id="display-tgl_surat">
                     <label class="required fw-semibold fs-6 mb-2">Menetapkan</label>
-                    <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" placeholder="Menetapkan" name="menetapkan" > {{old('menetapkan', $table->menetapkan)}}</textarea>
+                    <textarea class="form-control form-control-solid" placeholder="Menetapkan" name="menetapkan" rows="3"> {{old('menetapkan', $table->menetapkan)}}</textarea>
                 </div>
                 <div class="fv-row mb-7">
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">

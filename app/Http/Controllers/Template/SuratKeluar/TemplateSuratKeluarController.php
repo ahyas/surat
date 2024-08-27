@@ -212,7 +212,9 @@ class TemplateSuratKeluarController extends Controller
         )->get();
 
         $pegawai = DB::table("users")
-        ->select("id","name")
+        ->select("users.id","users.name")
+        ->where("daftar_pegawai.status",1)
+        ->join("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->get();
 
         $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
