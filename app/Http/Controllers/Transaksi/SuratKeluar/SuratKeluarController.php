@@ -25,7 +25,11 @@ class SuratKeluarController extends Controller
             "keterangan",
         )->get();
 
-        $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
+        $user = DB::table("users")
+        ->where("status", 1)
+        ->select("users.id AS id_user","users.name AS nama_pegawai")
+        ->join("daftar_pegawai", "users.id","=","daftar_pegawai.id_user")
+        ->get();
 
         $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
         ->select(

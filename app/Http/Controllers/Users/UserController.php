@@ -33,7 +33,9 @@ class UserController extends Controller
             "users.email",
             "bidang.id AS id_bidang",
             "ref_jabatan.nama AS jabatan",
-            "daftar_pegawai.nip"
+            "daftar_pegawai.nip",
+            "daftar_pegawai.status",
+            DB::raw("(CASE WHEN daftar_pegawai.status = 1 THEN 'Aktif' ELSE 'Non Aktif' END) AS status_user")
         )
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
         ->leftJoin("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
@@ -114,7 +116,8 @@ class UserController extends Controller
             "bidang.id AS id_bidang",
             "users.email",
             "daftar_pegawai.id_jabatan",
-            "daftar_pegawai.nip"
+            "daftar_pegawai.nip",
+            "daftar_pegawai.status"
         )
         ->leftJoin("permission", "users.id","=","permission.id_user")
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
@@ -159,7 +162,8 @@ class UserController extends Controller
             ->updateOrInsert(["id_user"=>$id_user], [
                 "id_user"=>$id_user,
                 "id_jabatan"=>$request["jabatan"],
-                "nip"=>$request["nip"]
+                "nip"=>$request["nip"],
+                "status"=>$request["status"]
             ]);
 
             DB::table("permission")

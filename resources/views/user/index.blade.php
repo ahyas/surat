@@ -108,6 +108,19 @@
                                             </select>
                                             <!--end::Input-->
                                         </div>
+
+                                        <div class="fv-row mb-7">
+                                            <!--begin::Label-->
+                                            <label class="required fw-semibold fs-6 mb-2">Status</label>
+                                            <!--end::Label-->
+                                            <!--begin::Input-->
+                                            <select name="status" id="status" class="form-select form-select-solid" data-control="select2" data-placeholder="Select an option" data-hide-search="true">
+                                                <option value="1" selected>Aktif</option>
+                                                <option value="0">Non aktif</option>
+                                            </select>
+                                            <!--end::Input-->
+                                        </div>
+
                                         <!--end::Input group-->
                                     </div>
                                     <!--end::Scroll-->
@@ -150,6 +163,7 @@
                         <th>NIP</th>
                         <th class="min-w-125px">Bidang</th>
                         <th>Jabatan</th>
+                        <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -212,6 +226,15 @@ $(document).ready(function(){
                 }
             },
             {data:"jabatan"},
+            {data:"status_user",
+                mRender:function(data, type, full){
+                    if(full["status"] == 1){
+                        return`<span class="badge badge-light-primary">${data}</span>`
+                    }else{
+                        return`<span class="badge badge-light-danger">${data}</span>`
+                    }
+                }
+            },
             {data:"id_user", className: "text-end",
                 mRender:function(data, type, full){
                     return`<div class="dropdown">
@@ -254,6 +277,7 @@ $(document).ready(function(){
                 $("input[name='email']").val(data.email);
                 $("#bidang").val(data.id_bidang).trigger('change');
                 $("#jabatan").val(data.id_jabatan).trigger('change');
+                $("#status").val(data.status).trigger('change');
                 loadingPage(false);
                 $("#kt_modal_add_user").modal("show");
             }
@@ -297,6 +321,7 @@ $(document).ready(function(){
         $("#kt_modal_add_user_form").trigger("reset");
         $("#bidang").val("").trigger('change');
         $("#jabatan").val("").trigger('change');
+        $("#status").val(1).trigger('change');
         $("#kt_modal_add_user").modal("show");
     });
 
