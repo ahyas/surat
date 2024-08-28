@@ -559,12 +559,11 @@ $(document).ready(function(){
                     return false;
                 }
 
-                if(confirm("Apakah semua data sudah benar?")){
-                    $("#kt_modal_add_tindaklanjut").modal("hide");
-                    setButtonSpinner(".save_tindaklanjut", "off");
-                    loadingPage(true);
-                    $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
-                }
+                $("#kt_modal_add_tindaklanjut").modal("hide");
+                setButtonSpinner(".save_tindaklanjut", "off");
+                loadingPage(true);
+                $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
+                alert("Surat telah ditindaklanjuti dan akan di arsipkan")
 
             }
         })

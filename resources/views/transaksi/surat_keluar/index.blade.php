@@ -763,6 +763,7 @@ $(document).ready(function(){
                     }else{
                         loadingPage(true);
                         $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                        $("#kt_modal_add_surat_keluar").modal("hide");
                     }
                 },error: function () {
                     if(confirm("Error: Terjadi kesalahan. Klik OK untuk memuat ulang halaman.")){

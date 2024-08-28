@@ -94,7 +94,6 @@ class Controller extends BaseController
                                 ],
                                 'Arsip'=>[
                                     'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    'Surat Keluar' => route('arsip.surat_keluar.index'),
                                 ]
                             ];
                             
@@ -144,7 +143,6 @@ class Controller extends BaseController
                                 ],
                                 'Arsip'=>[
                                     'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    'Surat Keluar' => route('arsip.surat_keluar.index'),
                                 ]
                             ];
                             
@@ -172,9 +170,12 @@ class Controller extends BaseController
                             break;
                         //login sebagai ketua
                         case 16 :
-                            $count_unprocessed = DB::table("transaksi_surat_masuk")->where("id_status",'!=', 3)->count();
-                            $count_onprocessed = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
-                            $tot_count = $count_unprocessed + $count_onprocessed;
+                            $tot_count=DB::table("transaksi_surat_masuk AS surat_masuk")
+                            ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                            ->whereNotIn("surat_masuk.id_status", [3])
+                            
+                            ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                            ->count();
 
                             $menu = 
                             [

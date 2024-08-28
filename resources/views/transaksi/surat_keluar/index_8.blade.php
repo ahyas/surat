@@ -39,7 +39,7 @@
     <!--end::Card-->
 </div>
 <!--end::Post-->
-<div class="modal fade" id="kt_modal_scrollable_2" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="modal_preview" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
         <div class="modal-content">
             <div class="modal-header">
@@ -58,6 +58,29 @@
         </div>
     </div>      
 </div>
+<!--start::lampiran surat keluar ms office -->
+<div class="modal fade" id="office_preview" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header">
+            <div class="d-flex flex-row" style="gap:20px">
+                <h2 class="modal-title">Preview</h2>
+                <a href="#" id="download_office" target="_blank" class="btn btn-light-success btn-sm">Download</a>
+            </div>
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            
+            <div class="modal-body" >
+                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+            </div>
+        </div>
+    </div>      
+</div>
+<!--end::lampiran surat keluar ms office-->
 
 <div class="modal fade" id="kt_modal_tembusan" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
@@ -133,7 +156,7 @@ $(document).ready(function(){
             {data:"file",
                 mRender:function(data){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
             {data:"dibuat_oleh"}
@@ -170,8 +193,20 @@ $(document).ready(function(){
     });
 
     $("body").on("click", "#lampiran", function(){
-        $("#kt_modal_scrollable_2").modal("show");
-        document.getElementById("preview").src = $(this).data("url")
+        console.log($(this).data("filename"));
+        var filename = $(this).data("filename");
+        var extension = filename.substr(filename.indexOf('.')); 
+        var url = $(this).data("url");
+        console.log($(this).data("url"))
+        if(extension == '.pdf'){
+            $("#modal_preview").modal("show");
+            document.getElementById("preview").src = url;
+            document.getElementById("download_pdf").href = url;
+        }else{
+            $("#office_preview").modal("show");
+            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+            document.getElementById("download_office").href = url;
+        }
     });
 
 });

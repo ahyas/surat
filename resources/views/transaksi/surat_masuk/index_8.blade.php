@@ -173,7 +173,7 @@
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
                                                     <th class="text-nowrap">Catatan / Pesan</th>
-                                                    <th class="text-nowrap">Petunjuks</th>
+                                                    <th class="text-nowrap">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -572,6 +572,7 @@ $(document).ready(function(){
                 setButtonSpinner(".save_tindaklanjut", "off");
                 loadingPage(true);
                 $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
+                alert("Surat telah ditindaklanjuti dan akan di arsipkan")
 
             }
         })
