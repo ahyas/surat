@@ -167,10 +167,9 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     "surat_masuk.id_status",
-                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
-                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->orderBy("surat_masuk.created_at","DESC")
+                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")->orderBy("surat_masuk.created_at","DESC")
                 ->get();
 
                 return response()->json($table);
@@ -263,7 +262,7 @@ class SuratMasukController extends Controller
             case 6:
                 $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
                 ->where("detail_surat_masuk.id_surat", $id_surat_masuk)
-                ->whereNotIn("detail_surat_masuk.status", [4,5])//sembunyikan status diteruskan dan dari pimpinan
+                //->whereNotIn("detail_surat_masuk.status", [4,5])//sembunyikan status diteruskan dan dari pimpinan
                 ->select(
                     "penerima.name AS nama_penerima",
                     "pengirim.name AS nama_pengirim",
@@ -348,7 +347,7 @@ class SuratMasukController extends Controller
             default:
                 $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
                 ->where("detail_surat_masuk.id_surat", $id_surat_masuk)
-                ->whereNotIn("detail_surat_masuk.status", [2])//sembunyikan status diteruskan
+                //->whereNotIn("detail_surat_masuk.status", [2])//sembunyikan status diteruskan
                 ->select(
                     "penerima.name AS nama_penerima",
                     "pengirim.name AS nama_pengirim",

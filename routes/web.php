@@ -109,11 +109,6 @@ Auth::routes();
         Route::get('/transaksi/surat_masuk/{id}/detail', 'Transaksi\SuratMasuk\SuratMasukController@detail')->name('transaksi.surat_masuk.detail');
         //End::Transaksi surat masuk
 
-        Route::get('/arsip/surat_masuk', 'Arsip\ArsipSuratMasukController@index')->name('arsip.surat_masuk.index');
-        Route::get('/arsip/surat_masuk/get_data','Arsip\ArsipSuratMasukController@getData')->name('arsip.surat_masuk.get_data');
-        Route::get('/arsip/surat_keluar','Arsip\ArsipsuratKeluarController@index')->name('arsip.surat_keluar.index');
-        Route::get('/arsip/surat_keluar/get_data','Arsip\ArsipsuratKeluarController@getData')->name('arsip.surat_keluar.get_data');
-
         //Begin::disposisi
         Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
         Route::post('/transaksi/surat_masuk/disposisi/kirim', 'Transaksi\SuratMasuk\SuratMasukController@kirim')->name('transaksi.surat_masuk.disposisi.kirim');
@@ -127,6 +122,12 @@ Auth::routes();
         //Begin::tindak lanjut
         Route::post('/transaksi/surat_masuk/tindak_lanjut','Transaksi\SuratMasuk\SuratMasukController@tindakLanjut')->name('transaksi.surat_masuk.tindak_lanjut');
         //End::tindak lanjut
+
+        Route::get('/arsip/surat_masuk', 'Arsip\ArsipSuratMasukController@index')->name('arsip.surat_masuk.index');
+        Route::get('/arsip/surat_masuk/get_data','Arsip\ArsipSuratMasukController@getData')->name('arsip.surat_masuk.get_data');
+        Route::get('/arsip/surat_keluar','Arsip\ArsipsuratKeluarController@index')->name('arsip.surat_keluar.index');
+        Route::get('/arsip/surat_keluar/get_data','Arsip\ArsipsuratKeluarController@getData')->name('arsip.surat_keluar.get_data');
+
     });
 
     Route::group(['middleware'=>'role:6, 8, 10, 13, 101'], function(){

@@ -129,6 +129,27 @@
     <!--end::Modal dialog-->
 </div>
 <!--End::Modal detail-->
+<div class="modal fade" id="modal_preview" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header">
+            <div class="d-flex flex-row" style="gap:20px">
+                <h2 class="modal-title">Preview</h2>
+                <a href="#" id="download_pdf" target="_blank" class="btn btn-light-success btn-sm">Download</a>
+            </div>
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            
+            <div class="modal-body" >
+                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe></div>
+            </div>
+        </div>
+    </div>      
+</div>
 @endsection
 @push('scripts')
 
@@ -148,8 +169,10 @@ $(document).ready(function(){
                 mRender:function(data, type, full){
                     if(full['rahasia'] == 'true'){
                         var a = `<span class="badge badge-light-danger">Rahasia</span>`;
-                    }else{
+                    }else if(full['rahasia'] == 'false'){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = `<span class="badge badge-light-danger">Internal</span>`;
                     }
 
                     return`<div class="d-flex flex-column">
@@ -163,42 +186,60 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"status",
                 mRender:function(data, type, full){
-                    if(full['id_status'] == 3){
-                        return `
-                            <div style='white-space: nowrap'>${data}</div> 
-                            <span class="badge badge-light-primary">Selesai</span>                       
-                            `;
-                    }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
-                        return `
-                            <div style='white-space: nowrap'>${data}</div> 
-                            <span class="badge badge-light-success">On-Process</span>                       
-                            `;
+                    if(full["jenis_surat"] == 1){
+                        if(full['id_status'] == 3){
+                            return `
+                                <div style='white-space: nowrap'>${data}</div> 
+                                <span class="badge badge-light-primary">Selesai</span>                       
+                                `;
+                        }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
+                            return `
+                                <div style='white-space: nowrap'>${data}</div> 
+                                <span class="badge badge-light-success">On-Process</span>                       
+                                `;
+                        }else{
+                            return `
+                                <span class="badge badge-light-danger">Unprocessed</span>                       
+                                `;
+                        }
                     }else{
-                        return `
-                            <span class="badge badge-light-danger">Unprocessed</span>                       
-                            `;
+                        return '<span>Arsip pribadi</span>';
                     }
                 }
             },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     var file = full["file"];
-                    if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 3 || full['id_status'] == 4 || full['id_status'] == 5){
-                        var btn = 'disabled';
+                    if(full["jenis_surat"] == 1){
+                        if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 3 || full['id_status'] == 4 || full['id_status'] == 5){
+                            var btn = 'disabled';
+                        }else{
+                            var btn = '';
+                        }
+
+                        return`<div class="dropdown">
+                                <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                    <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Detail</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>`;
                     }else{
-                        var btn = '';
+                        return`<div class="dropdown">
+                                <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                                    <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                        <li>
+                                            <div class="menu-item px-3">
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>`;
                     }
 
-                    return`<div class="dropdown">
-                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
-                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
-                                    <li>
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Detail</a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>`;
                 }
             }
         ]
@@ -213,7 +254,7 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
-                console.log(data[0].rahasia )
+                console.log(data)
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
@@ -240,6 +281,14 @@ $(document).ready(function(){
             }
         });
     });
+
+    $("body").on("click","#detail_arsip", function(){
+        console.log("Detail arsip", $(this).data('url'))
+        var url = $(this).data('url')
+        $("#modal_preview").modal("show");
+        document.getElementById("preview").src = url;
+        document.getElementById("download_pdf").href = url;
+    })
 
     function loadingPage(active){
         const loadingEl = document.createElement("div");

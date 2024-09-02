@@ -408,7 +408,7 @@ $(document).ready(function(){
                 }
             }
         ]
-    });
+    })
 
     $("body").on("click","#daftar_tujuan",function(){
         var id_surat = $(this).data("id_surat");

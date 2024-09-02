@@ -53,14 +53,38 @@ class ArsipSuratMasukController extends Controller
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
-                    "users.name AS dibuat_oleh",
                     "surat_masuk.id_status",
-                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
-                )->leftJoin("users", "surat_masuk.created_by","=","users.id")
-                ->orderBy("surat_masuk.updated_at","DESC")
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
+                )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat");
+
+                $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+                $table = $table->orderBy("surat_masuk.updated_at","DESC")->get();
+
+                $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+                ->whereNotIn("surat_keluar.internal",[111])
+                ->where("surat_keluar.id_status",1)
+                ->whereNotNull("surat_keluar.file")
+                ->select(
+                    "surat_keluar.id",
+                    "surat_keluar.no_surat",
+                    "users.name AS pengirim",
+                    "users.name AS rahasia",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "surat_keluar.id_status",
+                    "surat_keluar.id_status AS status"
+                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                ->leftJoin("users", "surat_keluar.created_by","=","users.id");
+
+                $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
+                $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
                 ->get();
 
-                return response()->json($table);
+                $merged = $table->merge($table2);
+
+                return response()->json($merged);
             break;
             //login sebagai admin disposisi 2
             case 10:
@@ -76,22 +100,37 @@ class ArsipSuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
-                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
-                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
-                    "jabatan_penerima.nama AS jab_penerima",
-                    "jabatan_pengirim.nama AS jab_pengirim"
-                )
-                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
-                ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
-                ->leftJoin("daftar_pegawai AS pegawai_penerima", "penerima.id", "=", "pegawai_penerima.id_user")
-                ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
-                ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
-                ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
-                ->orderBy("surat_masuk.updated_at","DESC")
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
+                )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat");
+
+                $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+                $table = $table->orderBy("surat_masuk.updated_at","DESC")->get();
+
+                $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+                ->whereNotIn("surat_keluar.internal",[111])
+                ->where("surat_keluar.id_status",1)
+                ->whereNotNull("surat_keluar.file")
+                ->select(
+                    "surat_keluar.id",
+                    "surat_keluar.no_surat",
+                    "users.name AS pengirim",
+                    "users.name AS rahasia",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "surat_keluar.id_status",
+                    "surat_keluar.id_status AS status"
+                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                ->leftJoin("users", "surat_keluar.created_by","=","users.id");
+
+                $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
+                $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
                 ->get();
 
-                return response()->json($table);
+                $merged = $table->merge($table2);
+
+                return response()->json($merged);
             break;
             
             //login sebagai admin disposisi 1/Kasubag
@@ -108,21 +147,38 @@ class ArsipSuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
-                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
-                    "jabatan_penerima.nama AS jab_penerima",
-                    "jabatan_pengirim.nama AS jab_pengirim"
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
                 )
-                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
-                ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
-                ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
-                ->leftJoin("daftar_pegawai AS pegawai_penerima", "penerima.id", "=", "pegawai_penerima.id_user")
-                ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
-                ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
-                ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
-                ->orderBy("surat_masuk.updated_at","DESC")
+                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat");
+                
+                $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+                $table = $table->orderBy("surat_masuk.updated_at","DESC")->get();
+
+                $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+                ->whereNotIn("surat_keluar.internal",[111])
+                ->where("surat_keluar.id_status",1)
+                ->whereNotNull("surat_keluar.file")
+                ->select(
+                    "surat_keluar.id",
+                    "surat_keluar.no_surat",
+                    "users.name AS pengirim",
+                    "users.name AS rahasia",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "surat_keluar.id_status",
+                    "surat_keluar.id_status AS status"
+                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                ->leftJoin("users", "surat_keluar.created_by","=","users.id");
+
+                $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
+                $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
                 ->get();
 
-                return response()->json($table);
+                $merged = $table->merge($table2);
+
+                return response()->json($merged);
 
         }
 
