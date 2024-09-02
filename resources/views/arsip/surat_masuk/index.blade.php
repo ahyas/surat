@@ -150,6 +150,29 @@
         </div>
     </div>      
 </div>
+
+<!--Preview file docx-->
+<div class="modal fade" id="office_preview" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+        <div class="modal-content">
+            <div class="modal-header">
+            <div class="d-flex flex-row" style="gap:20px">
+                <h2 class="modal-title">Preview</h2>
+                <a href="#" id="download_office" target="_blank" class="btn btn-light-success btn-sm">Download</a>
+            </div>
+                <!--begin::Close-->
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+                <!--end::Close-->
+            </div>
+            
+            <div class="modal-body" >
+                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+            </div>
+        </div>
+    </div>      
+</div>
 @endsection
 @push('scripts')
 
@@ -161,7 +184,7 @@ $(document).ready(function(){
             dataSrc:""
         },
         serverSide  : false,
-        ordering    : false,
+        order: [[3, 'desc']],
         responsive  : true,
         columns     :
         [
@@ -233,7 +256,7 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-filename='${file}' data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -283,11 +306,21 @@ $(document).ready(function(){
     });
 
     $("body").on("click","#detail_arsip", function(){
-        console.log("Detail arsip", $(this).data('url'))
+
+        var filename = $(this).data("filename");
+        console.log("Detail arsip", $(this).data("filename"))
+        console.log("URL", $(this).data('url'))
+        var extension = filename.substr(filename.indexOf('.')); 
         var url = $(this).data('url')
-        $("#modal_preview").modal("show");
-        document.getElementById("preview").src = url;
-        document.getElementById("download_pdf").href = url;
+        if(extension == '.pdf'){
+            $("#modal_preview").modal("show");
+            document.getElementById("preview").src = url;
+            document.getElementById("download_pdf").href = url;
+        }else{
+            $("#office_preview").modal("show");
+            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+            document.getElementById("download_office").href = url;
+        }
     })
 
     function loadingPage(active){

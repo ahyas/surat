@@ -104,7 +104,7 @@ class ArsipSuratMasukController extends Controller
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat");
 
                 $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
-                $table = $table->orderBy("surat_masuk.updated_at","DESC")->get();
+                $table = $table->orderBy("surat_masuk.tgl_surat","DESC")->get();
 
                 $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
