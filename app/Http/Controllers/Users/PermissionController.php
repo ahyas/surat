@@ -21,8 +21,10 @@ class PermissionController extends Controller
 
         $table = DB::table("users")
         ->where("users.id","!=",1)
+        ->where("daftar_pegawai.status", 1)
         ->select("users.id AS id_user","users.name AS nama","users.email","roles.name AS role")
         ->Join("permission", "users.id","=","permission.id_user")
+        ->join("daftar_pegawai", "users.id", "=", "daftar_pegawai.id_user")
         ->leftJoin("roles","permission.id_role","=","roles.id")
         ->orderBy("users.created_at", 'DESC')
         ->get();

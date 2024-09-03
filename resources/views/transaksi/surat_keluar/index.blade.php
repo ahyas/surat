@@ -218,6 +218,23 @@
                                 </div>
                             </div>
                             <div class="modal-body">
+                                <form method="POST" name="form_penerima">
+                                    {{ csrf_field()}}
+                                    <div class="fv-row mb-7">
+                                        <label class="fw-semibold fs-6 mb-2">Tambah penerima</label>
+                                        <select name="penerima" id="penerima" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Pilih tujuan" data-allow-clear="true" >
+                                            <option value="">Pilih Penerima Surat</option>
+                                            @foreach($user as $row)
+                                                <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-sm btn-success add_penerima" id="add_penerima" disabled>
+                                        Tambahkan
+                                    </button>
+                                    
+                                </form>
                                 <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_tembusan">
                                     <thead>
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -248,7 +265,7 @@
             <table class="table table-hover align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th>Nomor Surat</th>
+                        <th class="min-w-100px">Nomor Surat</th>
                         <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
@@ -319,6 +336,20 @@ $(document).ready(function(){
     document.getElementById("display-upload-file").style.display = "none";
     document.getElementById("display-choose-template").style.display = "none";
 
+    $("body").on("click","#add_penerima",function(e){
+        e.preventDefault()
+        let a = $("#penerima").val()
+        console.log("Test", a)
+        $("#penerima").val('').trigger("change");
+        document.getElementById("add_penerima").disabled = true
+    })
+
+    $("#penerima").change(function(){
+        document.getElementById("add_penerima").disabled = false
+        let value = $(this).val()
+        console.log(value)
+    })
+
     var date = document.getElementById("tgl_surat");
     flatpickr(date, {
         dateFormat: "Y-m-d",
@@ -352,12 +383,23 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
+                            <div class="text-gray-800 mb-1">${data}</div>
                         ${full["deskripsi"]}
                         </div>${a}`;
                 }
             },
-            {data:"perihal"},
+            {data:"perihal", 
+                mRender:function(data){
+                    if(data.length>=90){
+                        var result = data.slice(0, 90);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+                    
+                }
+            },
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){
@@ -419,9 +461,7 @@ $(document).ready(function(){
                 dataSrc:""
             },
             "bDestroy": true,
-            searching   : false, paging: true, info: false,
-            pageLength  :5,
-            lengthMenu  : [[5, 10, 20], [5, 10, 20]],
+            searching   : false, paging: false, info: false,
             serverSide  : false,
             ordering    : false,
             responsive  : true,

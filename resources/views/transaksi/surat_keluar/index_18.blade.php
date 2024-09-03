@@ -127,7 +127,18 @@ $(document).ready(function(){
                 }
             },
             {data:"deskripsi"},
-            {data:"perihal"},
+            {data:"perihal",
+                mRender:function(data){
+                    if(data.length>=90){
+                        var result = data.slice(0, 90);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+                    
+                }
+            },
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data){

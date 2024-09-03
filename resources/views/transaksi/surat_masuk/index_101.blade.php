@@ -146,15 +146,36 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-danger">Rahasia</span>`;
                     }
 
+                    if(data.length>=29){
+                        var result = data.slice(0, 29);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+
                     return`<div class="d-flex flex-column">
-                                <div class="text-gray-800 mb-1">${data}</div>
+                                <div class="text-gray-800 mb-1">${result}</div>
                                 <span>${a}</span>                   
                             </div>`;
                 }
             },
             {data:"pengirim"},
-            {data:"perihal"},
-            {data:"tgl_surat", className: "text-end"},
+            {data:"perihal",
+                mRender:function(data){
+                    if(data.length>=90){
+                        var result = data.slice(0, 90);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+                    
+                }
+            },
+            {data:"tgl_surat", mRender:function(data){
+                    return`<div style='white-space: nowrap'>${data}</div>`
+                }},
             {data:"file", className: "text-end",
                 mRender:function(data){
                     return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;

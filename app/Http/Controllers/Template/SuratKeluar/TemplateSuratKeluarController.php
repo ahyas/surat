@@ -36,7 +36,11 @@ class TemplateSuratKeluarController extends Controller
         ->select("id","no_surat")
         ->get();
 
-        $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
+        $user = DB::table("users")
+        ->where("daftar_pegawai.status", 1)
+        ->select("users.id AS id_user","users.name AS nama_pegawai")
+        ->join("daftar_pegawai", "users.id","=","daftar_pegawai.id_user")
+        ->get();
 
         $nomenklatur_jabatan = DB::table("ref_nomenklatur_jabatan")
         ->select(
@@ -217,7 +221,11 @@ class TemplateSuratKeluarController extends Controller
         ->join("daftar_pegawai","users.id","=","daftar_pegawai.id_user")
         ->get();
 
-        $user = DB::table("users")->select("id AS id_user","name AS nama_pegawai")->get();
+        $user = DB::table("users")
+        ->where("daftar_pegawai.status", 1)
+        ->select("users.id AS id_user","users.name AS nama_pegawai")
+        ->join("daftar_pegawai", "users.id","=","daftar_pegawai.id_user")
+        ->get();
 
         $count_menimbang = DB::table("template_sk_menimbang")->where("id_surat_keluar",$id)->count();
         $count_mengingat = DB::table("template_sk_mengingat")->where("id_surat_keluar",$id)->count();

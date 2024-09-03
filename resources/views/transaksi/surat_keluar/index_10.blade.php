@@ -358,12 +358,23 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
+                            <div class="text-gray-800 mb-1">${data}</div>
                         ${full["deskripsi"]}
                         </div>${a}`;
                 }
             },
-            {data:"perihal"},
+            {data:"perihal",
+                mRender:function(data){
+                    if(data.length>=90){
+                        var result = data.slice(0, 90);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+                    
+                }
+            },
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(data>0){

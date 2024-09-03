@@ -23,7 +23,6 @@
                 <thead>
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor Surat</th>
-                        <th>Kategori klasifikasi</th>
                         <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
@@ -145,13 +144,23 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
-                            <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
+                            <div class="text-gray-800 mb-1">${data}</div>
                         ${full["deskripsi"]}
                         </div>${a}`;
                 }
             },
-            {data:"deskripsi"},
-            {data:"perihal"},
+            {data:"perihal",
+                mRender:function(data){
+                    if(data.length>=90){
+                        var result = data.slice(0, 90);   
+                        return result+" ..."
+                    }else{
+                        var result = data
+                        return result
+                    }
+                    
+                }
+            },
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data){

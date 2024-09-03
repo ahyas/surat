@@ -179,6 +179,7 @@ Auth::routes();
     Route::group(['middleware'=>'role:6,8,10, 13, 16,18, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
+        //Route::post('/transaksi/surat_keluar/tujuan/')
     });
     
 Auth::routes();
