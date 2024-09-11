@@ -197,9 +197,9 @@ class Controller extends BaseController
 
                             $menu = 
                             [
-                                'Transaksi'=>[
-                                    'Surat keluar' => route('transaksi.surat_keluar'),
-                                ],
+                                'Arsip'=>[
+                                    'Surat Masuk' => route('arsip.surat_masuk.index')
+                                ]
                             ];
                             
                             break;

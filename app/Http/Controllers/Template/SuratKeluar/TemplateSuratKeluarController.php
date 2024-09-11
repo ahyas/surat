@@ -171,6 +171,8 @@ class TemplateSuratKeluarController extends Controller
             "transaksi_surat_keluar.perihal",
             "transaksi_surat_keluar.id_nomenklatur_jabatan",
             "transaksi_surat_keluar.tgl_surat",
+            "transaksi_surat_keluar.internal",
+            "transaksi_surat_keluar.tujuan",
             "template_sk.menetapkan",
             "transaksi_surat_keluar.perihal",
             DB::raw("(CASE WHEN transaksi_surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
@@ -471,20 +473,25 @@ class TemplateSuratKeluarController extends Controller
             DB::table("detail_transaksi_surat")
             ->where("id_surat", $id)
             ->delete();
-
-            $tujuan = $request["tujuan"];
-            $value = array();
             
-            foreach($tujuan as $id_pegawai){
-                if(!empty($id_pegawai)){
-                    $value[] = [
-                        "id_surat"=>$id,
-                        "id_penerima"=>$id_pegawai
-                    ];
-                }
-            }
+            if($request["internal"] == 1){
+                $tujuan = $request["tujuan"];
+                $value = array();
 
-            DB::table('detail_transaksi_surat')->insert($value);
+                foreach($tujuan as $id_pegawai){
+                    if(!empty($id_pegawai)){
+                        $value[] = [
+                            "id_surat"=>$id,
+                            "id_penerima"=>$id_pegawai
+                        ];
+                    }
+                }
+    
+                DB::table('detail_transaksi_surat')->insert($value);
+                $tujuan_surat = null;
+            }else{
+                $tujuan_surat = $request["tujuan"];
+            }
             //--------end save daftar penerima surat-------------
             
             DB::table("template_sk")
@@ -504,6 +511,7 @@ class TemplateSuratKeluarController extends Controller
                 "id_ref_transaksi"=>$request["transaksi"],
                 "id_nomenklatur_jabatan"=>$request["nomenklatur_jabatan"],
                 "no_surat"=>$nomor_surat,
+                "tujuan"=>$tujuan_surat,
                 "perihal"=>$request["perihal"],
                 "tgl_surat"=>$request["tgl_surat"],
                 "file"=>$filename

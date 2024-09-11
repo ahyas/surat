@@ -98,7 +98,7 @@ Auth::routes();
         //END::transaksi surat
     });
    
-    Route::group(['middleware'=>'role:5, 6, 8, 10, 13, 16, 101'], function(){
+    Route::group(['middleware'=>'role:5, 6, 8, 10, 13, 16, 18, 101'], function(){
          //Begin::Transaksi surat masuk
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');
@@ -137,7 +137,16 @@ Auth::routes();
         Route::get('/transaksi/surat_keluar/{id_surat}/edit', 'Transaksi\SuratKeluar\SuratKeluarController@edit')->name('transaksi.surat_keluar.edit');
         Route::post('/transaksi/surat_keluar/{id_surat}/update', 'Transaksi\SuratKeluar\SuratKeluarController@update')->name('transaksi.surat_keluar.update');
         Route::get('/transaksi/surat_keluar/{id_surat}/delete', 'Transaksi\SuratKeluar\SuratKeluarController@delete')->name('transaksi.surat_keluar.delete');
+        
+        //menambah daftar penerima surat keluar
+        Route::get('/transaksi/surat_keluar/detail/add','Transaksi\SuratKeluar\SuratKeluarController@addDetail');
+        //menghapus penerima surat keluar
+        Route::get('/transaksi/surat_keluar/detail/{id_surat_keluar}/{id_penerima}/delete','Transaksi\SuratKeluar\SuratKeluarController@deleteDetail');
+        //menampilkan daftar penerima pada surat keluar
         Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail','Transaksi\SuratKeluar\SuratKeluarController@getDetailSurat');
+        Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal','Transaksi\SuratKeluar\SuratKeluarController@getDetailSuratEksternal');
+        Route::post('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal/update','Transaksi\SuratKeluar\SuratKeluarController@updateDetailSuratEksternal');
+
         Route::get('/referensi/{id_ref_klasifikasi}/get_fungsi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getFungsiList')->name('transaksi.surat_keluar.get_fungsi_list');
         Route::get('/referensi/{id_ref_fungsi}/get_kegiatan_list', 'Transaksi\SuratKeluar\SuratKeluarController@getKegiatanList')->name('transaksi.surat_keluar.get_kegiatan_list');
         Route::get('/referensi/{id_ref_kegiatan}/get_transaksi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getTransaksiList')->name('transaksi.surat_keluar.get_transaksi_list');
@@ -179,7 +188,7 @@ Auth::routes();
     Route::group(['middleware'=>'role:6,8,10, 13, 16,18, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
-        //Route::post('/transaksi/surat_keluar/tujuan/')
+        
     });
     
 Auth::routes();

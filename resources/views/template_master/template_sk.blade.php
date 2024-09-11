@@ -42,7 +42,7 @@
                 {{csrf_field()}} {{ method_field('POST') }}
 
                 <div id="notification"></div>
-
+                <input type="hidden" value="{{$table->internal}}" name="internal"/>
                 <input type="hidden" name="id_surat" class="form-control form-control-solid" value="{{$table->id_surat}}"/>
                 <input type="hidden" name="kode_surat" class="form-control" value="{{$table->kode_surat}}"/>
                 <div class="fv-row mb-7">
@@ -121,17 +121,23 @@
                     @endif
                     </select>
                 </div>
+
                 <div id="display-tujuan-internal">
                     <div class="fv-row mb-7">
                         <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                        @if($table->internal == 1)
                         <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required>
                             <option>Pilih tujuan surat</option>
                             @foreach($user as $row)
                                 <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
                             @endforeach
                         </select>
+                        @else
+                        <input type="text" name="tujuan" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" value="{{$table->tujuan}}"/>
+                        @endif
                     </div>
                 </div>
+
                 <div class="fv-row mb-7">
                     <label class="required fw-semibold fs-6 mb-2">Tentang/perihal</label>
                     <textarea class="form-control form-control form-control-solid" data-kt-autosize="true" name="perihal">{{old('perihal', $table->perihal)}}</textarea>                    

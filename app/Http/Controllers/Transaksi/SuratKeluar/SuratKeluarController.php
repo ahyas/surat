@@ -424,12 +424,66 @@ class SuratKeluarController extends Controller
     public function getDetailSurat($id_surat){
         $table = DB::table("detail_transaksi_surat")
         ->where("id_surat", $id_surat)
-        ->select("users.name AS nama_penerima", "users.email","bidang.nama AS nama_bidang")
+        ->select("users.name AS nama_penerima", "users.email","bidang.nama AS nama_bidang","detail_transaksi_surat.id_surat AS id_surat_keluar", "users.id AS id_penerima")
         ->join("users", "detail_transaksi_surat.id_penerima","=","users.id")
         ->leftJoin("bidang","users.id_bidang","=","bidang.id")
         ->get();
 
+        return response()->json(["table"=>$table,"count"=>$table->count()]);
+    }
+
+    public function getDetailSuratEksternal($id_surat_keluar){
+        $table = DB::table("transaksi_surat_keluar")
+        ->where("id", $id_surat_keluar)
+        ->select("tujuan")
+        ->first();
+
         return response()->json($table);
+    }
+
+    public function updateDetailSuratEksternal(Request $request, $id_surat_keluar){
+        $errors = [];
+        $data = [];
+
+        if(empty($request["penerima_eksternal"])){
+            $errors['err_penerima'] = 'Penerima surat tidak boleh kosong';
+        }
+
+        if (!empty($errors)) {
+            $data['success'] = false;
+            $data['errors'] = $errors;
+            
+        } else {
+            $data['success'] = true;
+            $data['errors'] = $errors;
+
+            DB::table("transaksi_surat_keluar")
+            ->where("id",$id_surat_keluar)
+            ->update([
+                "tujuan"=>$request["penerima_eksternal"]
+            ]);
+        }
+
+        return response()->json($data);
+    }
+
+    public function addDetail(Request $request){
+        DB::table("detail_transaksi_surat")
+        ->insertOrIgnore([
+            "id_surat"=>$request["id_surat_keluar"],
+            "id_penerima"=>$request["id_penerima"]
+        ]);
+
+        return response()->json();
+    }
+
+    public function deleteDetail($id_surat_keluar, $id_penerima){
+        DB::table("detail_transaksi_surat")
+        ->where("id_surat",$id_surat_keluar)
+        ->where("id_penerima",$id_penerima)
+        ->delete();
+
+        return response()->json();
     }
 
     public function getBulanRomawi($tgl_surat){
@@ -807,19 +861,7 @@ class SuratKeluarController extends Controller
                 $nomor_surat = $no_agenda."/SEK.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
                 
             }
-        }
-
-        
-        if($request["penerima_surat"] == 1){
-            if (empty($request["tujuan"])) {
-                $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-            }
-        }else{
-            if (empty($request["tujuan-external"])) {
-                $errors['tujuan'] = 'Tujuan surat tidak boleh kosong';
-            }
-        }
-        
+        }        
 
         if (empty($request["perihal"])) {
             $errors['perihal'] = 'Perihal surat tidak boleh kosong';
@@ -876,35 +918,6 @@ class SuratKeluarController extends Controller
                     ]
                 );
 
-                //internal
-                if($request["penerima_surat"] == 1){
-                    //replace old data with new data
-                    DB::table("detail_transaksi_surat")
-                    ->where("id_surat", $id)
-                    ->delete();
-
-                    //detail transaksi surat
-                    $tujuan = $request["tujuan"];
-                    $value = array();
-                    
-                    foreach($tujuan as $id_pegawai){
-                        if(!empty($id_pegawai)){
-                            $value[] = [
-                                "id_surat"=>$id,
-                                "id_penerima"=>$id_pegawai
-                            ];
-                        }
-                    }
-
-                    DB::table('detail_transaksi_surat')->insert($value);
-                }else{
-                    DB::table("transaksi_surat_keluar")
-                    ->where("id", $id)
-                    ->update([
-                        "tujuan"=>$request["tujuan-external"]
-                    ]);
-                }
-
             }else{
                 DB::table("transaksi_surat_keluar")
                 ->where("id", $id)
@@ -920,35 +933,6 @@ class SuratKeluarController extends Controller
                         "tgl_surat"=>$request["tgl_surat"],
                     ]
                 );
-                 //internal
-                if($request["penerima_surat"] == 1){
-                    //replace old data with new data
-                    DB::table("detail_transaksi_surat")
-                    ->where("id_surat", $id)
-                    ->delete();
-
-                    //detail transaksi surat
-                    $tujuan = $request["tujuan"];
-                    $value = array();
-                    
-                    foreach($tujuan as $id_pegawai){
-                        if(!empty($id_pegawai)){
-                            $value[] = [
-                                "id_surat"=>$id,
-                                "id_penerima"=>$id_pegawai
-                            ];
-                        }
-                    }
-
-                    DB::table('detail_transaksi_surat')
-                    ->insert($value);
-                }else{
-                    DB::table("transaksi_surat_keluar")
-                    ->where("id", $id)
-                    ->update([
-                        "tujuan"=>$request["tujuan-external"]
-                    ]);
-                }
                 
             }
     

@@ -82,27 +82,28 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                       
-                                        <div class="fv-row mb-7">
-                                            <label class="required fw-semibold fs-6 mb-5">Penerima</label>
-                                            <div class="d-flex fv-row">
-                                                <!--begin::Radio-->
-                                                <div class="form-check form-check-custom form-check-solid">
-                                                    <!--begin::Input-->
-                                                    <input class="form-check-input me-3" name="penerima_surat" type="radio" value="1" id="kt_modal_update_role_option_0" disabled/>
-                                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
-                                                        <div class="fw-bold text-gray-800">Internal</div>
-                                                    </label>
-                                                    
-                                                    <input class="form-check-input me-3" name="penerima_surat" type="radio" value="2" id="kt_modal_update_role_option_1" style="margin-left:20px" disabled/>
-                                                    <label class="form-check-label" for="kt_modal_update_role_option_1">
-                                                        <div class="fw-bold text-gray-800">External</div>
-                                                    </label>
-                                                    <!--end::Label-->
+                                        <div id="display-penerima-surat">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-5">Penerima</label>
+                                                <div class="d-flex fv-row">
+                                                    <!--begin::Radio-->
+                                                    <div class="form-check form-check-custom form-check-solid">
+                                                        <!--begin::Input-->
+                                                        <input class="form-check-input me-3" name="penerima_surat" type="radio" value="1" id="kt_modal_update_role_option_0"/>
+                                                        <label class="form-check-label" for="kt_modal_update_role_option_0">
+                                                            <div class="fw-bold text-gray-800">Internal</div>
+                                                        </label>
+                                                        
+                                                        <input class="form-check-input me-3" name="penerima_surat" type="radio" value="2" id="kt_modal_update_role_option_1" style="margin-left:20px"/>
+                                                        <label class="form-check-label" for="kt_modal_update_role_option_1">
+                                                            <div class="fw-bold text-gray-800">External</div>
+                                                        </label>
+                                                        <!--end::Label-->
+                                                    </div>
+                                                    <!--end::Radio-->
                                                 </div>
-                                                <!--end::Radio-->
+                                                <!--end::Input row-->
                                             </div>
-                                            <!--end::Input row-->
                                         </div>
                                         <div id="display-tujuan-internal">
                                             <div class="fv-row mb-7">
@@ -213,15 +214,36 @@
                         <div class="modal-content">
                             <!--begin::Modal header-->
                             <div class="modal-header">
-                                <h2 class="modal-title">Daftar Penerima Surat</h2>
+                                <h2 class="modal-title">Daftar Penerima Surat Internal</h2>
                                 <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
                                     <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
                                 </div>
                             </div>
                             <div class="modal-body">
+                                <input type="hidden" id="count_penerima" />
+                                <form name="form_penerima">
+                                    {{ csrf_field()}}
+                                    <div id="display-penerima-surat-internal">
+                                    <div class="fv-row mb-7">
+                                        <input type="hidden" id="id_surat_keluar" />
+                                        <label class="fw-semibold fs-6 mb-2">Tambah penerima</label>
+                                        <select name="penerima" id="penerima" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="true" data-placeholder="Pilih tujuan" data-allow-clear="true" >
+                                            <option value="">Pilih Penerima Surat</option>
+                                            @foreach($user as $row)
+                                                <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-sm btn-success add_penerima" id="add_penerima" disabled>
+                                        Tambahkan
+                                    </button>
+                                    </div>
+                                </form>
                                 <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_tembusan">
                                     <thead>
                                         <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                                            <th></th>
                                             <th></th>
                                             <th></th>
                                         </tr>
@@ -231,6 +253,40 @@
                                 <div class="text-center pt-10">
                                     <button type="button" id="btn-cancel" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
                                 </div>
+                            </div>
+                            <!--end::Modal body-->
+                        </div>
+                        <!--end::Modal content-->
+                    </div>
+                    <!--end::Modal dialog-->
+                </div>
+
+                <!--Daftar tujuan eksternal-->
+                <div class="modal fade" id="kt_modal_tujuan_eksternal" tabindex="-1" aria-hidden="true">
+                    <!--begin::Modal dialog-->
+                    <div class="modal-dialog modal-dialog-centered mw-650px">
+                        <!--begin::Modal content-->
+                        <div class="modal-content">
+                            <!--begin::Modal header-->
+                            <div class="modal-header">
+                                <h2 class="modal-title">Penerima Surat Eksternal</h2>
+                                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                                </div>
+                            </div>
+                            <div class="modal-body">
+                                <div id="notification2"></div>
+                                <form name="form_penerima_eksternal" id="form_penerima_eksternal" method="POST">
+                                    {{ csrf_field()}}
+                                    <input type="hidden" id="id_surat_keluar_eksternal"/>
+                                    <div class="fv-row mb-7">
+                                        <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
+                                        <input type="text" name="penerima_eksternal" id="penerima_eksternal" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" />
+                                    </div>
+                                    <div class="text-center pt-10">
+                                        <button type="submit" id="update_penerima_eksternal" class="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
                             </div>
                             <!--end::Modal body-->
                         </div>
@@ -321,6 +377,28 @@ $(document).ready(function(){
     document.getElementById("display-tujuan-external").style.display = "none";
     document.getElementById("display-upload-file").style.display = "none";
     document.getElementById("display-choose-template").style.display = "none";
+    $("body").on("click","#add_penerima",function(e){
+        e.preventDefault()
+        let id_penerima = $("#penerima").val()
+        let id_surat_keluar = $("#id_surat_keluar").val()
+        console.log("Test", id_penerima)
+        $.ajax({
+            url:"{{url('transaksi/surat_keluar/detail/add')}}",
+            type:"GET",
+            dataType:"JSON",
+            data:{id_surat_keluar:id_surat_keluar, id_penerima:id_penerima},
+            success:function(data){
+                $("#penerima").val('').trigger("change");
+                document.getElementById("add_penerima").disabled = true
+                $("#tb_tembusan").DataTable().ajax.reload(null, false)
+                $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+            }
+        });
+    });
+
+    $("#penerima").change(function(){
+        document.getElementById("add_penerima").disabled = false
+    })
 
     var date = document.getElementById("tgl_surat");
     flatpickr(date, {
@@ -331,7 +409,7 @@ $(document).ready(function(){
     var fp = date._flatpickr;
 
     var id_role = `{{$data['id_role']}}`;
-
+    var current_user_id = "{{Auth::user()->id}}";
     let tb_surat_keluar = $("#tb_surat_keluar").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_keluar.get_data')}}"
@@ -377,11 +455,27 @@ $(document).ready(function(){
             },
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
-                    if(data>0){
-                        var show = `<a href="javascript:void(0)" id="daftar_tujuan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
-                        return show;
+                    if(full["internal"] == 2){
+                        var a = `<span class="badge badge-light-danger" style="margin-bottom:10px">External</span>`;
+                    }else if(full["internal"] == 1){
+                        var a = `<span class="badge badge-light-primary" style="margin-bottom:10px">Internal</span>`;
                     }else{
-                        return full['tujuan'];
+                        var a = ``;
+                    }
+
+                    if(full["id_user"] == current_user_id){
+                        var show_control = "show";
+                    }else{
+                        var show_control = "hide";
+                    }
+                    
+                    //tujuan internal
+                    if(data>0){
+                        var show = `${a}<br><a href="javascript:void(0)" id="daftar_tujuan" data-id_surat='${full['id_surat']}' data-show_control='${show_control}'>
+                        <span class="badge badge-info">${data} orang</span></a>`;
+                        return show;
+                    }else{//tujuan eksternal
+                        return `${a}<br><span style="color:white; font-size:11px; font-weight:600; cursor: pointer;" id="tujuan_eksternal" data-id_surat='${full['id_surat']}' data-show_control='${show_control}'><div class="bg-info" style="padding:6px; border-radius:5px" >${full['tujuan']}</div></span>`;
                     }
                     
                 }
@@ -400,7 +494,7 @@ $(document).ready(function(){
             {data:"dibuat_oleh"},
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
-                    var current_user_id = "{{Auth::user()->id}}";
+                    
                     if(full["id_user"] == current_user_id){
                         var disabled = "";
                     }else{
@@ -430,10 +524,21 @@ $(document).ready(function(){
     $("body").on("click","#daftar_tujuan",function(){
         var id_surat = $(this).data("id_surat");
         $("#kt_modal_tujuan").modal("show");
+        var show_control = $(this).data("show_control")
+        if(show_control == 'show'){
+            document.getElementById("display-penerima-surat-internal").style.display = 'block'
+        }else{
+            document.getElementById("display-penerima-surat-internal").style.display = 'none'
+        }
+        console.log($(this).data("show_control"))
+        $("#id_surat_keluar").val(id_surat)
         $("#tb_tembusan").DataTable({
             ajax        : {
                 url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
-                dataSrc:""
+                dataSrc:function(res){
+                    $("#count_penerima").val(res.count)
+                    return res.table
+                }
             },
             "bDestroy": true,
             searching   : false, paging: true, info: false,
@@ -452,9 +557,38 @@ $(document).ready(function(){
                         </div>`;
                     },
                 },
-                {data:"nama_bidang", className:"text-end"}
+                {data:"nama_bidang", className:"text-end"},
+                {data:"id_penerima", className:"text-end",
+                    mRender:function(data, type, full){
+                        if(show_control == 'show'){
+                            return`<div id="display-btn-penerima-surat-internal"><button class='btn btn-sm btn-danger' id='hapus_penerima' data-id_penerima='${data}' data-id_surat_keluar='${full['id_surat_keluar']}'>Hapus</button></div>`;
+                        }else{
+                            return``;   
+                        }
+                    }
+                }
             ]
         });
+    });
+
+    $("body").on("click","#hapus_penerima",function(){
+        var id_surat_keluar = $(this).data("id_surat_keluar")
+        var id_penerima = $(this).data("id_penerima")
+        var count_penerima = $("#count_penerima").val();
+        if(count_penerima >1){
+            $.ajax({
+                url:`transaksi/surat_keluar/detail/${id_surat_keluar}/${id_penerima}/delete`,
+                type:'GET',
+                dataType:"JSON",
+                data:{id_surat_keluar:id_surat_keluar, id_penerima:id_penerima},
+                success:function(data){
+                    $("#tb_tembusan").DataTable().ajax.reload(null, false)
+                    $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                }
+            })
+        }else{
+            alert("Minimal terdapat satu penerima")
+        }
     });
 
     $("body").on("click", "#lampiran", function(){
@@ -486,6 +620,63 @@ $(document).ready(function(){
             }
         });
     });
+
+    $(("body")).on("click","#tujuan_eksternal", function(){
+        
+        let id_surat = $(this).data("id_surat");        
+        var show_control = $(this).data("show_control")
+        document.getElementById("notification2").innerHTML = ''
+
+        $("#id_surat_keluar_eksternal").val(id_surat)
+        $.ajax({
+            url:`{{url('transaksi/surat_keluar/${id_surat}/detail_eksternal')}}`,
+            type:"GET",
+            success:function(data){
+                console.log(data.tujuan)
+                $("#penerima_eksternal").val(data.tujuan)
+                if(show_control == 'show'){
+                    document.getElementById("display-penerima-surat-internal").style.display = 'block'
+                    document.getElementById("penerima_eksternal").removeAttribute("disabled");
+                    document.getElementById("update_penerima_eksternal").removeAttribute("disabled");
+                    
+                }else{
+                    document.getElementById("display-penerima-surat-internal").style.display = 'none'
+                    document.getElementById("penerima_eksternal").setAttribute("disabled", "disabled");
+                    document.getElementById("update_penerima_eksternal").setAttribute("disabled", "disabled");
+                }
+                
+                $("#kt_modal_tujuan_eksternal").modal("show");
+            }
+        })
+    });
+
+    $("#update_penerima_eksternal").click(function(e){
+        e.preventDefault()
+        var formData = new FormData(document.getElementById("form_penerima_eksternal")); 
+        let id_surat_keluar = $("#id_surat_keluar_eksternal").val()
+        
+        $.ajax({
+            url:`{{url('transaksi/surat_keluar/${id_surat_keluar}/detail_eksternal/update')}}`,
+            type:"POST",
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            dataType:"JSON",
+            success:function(data){
+                console.log(data)
+                if(!data.success){
+                    let err_penerima = data.errors.err_penerima  ? `<li>${data.errors.err_penerima}</li>` : ``;
+                    document.getElementById("notification2").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification2'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_penerima+"</div></div>";      
+
+                    return false;
+                }
+
+                $("#kt_modal_tujuan_eksternal").modal("hide");
+                $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+            }
+        });
+    })
 
     $("body").on("click","#delete_surat_keluar", function(){
         console.log($(this).data("id_surat_keluar"));
@@ -720,6 +911,7 @@ $(document).ready(function(){
         //document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
         //document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");
         //document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+        document.getElementById("display-penerima-surat").style.display = "inline-block";
         document.getElementById("display-gunakan-template").style.display = "inline-block";
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
@@ -799,6 +991,9 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_surat_keluar", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Surat Keluar</h2>`;
+        document.getElementById("display-penerima-surat").style.display = "none";
+        document.getElementById("display-tujuan-internal").style.display = "none";
+        document.getElementById("display-tujuan-external").style.display = "none";
         document.getElementById("update_surat").style.display = "inline-block";
         document.querySelector(".update_surat_keluar").setAttribute("data-kt-indicator", "off");
         document.querySelector(".update_surat_keluar").removeAttribute("disabled");
@@ -869,31 +1064,6 @@ $(document).ready(function(){
                 }
 
                 document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-                
-                if(data.surat_keluar.internal == 1){
-                    
-                    document.querySelector("#kt_modal_update_role_option_1").disabled=true;
-                    document.querySelector("#kt_modal_update_role_option_0").removeAttribute("disabled");
-                    document.querySelector("#kt_modal_update_role_option_0").checked;
-
-                    let tujuan_surat = data.tujuan_surat.map(function (obj) {
-                        return obj.id_penerima;
-                    });
-
-                    document.getElementById("display-tujuan-internal").style.display = "inline-block";
-                    document.getElementById("display-tujuan-external").style.display = "none";
-                    $("#tujuan").val(tujuan_surat).trigger("change");
-                    
-                }else{
-                    document.querySelector("#kt_modal_update_role_option_1").removeAttribute("disabled");
-                    document.querySelector("#kt_modal_update_role_option_1").checked;
-                    document.querySelector("#kt_modal_update_role_option_0").disabled=true; 
-
-                    document.getElementById("display-tujuan-internal").style.display = "none";
-                    document.getElementById("display-tujuan-external").style.display = "inline-block";
-                    $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
-                    
-                }
 
                 document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                 $("#nomenklatur_jabatan").val(data.id_nomenklatur);
