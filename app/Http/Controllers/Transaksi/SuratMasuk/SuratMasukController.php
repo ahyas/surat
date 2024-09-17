@@ -86,6 +86,8 @@ class SuratMasukController extends Controller
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("surat_masuk.created_by", Auth::user()->id)
                 ->where("surat_masuk.rahasia", 'false')
+                ->whereNull("surat_masuk.id_status")
+                ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -94,6 +96,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "users.name AS dibuat_oleh",
+                    "surat_masuk.id_status",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->orderBy("surat_masuk.created_at","DESC")

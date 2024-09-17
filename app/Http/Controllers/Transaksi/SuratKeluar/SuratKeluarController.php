@@ -441,6 +441,16 @@ class SuratKeluarController extends Controller
         return response()->json($table);
     }
 
+    public function arsipkan($id){
+        DB::table('transaksi_surat_keluar')
+        ->where("id", $id)
+        ->update([
+            'id_status'=>2
+        ]);
+
+        return response()->json();
+    }
+
     public function updateDetailSuratEksternal(Request $request, $id_surat_keluar){
         $errors = [];
         $data = [];

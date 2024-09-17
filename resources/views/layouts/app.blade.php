@@ -419,11 +419,18 @@ License: For each use you must have a valid license purchased only from above li
 																	<span class="menu-bullet">
 																		<span class="bullet bullet-dot"></span>
 																	</span>
-																	<span class="menu-title">{{$sub_key}} @if($sub_key == 'Surat Masuk' && $key == 'Transaksi')
-																	&nbsp;
-																	@if($data['tot_count']>0)<span class="badge badge-circle badge-danger">{{$data['tot_count']}}</span>@endif
+																	<span class="menu-title">{{$sub_key}} 
+																	@if($sub_key == 'Surat Masuk' && $key == 'Transaksi')
+																		&nbsp;
+																		@if($data['tot_count']>0)<span class="badge badge-circle badge-danger" id="count_surat_masuk">{{$data['tot_count']}}</span>
 																		@endif
+																	@elseif($sub_key == 'Surat Keluar' && $key == 'Transaksi')
+																	&nbsp;
+																		@if($data['tot_count_surat_keluar']>0)<span class="badge badge-circle badge-danger count_surat_keluar" id="count_surat_keluar">{{$data['tot_count_surat_keluar']}}</span>
+																		@endif
+																	@endif
 																	</span>
+																	
 																</a>
 																<!--end:Menu link-->
 															</div>

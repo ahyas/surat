@@ -98,6 +98,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / isi ringkas</th>
                         <th >Tanggal Surat</th>
+                        <th >Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -174,6 +175,32 @@
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
                                             </tr>
                                         </table>
+                                        <span class="fw-bold fs-6 text-gray-800">History</span>
+                                        <table class="table table-striped table-row-bordered gy-5 gs-7 border rounded w-100 fs-6 daftar_disposisi" id="kt_datatable_column_rendering">
+                                            <thead>
+                                                <tr class="fw-bold">
+                                                    <th>Pengirim</th>
+                                                    <th class="text-nowrap">Catatan / Pesan</th>
+                                                    <th class="text-nowrap min-w-200px">Petunjuk</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td>
+                                                        <div class="text-nowrap"><b>Status :</b> <span id="detail-status"></span></div>
+                                                        <div id="detail-tindak_lanjut" style="display:none;">
+                                                            <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
+                                                            <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
+                                                            <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
+                                                            <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
+                                                        </div>
+                                                    </td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
                                     </div>
                                 </div>
                                 
@@ -223,11 +250,9 @@ $(document).ready(function(){
                     }
 
                     if(data.length>=29){
-                        var result = data.slice(0, 29);   
-                        return result+" ..."
+                        var result = data.slice(0, 29)+" ...";   
                     }else{
                         var result = data
-                        return result
                     }
 
                     return`<div class="d-flex flex-column">
@@ -252,6 +277,25 @@ $(document).ready(function(){
             {data:"tgl_surat",
                 mRender:function(data){
                     return`<div style='white-space: nowrap'>${data}</div>`
+                }
+            },
+            {data:"status",
+                mRender:function(data, type, full){
+                    if(full['id_status'] == 3){
+                        return `
+                            <div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-primary">Selesai</span>                       
+                            `;
+                    }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
+                        return `
+                            <div style='white-space: nowrap'>${data}</div> 
+                            <span class="badge badge-light-success">On-Process</span>                       
+                            `;
+                    }else{
+                        return `
+                            <span class="badge badge-light-danger">Unprocessed</span>                       
+                            `;
+                    }
                 }
             },
             {data:"id", className: "text-end",
@@ -282,6 +326,7 @@ $(document).ready(function(){
     $("body").on("click","#detail_surat_masuk", function(){
         document.getElementById("preview-title").innerHTML = `<h2 class="fw-bold">Detail surat</h2>`;
         var id_surat = $(this).data("id_surat_masuk");
+        showDaftarDisposisi(id_surat);
         var url = $(this).data("url");
         loadingPage(true);
         $.ajax({
@@ -302,6 +347,53 @@ $(document).ready(function(){
             }
         });
     });
+
+    function showDaftarDisposisi(id_surat){
+        $(".daftar_disposisi").DataTable().clear().destroy();
+        $(".daftar_disposisi").DataTable({
+            ajax        : {
+                url     :`{{url('transaksi/surat_masuk/disposisi/${id_surat}/daftar_disposisi')}}`,
+                dataSrc :""
+            },
+            serverSide  : false,
+            ordering    : false,
+            responsive  : true,
+            bPaginate   : false,
+            searching   : false,
+            info        :false,
+            columns     :
+            [
+                {data:"jab_pengirim", 
+                    mRender:function(data, type, full){
+                        let penerima = full["jab_penerima"];
+                        let tanggal = full['tanggal'];
+                        let waktu = full["waktu"];
+                        return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
+                        <span style='white-space: nowrap'><b>Ke</b> : ${penerima}</span><br>
+                        <span style='white-space: nowrap'>${tanggal} / ${waktu}</span>`;
+                    }
+                },
+                {data:"catatan", className:"text-end",
+                    mRender:function(data){
+                        if(data == null){
+                            return '<span> - </span>';
+                        }else{
+                            return `<span> ${data} </span>`;
+                        }
+                    }
+                },
+                {data:"petunjuk",
+                    mRender:function(data){
+                        if(data == null){
+                            return '<span> - </span>';
+                        }else{
+                            return `<span> ${data} </span>`;
+                        }
+                    }
+                },
+            ]
+        });
+    }
 
     $("body").on("click","#add_surat_masuk", function(){
         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");

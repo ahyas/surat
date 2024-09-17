@@ -496,8 +496,14 @@ $(document).ready(function(){
                 mRender:function(data, type, full){
                     
                     if(full["id_user"] == current_user_id){
+                        if(full["file"]){
+                            var disabled_arsip = ""
+                        }else{
+                            var disabled_arsip = "disabled"
+                        }
                         var disabled = "";
                     }else{
+                        var disabled_arsip = "disabled";
                         var disabled = "disabled";
                     }
 
@@ -511,6 +517,11 @@ $(document).ready(function(){
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${disabled_arsip}" id="arsip_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Arsipkan</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
                                             <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
                                         </div>
                                     </li>
@@ -519,6 +530,25 @@ $(document).ready(function(){
                 }
             }
         ]
+    });
+
+    $("body").on("click", "#arsip_surat_keluar",function(){
+        var id_surat_keluar = $(this).data("id_surat_keluar");
+
+        if(confirm("Pastikan seluruh data telah sesuai sebelum mengarsipkan. Lanjutkan?")){
+            console.log(id_surat_keluar)
+
+            $.ajax({
+                url:`transaksi/surat_keluar/${id_surat_keluar}/arsipkan`,
+                type:'GET',
+                dataType:'JSON',
+                success:function(data){
+                    //$("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                    location.reload();
+                }
+            })
+            
+        }
     });
 
     $("body").on("click","#daftar_tujuan",function(){

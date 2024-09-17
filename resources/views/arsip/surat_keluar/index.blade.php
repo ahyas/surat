@@ -26,8 +26,7 @@
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th>Status</th>
-                        <th class="text-end min-w-125px">Dibuat oleh</th>
+                        <th>Dibuat oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -97,7 +96,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-
+    var current_user_id = "{{Auth::user()->id}}";
     let tb_surat_keluar = $("#tb_surat_keluar").DataTable({
         ajax        : {
             url:"{{route('arsip.surat_keluar.get_data')}}",
@@ -110,28 +109,30 @@ $(document).ready(function(){
         [
             {data:"no_surat",
                 mRender:function(data, type, full){
-                    if(full["internal"] == 2){
-                        var a = `<span class="badge badge-light-danger">External</span>`;
-                    }else if(full["internal"] == 1){
-                        var a = `<span class="badge badge-light-primary">Internal</span>`;
-                    }else{
-                        var a = ``;
-                    }
 
                     return`<div class="d-flex flex-column">
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div>
                             <div>${full['deskripsi']}</div>
-                        </div>${a}`;
+                        </div>`;
                 }
             },
             {data:"perihal"},
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
-                    if(data>0){
-                        var show = `<a href="javascript:void(0)" id="daftar_tujuan" id="tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
-                        return show;
+                    if(full["internal"] == 2){
+                        var a = `<span class="badge badge-light-danger" style="margin-bottom:10px">External</span>`;
+                    }else if(full["internal"] == 1){
+                        var a = `<span class="badge badge-light-primary" style="margin-bottom:10px">Internal</span>`;
                     }else{
-                        return full['tujuan'];
+                        var a = ``;
+                    }
+                    
+                    //tujuan internal
+                    if(data>0){
+                        var show = `${a}<br><a href="javascript:void(0)" id="daftar_tujuan" data-id_surat='${full['id_surat']}'><span class="badge badge-info">${data} orang</span></a>`;
+                        return show;
+                    }else{//tujuan eksternal
+                        return `${a}<br><span style="color:white; font-size:11px; font-weight:600; cursor: pointer;" id="tujuan_eksternal" data-id_surat='${full['id_surat']}'><div class="bg-info" style="padding:6px; border-radius:5px" >${full['tujuan']}</div></span>`;
                     }
                     
                 }
@@ -147,31 +148,23 @@ $(document).ready(function(){
                     }
                 }
             },
-            {data:"status",
-                mRender:function(data, type, full){
-                    if(full['id_status'] == 1){
-                        return`<span class="badge badge-light-danger">${data}</span>`;
-                    }else{
-                        return`<span class="badge badge-light-success">${data}</span>`;
-                    }
-                }
-            },
-            {data:"dibuat_oleh", className:"text-end"}
+            {data:"dibuat_oleh"},
         ]
     });
 
     $("body").on("click","#daftar_tujuan",function(){
         var id_surat = $(this).data("id_surat");
+        console.log(id_surat)
         $("#kt_modal_tujuan").modal("show");
         $("#tb_tembusan").DataTable({
             ajax        : {
                 url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
-                dataSrc:""
+                dataSrc:function(res){  
+                    return res.table
+                }
             },
             "bDestroy": true,
-            searching   : false, paging: true, info: false,
-            pageLength  :5,
-            lengthMenu  : [[5, 10, 20], [5, 10, 20]],
+            searching   : false, paging: false, info: false,
             serverSide  : false,
             ordering    : false,
             responsive  : true,

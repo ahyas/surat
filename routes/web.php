@@ -147,6 +147,8 @@ Auth::routes();
         Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal','Transaksi\SuratKeluar\SuratKeluarController@getDetailSuratEksternal');
         Route::post('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal/update','Transaksi\SuratKeluar\SuratKeluarController@updateDetailSuratEksternal');
 
+        Route::get('/transaksi/surat_keluar/{id}/arsipkan', 'Transaksi\SuratKeluar\SuratKeluarController@arsipkan');
+
         Route::get('/referensi/{id_ref_klasifikasi}/get_fungsi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getFungsiList')->name('transaksi.surat_keluar.get_fungsi_list');
         Route::get('/referensi/{id_ref_fungsi}/get_kegiatan_list', 'Transaksi\SuratKeluar\SuratKeluarController@getKegiatanList')->name('transaksi.surat_keluar.get_kegiatan_list');
         Route::get('/referensi/{id_ref_kegiatan}/get_transaksi_list', 'Transaksi\SuratKeluar\SuratKeluarController@getTransaksiList')->name('transaksi.surat_keluar.get_transaksi_list');

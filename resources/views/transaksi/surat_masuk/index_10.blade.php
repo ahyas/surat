@@ -317,11 +317,9 @@ $(document).ready(function(){
                     }
 
                     if(data.length>=29){
-                        var result = data.slice(0, 29);   
-                        return result+" ..."
+                        var result = data.slice(0, 29)+" ...";   
                     }else{
                         var result = data
-                        return result
                     }
 
                     return`<div class="d-flex flex-column">
