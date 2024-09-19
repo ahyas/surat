@@ -122,7 +122,8 @@ Auth::routes();
         //Begin::tindak lanjut
         Route::post('/transaksi/surat_masuk/tindak_lanjut','Transaksi\SuratMasuk\SuratMasukController@tindakLanjut')->name('transaksi.surat_masuk.tindak_lanjut');
         //End::tindak lanjut
-
+        Route::get('/arsip', 'Arsip\ArsipSuratAll@index')->name('arsip.semua_surat.index');
+        Route::get('/arsip/get_data', 'Arsip\ArsipSuratAll@getData')->name('arsip.semua_surat.get_data');
         Route::get('/arsip/surat_masuk', 'Arsip\ArsipSuratMasukController@index')->name('arsip.surat_masuk.index');
         Route::get('/arsip/surat_masuk/get_data','Arsip\ArsipSuratMasukController@getData')->name('arsip.surat_masuk.get_data');
         Route::get('/arsip/surat_keluar','Arsip\ArsipsuratKeluarController@index')->name('arsip.surat_keluar.index');

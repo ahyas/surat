@@ -48,9 +48,12 @@ class ArsipSuratMasukController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
-                    "surat_keluar.id_status",
-                    "surat_keluar.id_status AS status"
-                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                    "surat_keluar.id_status AS status",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi")
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->leftJoin("users", "surat_keluar.created_by","=","users.id");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
@@ -94,9 +97,12 @@ class ArsipSuratMasukController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
-                    "surat_keluar.id_status",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
                     "surat_keluar.id_status AS status"
-                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->leftJoin("users", "surat_keluar.created_by","=","users.id");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
@@ -140,9 +146,12 @@ class ArsipSuratMasukController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
-                    "surat_keluar.id_status",
-                    "surat_keluar.id_status AS status"
-                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                    "surat_keluar.id_status AS status",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->leftJoin("users", "surat_keluar.created_by","=","users.id");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
@@ -154,7 +163,7 @@ class ArsipSuratMasukController extends Controller
                 return response()->json($merged);
             break;
             
-            //login sebagai admin disposisi 1/Kasubag
+            //login sebagai admin disposisi 1/Kasubag/End user
             default:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
@@ -188,9 +197,12 @@ class ArsipSuratMasukController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
-                    "surat_keluar.id_status",
-                    "surat_keluar.id_status AS status"
-                )->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                    "surat_keluar.id_status AS status",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi")
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->leftJoin("users", "surat_keluar.created_by","=","users.id");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));

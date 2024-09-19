@@ -21,10 +21,11 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>No. Surat</th>
-                        <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
+                        <th >Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Status</th>
+                        <th class="min-w-125px">Pengirim</th>
                         <th class="text-end min-w-100px"></th>
                     </tr>
                 </thead>
@@ -180,7 +181,7 @@
 $(document).ready(function(){
     $("#tb_surat_masuk").DataTable({
         ajax        : {
-            url:"{{route('arsip.surat_masuk.get_data')}}",
+            url:"{{route('arsip.semua_surat.get_data')}}",
             dataSrc:""
         },
         serverSide  : false,
@@ -190,13 +191,6 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full['rahasia'] == 'true'){
-                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
-                    }else if(full['rahasia'] == 'false'){
-                        var a = `<span class="badge badge-light-success">Biasa</span>`;
-                    }else{
-                        var a = `<span class="badge badge-light-danger">Internal</span>`;
-                    }
 
                     if(full["deskripsi"]){
                         var deskripsi = full["deskripsi"];
@@ -205,13 +199,17 @@ $(document).ready(function(){
                     }
                     return`<div class="d-flex flex-column">
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div> 
-                            ${deskripsi}
-                            <span>${a}</span>                       
+                            ${deskripsi}                      
                             </div>`;
                 }
             },
-            {data:"pengirim"},
             {data:"perihal"},
+            {data:"jumlah_tembusan", 
+                mRender:function(data, type, full){
+                    return data;
+                    
+                }
+            },
             {data:"tgl_surat"},
             {data:"status",
                 mRender:function(data, type, full){
@@ -236,6 +234,7 @@ $(document).ready(function(){
                     }
                 }
             },
+            {data:"pengirim"},
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     var file = full["file"];

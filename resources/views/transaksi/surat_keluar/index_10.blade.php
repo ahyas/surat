@@ -16,13 +16,14 @@
             <!--begin::Card toolbar-->
             <div class="card-toolbar">
                 <!--begin::Toolbar-->
+                
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     
                     <button type="button" class="btn btn-primary btn-sm" id="add_surat_keluar">
                     <i class="ki-duotone ki-plus fs-2"></i>Add Surat Keluar</button>
                     <!--end::Add user-->
                 </div>
-
+                
                 <div class="modal fade" id="kt_modal_add_surat_keluar" tabindex="-1" aria-hidden="true">
                     <!--begin::Modal dialog-->
                     <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -427,18 +428,10 @@ $(document).ready(function(){
         [
             {data:"no_surat",
                 mRender:function(data, type, full){
-                    if(full["internal"] == 2){
-                        var a = `<span class="badge badge-light-danger">External</span>`;
-                    }else if(full["internal"] == 1){
-                        var a = `<span class="badge badge-light-primary">Internal</span>`;
-                    }else{
-                        var a = ``;
-                    }
-
                     return`<div class="d-flex flex-column">
                             <div class="text-gray-800 mb-1">${data}</div>
                         ${full["deskripsi"]}
-                        </div>${a}`;
+                        </div>`;
                 }
             },
             {data:"perihal",

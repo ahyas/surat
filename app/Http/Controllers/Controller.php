@@ -77,7 +77,8 @@ class Controller extends BaseController
                                     'Surat Masuk' => route('transaksi.surat_masuk')
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index')
+                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];  
                             break;
@@ -102,8 +103,9 @@ class Controller extends BaseController
                                     'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    'Surat Keluar' => route('arsip.surat_keluar.index')
+                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                    //'Surat Keluar' => route('arsip.surat_keluar.index'),
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
@@ -118,7 +120,11 @@ class Controller extends BaseController
                             ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                             ->count();
                             
-                            $tot_count_surat_keluar = 0;
+                            $tot_count_surat_keluar = DB::table("transaksi_surat_keluar AS surat_keluar")
+                            ->whereNotIn("surat_keluar.internal",[111])
+                            ->where("surat_keluar.id_status",1)
+                            ->whereNotNull("surat_keluar.file")
+                            ->count();
 
                             $menu = 
                             [
@@ -127,7 +133,9 @@ class Controller extends BaseController
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index')
+                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                    //'Surat Keluar' => route('arsip.surat_keluar.index'),
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
@@ -160,8 +168,9 @@ class Controller extends BaseController
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    'Surat Keluar' => route('arsip.surat_keluar.index')
+                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                    //'Surat Keluar' => route('arsip.surat_keluar.index'),
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
@@ -188,8 +197,9 @@ class Controller extends BaseController
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    'Surat Keluar' => route('arsip.surat_keluar.index')
+                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
+                                    //'Surat Keluar' => route('arsip.surat_keluar.index'),
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
@@ -203,7 +213,7 @@ class Controller extends BaseController
                             ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                             ->count();
                             
-
+                            $tot_count_surat_keluar = 0;
                             $menu = 
                             [
                                 'Transaksi'=>[
