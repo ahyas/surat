@@ -45,10 +45,13 @@ class ArsipSuratAll extends Controller
                 );
 
                 $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+                $table = $table->addSelect(DB::raw("3 AS internal"));
+                    $table = $table->addSelect(DB::raw("NULL AS tujuan"));
                 $table = $table->orderBy("surat_masuk.tgl_surat","DESC")->get();
 
                 $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
-                ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+                ->where("surat_keluar.id_status",2)
+                ->whereNotIn('surat_keluar.created_by', [Auth::user()->id])
                 ->whereNotIn("surat_keluar.internal",[111])
                 ->whereNotNull("surat_keluar.file")
                 ->select(
@@ -59,6 +62,8 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan",
                     "surat_keluar.id_status AS status",
                     DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -77,7 +82,9 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.id_ref_transaksi",
                     "ref_kegiatan.deskripsi",
                     "users.name",
-                    "detail_transaksi_surat.id_surat");
+                    "detail_transaksi_surat.id_surat",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
                 $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
@@ -96,6 +103,8 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan",
                     "surat_keluar.id_status AS status",
                     DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -114,7 +123,9 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.id_ref_transaksi",
                     "ref_kegiatan.deskripsi",
                     "users.name",
-                    "detail_transaksi_surat.id_surat");
+                    "detail_transaksi_surat.id_surat",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan");
 
                 $table3 = $table3->addSelect(DB::raw("'2' as jenis_surat"));
                 $table3 = $table3->orderBy("surat_keluar.created_at","DESC")
@@ -152,10 +163,13 @@ class ArsipSuratAll extends Controller
                 );
 
                 $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+                $table = $table->addSelect(DB::raw("3 AS internal"));
+                $table = $table->addSelect(DB::raw("NULL AS tujuan"));
                 $table = $table->orderBy("surat_masuk.tgl_surat","DESC")->get();
 
                 $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
-                ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+                ->where("surat_keluar.id_status",2)
+                ->whereNotIn('surat_keluar.created_by', [Auth::user()->id])
                 ->whereNotIn("surat_keluar.internal",[111])
                 ->whereNotNull("surat_keluar.file")
                 ->select(
@@ -166,6 +180,8 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan",
                     "surat_keluar.id_status AS status",
                     DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -184,7 +200,9 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.id_ref_transaksi",
                     "ref_kegiatan.deskripsi",
                     "users.name",
-                    "detail_transaksi_surat.id_surat");
+                    "detail_transaksi_surat.id_surat",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan");
 
                 $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
                 $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
@@ -194,6 +212,7 @@ class ArsipSuratAll extends Controller
 
                 $table3 = DB::table("transaksi_surat_keluar AS surat_keluar")
                 ->where("surat_keluar.id_status",2)
+                ->where("surat_keluar.created_by",Auth::user()->id)
                 ->select(
                     "surat_keluar.id",
                     "surat_keluar.no_surat",
@@ -202,6 +221,8 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan",
                     "surat_keluar.id_status AS status",
                     DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -220,7 +241,10 @@ class ArsipSuratAll extends Controller
                     "surat_keluar.id_ref_transaksi",
                     "ref_kegiatan.deskripsi",
                     "users.name",
-                    "detail_transaksi_surat.id_surat");
+                    "detail_transaksi_surat.id_surat",
+                    "surat_keluar.internal",
+                    "surat_keluar.tujuan"
+                );
 
                 $table3 = $table3->addSelect(DB::raw("'2' as jenis_surat"));
                 $table3 = $table3->orderBy("surat_keluar.created_at","DESC")
@@ -258,13 +282,16 @@ class ArsipSuratAll extends Controller
                 "detail_surat_masuk.id_surat"
             );
 
-            $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
+            $table = $table->addSelect(DB::raw("1 as jenis_surat"));
+            $table = $table->addSelect(DB::raw("3 AS internal"));
+            $table = $table->addSelect(DB::raw("NULL AS tujuan"));
             $table = $table->orderBy("surat_masuk.tgl_surat","DESC")->get();
 
             $table2 = DB::table("transaksi_surat_keluar AS surat_keluar")
-            ->whereIn("detail_transaksi_surat.id_penerima",[Auth::user()->id])
+            ->whereNotIn('surat_keluar.created_by', [Auth::user()->id])
             ->whereNotIn("surat_keluar.internal",[111])
             ->whereNotNull("surat_keluar.file")
+            ->where("detail_transaksi_surat.id_penerima", Auth::user()->id)
             ->select(
                 "surat_keluar.id",
                 "surat_keluar.no_surat",
@@ -273,8 +300,10 @@ class ArsipSuratAll extends Controller
                 "surat_keluar.perihal",
                 "surat_keluar.tgl_surat",
                 "surat_keluar.file",
+                "surat_keluar.internal",
+                "surat_keluar.tujuan",
                 "surat_keluar.id_status AS status",
-                DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
+                DB::raw('COUNT(detail_transaksi_surat.id_surat ) AS jumlah_tembusan'),
                 DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
             )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
             ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
@@ -291,7 +320,12 @@ class ArsipSuratAll extends Controller
                 "surat_keluar.id_ref_transaksi",
                 "ref_kegiatan.deskripsi",
                 "users.name",
-                "detail_transaksi_surat.id_surat");
+                "detail_transaksi_surat.id_surat",
+                "surat_keluar.internal",
+                "surat_keluar.tujuan"
+                );
+
+            
 
             $table2 = $table2->addSelect(DB::raw("'2' as jenis_surat"));
             $table2 = $table2->orderBy("surat_keluar.created_at","DESC")
@@ -300,8 +334,8 @@ class ArsipSuratAll extends Controller
             $merged = $table->merge($table2);
 
             $table3 = DB::table("transaksi_surat_keluar AS surat_keluar")
-            ->where("surat_keluar.created_by",Auth::user()->id)
             ->where("surat_keluar.id_status",2)
+            ->where("surat_keluar.created_by",Auth::user()->id)
             ->select(
                 "surat_keluar.id",
                 "surat_keluar.no_surat",
@@ -310,6 +344,8 @@ class ArsipSuratAll extends Controller
                 "surat_keluar.perihal",
                 "surat_keluar.tgl_surat",
                 "surat_keluar.file",
+                "surat_keluar.internal",
+                "surat_keluar.tujuan",
                 "surat_keluar.id_status AS status",
                 DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                 DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -328,7 +364,10 @@ class ArsipSuratAll extends Controller
                 "surat_keluar.id_ref_transaksi",
                 "ref_kegiatan.deskripsi",
                 "users.name",
-                "detail_transaksi_surat.id_surat");
+                "detail_transaksi_surat.id_surat",
+                "surat_keluar.internal",
+                "surat_keluar.tujuan"
+            );
 
             $table3 = $table3->addSelect(DB::raw("'2' as jenis_surat"));
             $table3 = $table3->orderBy("surat_keluar.created_at","DESC")

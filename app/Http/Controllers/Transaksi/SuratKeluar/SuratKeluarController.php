@@ -50,6 +50,10 @@ class SuratKeluarController extends Controller
             case 16:
                 return view('transaksi.surat_keluar.index_16');
             break;
+            //login sebagai wakil
+            case 17:
+                return view('transaksi.surat_keluar.index_17');
+            break;
             //login sebagai end user
             case 18:
                 return view('transaksi.surat_keluar.index_18');
@@ -348,6 +352,60 @@ class SuratKeluarController extends Controller
                 return response()->json($table);
             break;
 
+            //login sebagai wakil
+            case 17:
+                $table = DB::table("transaksi_surat_keluar AS surat_keluar")
+                ->where("surat_keluar.id_status",1)
+                ->whereNotNull("surat_keluar.file")
+                ->whereNotIn("surat_keluar.internal",[111])
+                //s->whereNotNull('surat_keluar.file')
+                ->select(
+                    "surat_keluar.id AS id_surat",
+                    "surat_keluar.id_ref_klasifikasi",
+                    "surat_keluar.id_ref_fungsi",
+                    "surat_keluar.id_ref_kegiatan",
+                    "surat_keluar.id_ref_transaksi",
+                    "surat_keluar.id_nomenklatur_jabatan",
+                    "surat_keluar.no_surat",
+                    "surat_keluar.tujuan",
+                    "surat_keluar.internal",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "ref_fungsi.kode AS kode_fungsi",
+                    "ref_kegiatan.kode AS kode_kegiatan",
+                    "ref_transaksi.kode AS kode_transaksi",
+                    "users.name AS dibuat_oleh",
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
+                    DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.kode ELSE ref_transaksi.kode END) AS kode_surat"),
+                )->leftJoin("ref_fungsi", "surat_keluar.id_ref_fungsi","=", "ref_fungsi.id")
+                ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
+                ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
+                ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
+                ->leftJoin("users", "surat_keluar.created_by","=","users.id")
+                ->groupBy("surat_keluar.id",
+                    "surat_keluar.id_ref_klasifikasi",
+                    "surat_keluar.id_ref_fungsi",
+                    "surat_keluar.id_ref_kegiatan",
+                    "surat_keluar.id_ref_transaksi",
+                    "surat_keluar.id_nomenklatur_jabatan",
+                    "surat_keluar.no_surat",
+                    "surat_keluar.tujuan",
+                    "surat_keluar.perihal",
+                    "surat_keluar.tgl_surat",
+                    "surat_keluar.file",
+                    "ref_fungsi.kode",
+                    "ref_kegiatan.kode",
+                    "ref_transaksi.kode",
+                    "ref_kegiatan.deskripsi",
+                    "ref_transaksi.deskripsi",
+                    "surat_keluar.internal", 
+                    "users.name",)
+                ->orderBy("surat_keluar.created_at","DESC")->get();
+
+                return response()->json($table);
+            break;
+
             case 18:
                 $id_user = Auth::user()->id;
                 $table = DB::table("transaksi_surat_keluar AS surat_keluar")
@@ -457,8 +515,9 @@ class SuratKeluarController extends Controller
 
     public function getDetailSuratEksternal($id_surat_keluar){
         $table = DB::table("transaksi_surat_keluar")
-        ->where("id", $id_surat_keluar)
-        ->select("tujuan")
+        ->where("transaksi_surat_keluar.id", $id_surat_keluar)
+        ->select("users.name AS pengirim","transaksi_surat_keluar.no_surat","transaksi_surat_keluar.perihal","transaksi_surat_keluar.tgl_surat")
+        ->leftJoin("users", "transaksi_surat_keluar.created_by","=","users.id")
         ->first();
 
         return response()->json($table);

@@ -20,7 +20,7 @@ Route::get('/document', Document::class)->name('document');
 Auth::routes();
     Route::get("/test","TestController@index");
 
-    Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 18, 101'], function(){
+    Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 17, 18, 101'], function(){
         Route::get('home', 'HomeController@index')->name('home');
     });
     
@@ -98,7 +98,7 @@ Auth::routes();
         //END::transaksi surat
     });
    
-    Route::group(['middleware'=>'role:5, 6, 8, 10, 13, 16, 18, 101'], function(){
+    Route::group(['middleware'=>'role:5, 6, 8, 10, 13, 16, 17, 18, 101'], function(){
          //Begin::Transaksi surat masuk
         Route::get('/transaksi/surat_masuk', 'Transaksi\SuratMasuk\SuratMasukController@index')->name('transaksi.surat_masuk');
         Route::get('/transaksi/surat_masuk/get_data','Transaksi\SuratMasuk\SuratMasukController@getData')->name('transaksi.surat_masuk.get_data');
@@ -188,10 +188,11 @@ Auth::routes();
         Route::post("/template/surat_keluar/{id_surat_keluar}/{id_user}/nominatif/update","Template\SuratKeluar\TemplateSuratKeluarController@updateNominatif");
     });
 
-    Route::group(['middleware'=>'role:6,8,10, 13, 16,18, 101'], function(){
+    Route::group(['middleware'=>'role:5, 6,8,10, 13, 16, 17, 18, 101'], function(){
         Route::get('/transaksi/surat_keluar', 'Transaksi\SuratKeluar\SuratKeluarController@index')->name('transaksi.surat_keluar');
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
-        
+        Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal','Transaksi\SuratKeluar\SuratKeluarController@getDetailSuratEksternal');
+        Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail','Transaksi\SuratKeluar\SuratKeluarController@getDetailSurat');
     });
     
 Auth::routes();

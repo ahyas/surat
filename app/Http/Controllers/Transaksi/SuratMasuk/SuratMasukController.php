@@ -66,7 +66,11 @@ class SuratMasukController extends Controller
 
                 return view('transaksi/surat_masuk/index_16', compact("user", "petunjuk"));
             break;
+            //login sebagai wakil
+            case 17:
 
+                return view('transaksi/surat_masuk/index_17', compact("user", "petunjuk"));
+            break;
             //login sebagai admin monitoring
             case 101:
                 return view('transaksi/surat_masuk/index_101');
@@ -110,7 +114,7 @@ class SuratMasukController extends Controller
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
                 ->whereNotIn("surat_masuk.id_status", [3])
-                ->where("detail_surat_masuk.status",2)
+                //->where("detail_surat_masuk.status",2)
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -125,6 +129,17 @@ class SuratMasukController extends Controller
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->orderBy("surat_masuk.created_at","DESC")
+                ->groupBy("surat_masuk.id",
+                    "surat_masuk.no_surat",
+                    "surat_masuk.pengirim",
+                    "surat_masuk.rahasia",
+                    "surat_masuk.perihal",
+                    "surat_masuk.tgl_surat",
+                    "surat_masuk.file",
+                    "surat_masuk.id_status",
+                    "surat_masuk.created_at",
+                    
+                    )
                 ->get();
 
                 return response()->json($table);
@@ -180,6 +195,31 @@ class SuratMasukController extends Controller
 
             //login sebagai ketua
             case 16:
+                $table=DB::table("transaksi_surat_masuk AS surat_masuk")
+                ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                ->whereNotIn("surat_masuk.id_status", [3])
+                ->select(
+                    "surat_masuk.id",
+                    "surat_masuk.no_surat",
+                    "surat_masuk.pengirim",
+                    "surat_masuk.rahasia",
+                    "surat_masuk.perihal",
+                    "surat_masuk.tgl_surat",
+                    "surat_masuk.file",
+                    "surat_masuk.id_status",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    "users.name AS dari"
+                )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
+                ->orderBy("surat_masuk.created_at","DESC")
+                ->get();
+
+                return response()->json($table);
+            break;
+
+            //login sebagai wakil
+            case 17:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
                 ->whereNotIn("surat_masuk.id_status", [3])
@@ -470,6 +510,13 @@ class SuratMasukController extends Controller
             ->update([
                 "id_status"=> Auth::user()->getRole()->id_role == 16 ? 5 : 1 //bila sebagai ketua status diturunkan
             ]);
+            if(Auth::user()->getRole()->id_role == 16){
+                $status = 5;
+            }elseif(Auth::user()->getRole()->id_role == 17){
+                $status = 5;
+            }else{
+                $status = 1;
+            }
              //insert penerima surat
              DB::table('detail_transaksi_surat_masuk')->insertOrIgnore([
                 "id_surat"=>$request["id_surat_masuk"],
@@ -477,7 +524,7 @@ class SuratMasukController extends Controller
                 "id_penerima"=>$request["tujuan"],
                 "petunjuk"=>$request["petunjuk"],
                 "catatan"=>$request["catatan"],
-                "status"=>Auth::user()->getRole()->id_role == 16 ? 5 : 1 //bila sebagai ketua status diturunkan
+                "status"=>$status //bila sebagai ketua atau wakil status diturunkan
             ]);
         }
 

@@ -9,7 +9,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Arsip surat masuk</p>
+                <p>Arsip semua surat</p>
             </div>
             <!--end::Card toolbar-->
         </div>
@@ -22,10 +22,10 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>No. Surat</th>
                         <th >Perihal / Isi ringkas</th>
-                        <th >Tujuan / Penerima</th>
+                        <!--<th class="min-w-150px">Tujuan / Penerima</th>-->
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Status</th>
-                        <th class="min-w-125px">Pengirim</th>
+                        <th class="min-w-125px">Dibuat oleh / Pengirim</th>
                         <th class="text-end min-w-100px"></th>
                     </tr>
                 </thead>
@@ -131,7 +131,7 @@
 </div>
 <!--End::Modal detail-->
 <div class="modal fade" id="modal_preview" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
             <div class="d-flex flex-row" style="gap:20px">
@@ -145,8 +145,54 @@
                 <!--end::Close-->
             </div>
             
-            <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe></div>
+            <div class="modal-body px-5 my-7" >
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe></div>
+                                <div class="text-center pt-10"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td width="120px">Nomor surat</td>
+                                            <td><span class="fs-6" id="detail-nomor_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td>Pengirim</td>
+                                            <td><span class="fs-6" id="detail-pengirim_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800 text-nowrap">
+                                            <td>Perihal / Isi ringkas</td>
+                                            <td><span class="fs-6" id="detail-perihal_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td>Tanggal surat</td>
+                                            <td><span class="fs-6" id="detail-tgl_surat_keluar"></span></td>
+                                        </tr>
+                                    </table>
+                                    <span class="fw-bold fs-6 text-gray-800">Daftar penerima surat</span>
+                                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_daftar_penerima">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 fw-semibold"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center pt-10">
+                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>      
@@ -154,7 +200,7 @@
 
 <!--Preview file docx-->
 <div class="modal fade" id="office_preview" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered mw-650px">
+    <div class="modal-dialog modal-dialog-scrollable modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
             <div class="d-flex flex-row" style="gap:20px">
@@ -168,11 +214,116 @@
                 <!--end::Close-->
             </div>
             
-            <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+            <div class="modal-body px-5 my-7" >
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-lg-6">
+                            <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td width="120px">Nomor surat</td>
+                                            <td><span class="fs-6" id="template-nomor_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td>Pengirim</td>
+                                            <td><span class="fs-6" id="template-pengirim_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800 text-nowrap">
+                                            <td>Perihal / Isi ringkas</td>
+                                            <td><span class="fs-6" id="template-perihal_surat_keluar"></span></td>
+                                        </tr>
+                                        <tr class="fw-bold fs-6 text-gray-800">
+                                            <td>Tanggal surat</td>
+                                            <td><span class="fs-6" id="template-tgl_surat_keluar"></span></td>
+                                        </tr>
+                                    </table>
+                                    <span class="fw-bold fs-6 text-gray-800">Daftar penerima surat</span>
+                                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="template_daftar_penerima">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 fw-semibold"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>      
+</div>
+
+<div class="modal fade" id="kt_modal_tujuan" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header">
+                <h2 class="modal-title">Daftar Penerima Surat</h2>
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_tembusan">
+                    <thead>
+                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 fw-semibold"></tbody>
+                </table>
+                <div class="text-center pt-10">
+                    <button type="button" id="btn-cancel" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
+</div>
+
+<!--Daftar tujuan eksternal-->
+<div class="modal fade" id="kt_modal_tujuan_eksternal" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <!--begin::Modal content-->
+        <div class="modal-content">
+            <!--begin::Modal header-->
+            <div class="modal-header">
+                <h2 class="modal-title">Penerima Surat Eksternal</h2>
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="notification2"></div>
+                <div class="fv-row mb-7">
+                    <label class="fw-semibold fs-6 mb-2">Tujuan</label>
+                    <input type="text" name="penerima_eksternal" id="penerima_eksternal" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tujuan surat" readonly/>
+                </div>
+                <div class="text-center pt-10">
+                    <button type="button" id="btn-cancel" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+            <!--end::Modal body-->
+        </div>
+        <!--end::Modal content-->
+    </div>
+    <!--end::Modal dialog-->
 </div>
 @endsection
 @push('scripts')
@@ -191,6 +342,11 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
+                    if(full["jenis_surat"] == 1){
+                        var jenis_surat = `<span class="badge badge-light-success" style="margin-bottom:10px">Surat Masuk</span>`;
+                    }else{
+                        var jenis_surat = `<span class="badge badge-light-info" style="margin-bottom:10px">Surat Keluar</span>`;
+                    }
 
                     if(full["deskripsi"]){
                         var deskripsi = full["deskripsi"];
@@ -200,16 +356,27 @@ $(document).ready(function(){
                     return`<div class="d-flex flex-column">
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div> 
                             ${deskripsi}                      
-                            </div>`;
+                            </div>${jenis_surat}`;
                 }
             },
             {data:"perihal"},
-            {data:"jumlah_tembusan", 
+            /*{data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
-                    return data;
+                    if(full["internal"] == 1){
+                        var internal = `<span class="badge badge-light-primary" style="margin-bottom:10px">Internal</span>`;
+                        var tujuan = `<a href="javascript:void(0)" id="daftar_tujuan" data-id_surat='${full['id']}'>
+                        <span class="badge badge-info">${data} orang</span></a>`;
+                    }else if(full["internal"] == 2){
+                        var internal = `<span class="badge badge-light-danger" style="margin-bottom:10px">External</span>` ;
+                        var tujuan = `<span style="color:white; font-size:11px; font-weight:600; cursor: pointer;" id="tujuan_eksternal" data-id_surat='${full['id']}'><div class="bg-info" style="padding:6px; border-radius:5px">${full['tujuan']}</div></span>`;
+                    }else{
+                        var internal = "";
+                        var tujuan = "Lihat detail";
+                    }
+                    return internal+' <br>'+tujuan;
                     
                 }
-            },
+            },*/
             {data:"tgl_surat"},
             {data:"status",
                 mRender:function(data, type, full){
@@ -261,7 +428,7 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-filename='${file}' data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-id_surat_keluar='${data}' data-filename='${file}' data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -271,6 +438,52 @@ $(document).ready(function(){
                 }
             }
         ]
+    });
+
+    $("body").on("click","#daftar_tujuan",function(){
+        var id_surat = $(this).data("id_surat");
+        console.log("id surat",id_surat)
+        $("#kt_modal_tujuan").modal("show");
+        $("#tb_tembusan").DataTable({
+            ajax        : {
+                url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
+                dataSrc:function(res){  
+                    return res.table
+                }
+            },
+            "bDestroy": true,
+            searching   : false, paging: false, info: false,
+            serverSide  : false,
+            ordering    : false,
+            responsive  : true,
+            columns     :
+            [
+                {data:"nama_penerima",
+                    mRender:function(data, type, full){
+                        return`<div class="d-flex flex-column">
+                            <div class="text-gray-800 mb-1">${data}</div>
+                            <span>${full['email']}</span>
+                        </div>`;
+                    },
+                },
+                {data:"nama_bidang", className:"text-end"}
+            ]
+        });
+    });
+
+    $(("body")).on("click","#tujuan_eksternal", function(){
+        
+        let id_surat = $(this).data("id_surat");        
+        console.log("id ",id_surat)
+        $.ajax({
+            url:`{{url('transaksi/surat_keluar/${id_surat}/detail_eksternal')}}`,
+            type:"GET",
+            success:function(data){
+                $("#penerima_eksternal").val(data.tujuan)
+                
+                $("#kt_modal_tujuan_eksternal").modal("show");
+            }
+        })
     });
 
     $("body").on("click","#detail_surat_masuk", function(){
@@ -313,19 +526,41 @@ $(document).ready(function(){
     $("body").on("click","#detail_arsip", function(){
 
         var filename = $(this).data("filename");
-        console.log("Detail arsip", $(this).data("filename"))
-        console.log("URL", $(this).data('url'))
         var extension = filename.substr(filename.indexOf('.')); 
         var url = $(this).data('url')
-        if(extension == '.pdf'){
-            $("#modal_preview").modal("show");
-            document.getElementById("preview").src = url;
-            document.getElementById("download_pdf").href = url;
-        }else{
-            $("#office_preview").modal("show");
-            document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
-            document.getElementById("download_office").href = url;
-        }
+        var id_surat_keluar = $(this).data('id_surat_keluar');
+        
+            console.log(id_surat_keluar)
+            $.ajax({
+                url:`{{url('/transaksi/surat_keluar/${id_surat_keluar}/detail_eksternal')}}`,
+                type:"GET",
+                success:function(data){
+                    console.log(data)
+                    
+                    if(extension == '.pdf'){
+                        document.getElementById("detail-nomor_surat_keluar").innerHTML = data.no_surat;
+                        document.getElementById("detail-pengirim_surat_keluar").innerHTML = data.pengirim;
+                        document.getElementById("detail-perihal_surat_keluar").innerHTML = data.perihal;
+                        document.getElementById("detail-tgl_surat_keluar").innerHTML = data.tgl_surat;
+                        $("#modal_preview").modal("show");
+                        document.getElementById("preview").src = url;
+                        document.getElementById("download_pdf").href = url;
+                        
+                    }else{
+                        document.getElementById("template-nomor_surat_keluar").innerHTML = data.no_surat;
+                        document.getElementById("template-pengirim_surat_keluar").innerHTML = data.pengirim;
+                        document.getElementById("template-perihal_surat_keluar").innerHTML = data.perihal;
+                        document.getElementById("template-tgl_surat_keluar").innerHTML = data.tgl_surat;
+                        $("#office_preview").modal("show");
+                        document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
+                        document.getElementById("download_office").href = url;
+                    }
+
+                    showDaftarPenerimaSurat(id_surat_keluar);
+                    
+                }
+            });
+        
     })
 
     function loadingPage(active){
@@ -348,6 +583,35 @@ $(document).ready(function(){
             KTApp.hidePageLoading();
             loadingEl.remove();
         }
+    }
+
+    function showDaftarPenerimaSurat(id_surat_keluar){
+        console.log("Daftar peneirma")
+        $("#tb_daftar_penerima, #template_daftar_penerima").DataTable().clear().destroy();
+        $("#tb_daftar_penerima, #template_daftar_penerima").DataTable({
+            ajax        : {
+                url:`{{url('transaksi/surat_keluar/${id_surat_keluar}/detail')}}`,
+                dataSrc:function(res){  
+                    return res.table
+                }
+            },
+            searching   : false, paging: false, info: false,
+            serverSide  : false,
+            ordering    : false,
+            responsive  : true,
+            columns     :
+            [
+                {data:"nama_penerima",
+                    mRender:function(data, type, full){
+                        return`<div class="d-flex flex-column">
+                            <div class="text-gray-800 mb-1">${data}</div>
+                            <span>${full['email']}</span>
+                        </div>`;
+                    },
+                },
+                {data:"nama_bidang", className:"text-end"}
+            ]
+        });
     }
 
     function showDaftarDisposisi(id_surat){
