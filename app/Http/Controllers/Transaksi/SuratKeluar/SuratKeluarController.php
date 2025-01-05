@@ -516,8 +516,7 @@ class SuratKeluarController extends Controller
     public function getDetailSuratEksternal($id_surat_keluar){
         $table = DB::table("transaksi_surat_keluar")
         ->where("transaksi_surat_keluar.id", $id_surat_keluar)
-        ->select("users.name AS pengirim","transaksi_surat_keluar.no_surat","transaksi_surat_keluar.perihal","transaksi_surat_keluar.tgl_surat")
-        ->leftJoin("users", "transaksi_surat_keluar.created_by","=","users.id")
+        ->select("transaksi_surat_keluar.tujuan")
         ->first();
 
         return response()->json($table);
@@ -639,7 +638,13 @@ class SuratKeluarController extends Controller
             $bulan = $this->getBulanRomawi($request["tgl_surat"]);
             $tahun = date("Y", $date); 
 
-            $count = DB::table("transaksi_surat_keluar")->max("no_agenda");
+            $current_year = date("Y"); 
+            
+            if(date("Y",$request['tahun']) == $current_year){
+                $count = DB::table("transaksi_surat_keluar")->where('tahun', $current_year)->max("no_agenda");
+            }else{
+                $count = DB::table("transaksi_surat_keluar")->where('tahun', $request['tahun'])->max("no_agenda");
+            }
 
             $num = $count +1;
 
@@ -657,6 +662,10 @@ class SuratKeluarController extends Controller
                 $nomor_surat = $no_agenda."/SEK.PTA.W31-A/".$request['kode_surat']."/".$bulan."/".$tahun;
                 
             }
+        }
+
+        if(date("Y", strtotime($request["tgl_surat"])) !== $request['tahun']){
+            $errors['tahun_surat'] = 'Tahun dan tanggal surat tidak sesuai';
         }
 
         if(empty($request["penerima_surat"])){
@@ -720,6 +729,7 @@ class SuratKeluarController extends Controller
                     "internal"=>$request["penerima_surat"],
                     "perihal"=>$request["perihal"],
                     "tgl_surat"=>$request["tgl_surat"],
+                    "tahun"=>$request["tahun"],
                     "created_by"=>Auth::user()->id
                 ]);
     
@@ -793,6 +803,7 @@ class SuratKeluarController extends Controller
                     "internal"=>$request["penerima_surat"],
                     "perihal"=>$request["perihal"],
                     "tgl_surat"=>$request["tgl_surat"],
+                    "tahun"=>$request["tahun"],
                     "file"=>$fileName,
                     "created_by"=>Auth::user()->id
                 ]);
@@ -832,6 +843,8 @@ class SuratKeluarController extends Controller
             $data['message'] = 'Success!';
 
         }
+
+        $thn = $request['tahun'];
 
         return response()->json($data);
     }
