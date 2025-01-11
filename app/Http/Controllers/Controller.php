@@ -103,9 +103,11 @@ class Controller extends BaseController
                                     'Klasifikasi surat' => route('referensi.klasifikasi_surat.index')
                                 ],
                                 'Arsip'=>[
-                                    //'Surat Masuk' => route('arsip.surat_masuk.index'),
-                                    //'Surat Keluar' => route('arsip.surat_keluar.index'),
                                     'Semua surat' =>route('arsip.semua_surat.index')
+                                ],
+                                'Register'=>[
+                                    'Surat Masuk'=>route('register.surat_masuk'),
+                                    'Surat Keluar'=>route('register.surat_keluar')
                                 ]
                             ];
                             
@@ -135,7 +137,7 @@ class Controller extends BaseController
                                 'Arsip'=>[
                                     //'Surat Masuk' => route('arsip.surat_masuk.index'),
                                     //'Surat Keluar' => route('arsip.surat_keluar.index'),
-                                    'Semua surat' =>route('arsip.semua_surat.index')
+                                    'Semua surats' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
