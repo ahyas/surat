@@ -687,6 +687,9 @@ class SuratMasukController extends Controller
             $fileName = time().'.'.$request->file_surat->extension();
             $tujuan_upload = public_path('/uploads/surat_masuk');
             $request->file_surat->move($tujuan_upload, $fileName);
+            
+            $tahun = date("Y", strtotime($request["tgl_surat"])); 
+
             DB::table("transaksi_surat_masuk")
             ->insert([
                 "no_surat"=>$request["nomor_surat"],
@@ -694,6 +697,7 @@ class SuratMasukController extends Controller
                 "perihal"=>$request["perihal"],
                 "rahasia"=>$rahasia,
                 "tgl_surat"=>$request["tgl_surat"],
+                "tahun"=>$tahun,
                 "created_by"=>Auth::user()->id,
                 "file"=>$fileName
             ]);

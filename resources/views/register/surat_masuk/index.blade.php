@@ -46,7 +46,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor</th>
                         <th width="400px">Pengirim</th>
-                        <th class="min-w-125px">Tanggal</th>
+                        <th class="w-125px">Tanggal</th>
                         <th>Perihal</th>
                     </tr>
                 </thead>

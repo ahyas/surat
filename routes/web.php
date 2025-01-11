@@ -73,12 +73,17 @@ Auth::routes();
          Route::get('/referensi/klasifikasi_surat/{id_klasifikasi}/delete', 'Referensi\KlasifikasiSuratController@delete')->name('referensi.klasifikasi_surat.delete');
          //END::klasifikasi surat
 
-        //Begin::register surat
+        //Begin::register surat masuk
         Route::get('/register/surat_masuk', 'RegisterSuratMasukController@index')->name('register.surat_masuk'); 
         Route::get('/register/surat_masuk/{tahun}/get_data', 'RegisterSuratMasukController@getData')->name('register.get_data');
-        Route::post('/register/surat_masuk/print', 'RegisterSuratMasukController@print')->name('register.print');
+        Route::post('/register/surat_masuk/print', 'RegisterSuratMasukController@print')->name('register.print'); 
+        //End::register surat masuk
+
+        //Begin::register surat keluar
         Route::get('/register/surat_keluar', 'RegisterSuratKeluarController@index')->name('register.surat_keluar'); 
-        //End::register surat
+        Route::get('/register/surat_keluar/{tahun}/get_data', 'RegisterSuratKeluarController@getData');
+        Route::post('/register/surat_keluar/print', 'RegisterSuratKeluarController@print')->name('register.surat_keluar.print'); 
+        //End::register surat keluar
 
          //BEGIN::fungsi surat
         Route::get('/referensi/fungsi_surat/{id_ref_klasifikasi}/detail', 'Referensi\FungsiSuratController@detailFungsiSurat');
