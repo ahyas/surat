@@ -118,12 +118,15 @@
                                         <div id="display-tujuan-internal">
                                             <div class="fv-row mb-7">
                                                 <label class="required fw-semibold fs-6 mb-2">Tujuan</label>
-                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="true" multiple="multiple" required disabled>
-                                                    <option>Pilih tujuan surat</option>
+                                                <select name="tujuan[]" id="tujuan" class="form-select form-select form-select-solid my_input" data-control="select2" data-close-on-select="false" data-placeholder="Select an option" data-allow-clear="false" multiple="multiple" required disabled>
                                                     @foreach($user as $row)
                                                         <option value="{{$row->id_user}}">{{$row->nama_pegawai}}</option>
                                                     @endforeach
                                                 </select>
+                                                <div class="form-check mt-7">
+                                                    <input type="checkbox" class="form-check-input" id="pilih_semua">
+                                                    <label class="fw-semibold fs-6 mb-2" for="pilih_semua">Pilih semua</label>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -550,6 +553,18 @@ $(document).ready(function(){
                 }
             })
             
+        }
+    });
+
+    $("#pilih_semua").click(function(){
+        if($("#pilih_semua").is(':checked') ){
+            console.log('checked')
+            $("#tujuan > option").prop("selected","selected");
+            $("#tujuan").trigger("change");
+        }else{
+            console.log('un checked')
+            $//('.select2-selection__clear')
+            $('#tujuan').val(null).trigger('change');
         }
     });
 
