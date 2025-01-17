@@ -137,7 +137,7 @@ class Controller extends BaseController
                                 'Arsip'=>[
                                     //'Surat Masuk' => route('arsip.surat_masuk.index'),
                                     //'Surat Keluar' => route('arsip.surat_keluar.index'),
-                                    'Semua surats' =>route('arsip.semua_surat.index')
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             

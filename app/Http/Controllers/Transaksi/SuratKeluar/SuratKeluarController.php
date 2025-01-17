@@ -515,8 +515,8 @@ class SuratKeluarController extends Controller
 
     public function getDetailSuratEksternal($id_surat_keluar){
         $table = DB::table("transaksi_surat_keluar")
+        ->join('users', 'transaksi_surat_keluar.created_by','=','users.id')
         ->where("transaksi_surat_keluar.id", $id_surat_keluar)
-        ->select("transaksi_surat_keluar.tujuan")
         ->first();
 
         return response()->json($table);

@@ -495,7 +495,7 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
-                console.log(data)
+                
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
@@ -504,7 +504,7 @@ $(document).ready(function(){
                 }
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
-                document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
+                document.getElementById("detail-pengirim").innerHTML = data[0].name;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
                 document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
@@ -518,7 +518,6 @@ $(document).ready(function(){
                 document.getElementById("detail-eviden_tindak_lanjut").innerHTML = data[0].file_tindak_lanjut ? `<a id="eviden_tindak_lanjut" target="_blank" href="{{asset('/public/uploads/tindak_lanjut/${data[0].file_tindak_lanjut}')}}">${data[0].file_tindak_lanjut}</a>` : ' - ';
                 loadingPage(false);
                 $("#kt_modal_detail").modal("show");
-                console.log(data);
             }
         });
     });
@@ -535,11 +534,11 @@ $(document).ready(function(){
                 url:`{{url('/transaksi/surat_keluar/${id_surat_keluar}/detail_eksternal')}}`,
                 type:"GET",
                 success:function(data){
-                    console.log(data)
+                    console.log("Data ",data)
                     
                     if(extension == '.pdf'){
                         document.getElementById("detail-nomor_surat_keluar").innerHTML = data.no_surat;
-                        document.getElementById("detail-pengirim_surat_keluar").innerHTML = data.pengirim;
+                        document.getElementById("detail-pengirim_surat_keluar").innerHTML = data.name;
                         document.getElementById("detail-perihal_surat_keluar").innerHTML = data.perihal;
                         document.getElementById("detail-tgl_surat_keluar").innerHTML = data.tgl_surat;
                         $("#modal_preview").modal("show");
