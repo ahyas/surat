@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header border-0 pt-6">
             <div class="card-title">
-                <p>Surat Masuk</p>
+                <p>Surat Masuks</p>
             </div>
         </div>
         <!--end::Card header-->
@@ -398,16 +398,22 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
-                document.getElementById("preview_disposisi").src = url; 
-                $("input[name='nomor_surat']").val(data.table[0].no_surat);
-                $("input[name='pengirim']").val(data.table[0].pengirim);
-                $("#perihal").val(data.table[0].perihal);
-                let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
-                $("#tujuan").val(id_penerima).trigger('change');    
-                fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
-                document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
-                loadingPage(false);
-                $("#kt_modal_add_disposisi").modal("show");
+                console.log(data.count_disposisi)
+                if(data.count_disposisi == 0){
+                    document.getElementById("preview_disposisi").src = url; 
+                    $("input[name='nomor_surat']").val(data.table[0].no_surat);
+                    $("input[name='pengirim']").val(data.table[0].pengirim);
+                    $("#perihal").val(data.table[0].perihal);
+                    let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
+                    $("#tujuan").val(id_penerima).trigger('change');    
+                    fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
+                    document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
+                    loadingPage(false);
+                    $("#kt_modal_add_disposisi").modal("show");
+                }else{
+                    loadingPage(false);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
+                }
             }
         });
         

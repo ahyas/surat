@@ -461,7 +461,7 @@ $(document).ready(function(){
             {data:"jumlah_tembusan", 
                 mRender:function(data, type, full){
                     if(full["internal"] == 2){
-                        var a = `<span class="badge badge-light-danger" style="margin-bottom:10px">External</span>`;
+                        var a = `<span class="badge badge-light-success" style="margin-bottom:10px">External</span>`;
                     }else if(full["internal"] == 1){
                         var a = `<span class="badge badge-light-primary" style="margin-bottom:10px">Internal</span>`;
                     }else{

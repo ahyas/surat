@@ -115,7 +115,7 @@ $(document).ready(function(){
             {data:"no_surat",
                 mRender:function(data, type, full){
                     if(full["internal"] == 2){
-                        var a = `<span class="badge badge-light-danger">External</span>`;
+                        var a = `<span class="badge badge-light-success">External</span>`;
                     }else if(full["internal"] == 1){
                         var a = `<span class="badge badge-light-primary">Internal</span>`;
                     }else{

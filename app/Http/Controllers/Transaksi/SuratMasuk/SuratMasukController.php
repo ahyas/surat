@@ -39,7 +39,7 @@ class SuratMasukController extends Controller
                     "ref_jabatan.nama AS jabatan_pegawai"
                 )
                 ->where("users.id_bidang",1)
-                ->where("ref_jabatan.id", 1) //hanya ketua
+                ->whereIn("ref_jabatan.id", [1, 2]) //hanya ketua
                 ->leftJoin("daftar_pegawai", "users.id", "=", "daftar_pegawai.id_user")
                 ->leftJoin("ref_jabatan", "daftar_pegawai.id_jabatan", "=","ref_jabatan.id")
                 ->get();
