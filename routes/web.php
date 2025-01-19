@@ -124,6 +124,8 @@ Auth::routes();
         //Begin::disposisi
         Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
         Route::post('/transaksi/surat_masuk/disposisi/kirim', 'Transaksi\SuratMasuk\SuratMasukController@kirim')->name('transaksi.surat_masuk.disposisi.kirim');
+        Route::get('/transaksi/surat_masuk/disposisi/{id}/lembar_disposisi/print', 'Transaksi\SuratMasuk\SuratMasukController@printDisposisi');
+
         //End::Disposisi
 
         //Begin::teruskan

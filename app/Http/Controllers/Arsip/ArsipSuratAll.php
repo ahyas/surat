@@ -10,7 +10,15 @@ use DB;
 class ArsipSuratAll extends Controller
 {
     public function index(){
-        return view('arsip/semua_surat/index');
+        $id_role = Auth::user()->getRole()->id_role;
+        //login sebagai admin disposisi
+        if($id_role == 6){
+            $show_print_disposisi = true;
+        }else{
+            $show_print_disposisi = false;
+        }
+
+        return view('arsip/semua_surat/index', compact('show_print_disposisi'));
     }
 
     public function getData(){

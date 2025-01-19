@@ -91,25 +91,32 @@
                                         <thead>
                                             <tr class="fw-bold">
                                                 <th>Pengirim</th>
-                                                <th class="text-nowrap">Catatan / Pesan</th>
-                                                <th class="text-nowrap">Petunjuk</th>
+                                                <th class="text-nowrap min-w-150px">Catatan / Pesan</th>
+                                                <th class="text-nowrap min-w-150px">Petunjuk</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
                                         <tfoot>
                                             <tr>
-                                                <td>
+                                                <td valign="top">
                                                     <div class="text-nowrap"><b>Status :</b> <span id="detail-status"></span></div>
                                                     <div id="detail-tindak_lanjut" style="display:none;">
                                                         <div class="text-nowrap"><b>Ditindaklanjuti Oleh :</b> <span id="detail-user_tindak_lanjut"></span></div>
                                                         <div class="text-nowrap"><b>Pada tanggal :</b></span> <span id="detail-tgl_tindak_lanjut"></span> / <span id="detail-waktu_tindak_lanjut"></span>  
                                                         <div class="text-nowrap"><b>Keterangan :</b> <span id="detail-keterangan"></span></div>
                                                         <div class="text-nowrap"><b>Eviden :</b> <span id="detail-eviden_tindak_lanjut"></span></div>
-                                                        
-                                                    </div>
                                                 </td>
-                                                <td></td>
-                                                <td></td>
+                                                <td colspan="2" valign="top">
+                                                    
+                                                    <div class="text-nowrap">
+                                                        <a href="" id="cetak_disposisi" target="_blank">
+                                                            @if($show_print_disposisi == true)
+                                                            <span class="badge badge-light-success" style="margin-bottom:10px">Cetak disposisi</span>
+                                                            @endif
+                                                        </a>
+                                                    </div>
+                                                    
+                                                </td>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -490,12 +497,14 @@ $(document).ready(function(){
         document.getElementById("preview-title").innerHTML = `<h2 class="fw-bold">Detail surat</h2>`;
         var id_surat = $(this).data("id_surat_masuk");
         var url = $(this).data("url");
+        var link = document.getElementById("cetak_disposisi");
+        link.setAttribute("href", `{{url('/transaksi/surat_masuk/disposisi/${id_surat}/lembar_disposisi/print')}}`);
         loadingPage(true);
         $.ajax({
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
-                
+
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
@@ -504,7 +513,7 @@ $(document).ready(function(){
                 }
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
-                document.getElementById("detail-pengirim").innerHTML = data[0].name;
+                document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
                 document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
@@ -647,7 +656,7 @@ $(document).ready(function(){
                         }
                     }
                 },
-                {data:"petunjuk",
+                {data:"petunjuk", className:"text-end",
                     mRender:function(data){
                         if(data == null){
                             return '<span> - </span>';

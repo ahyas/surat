@@ -82,8 +82,8 @@
                                             <thead>
                                                 <tr class="fw-bold">
                                                     <th>Pengirim</th>
-                                                    <th class="text-nowrap">Catatan / Pesan</th>
-                                                    <th class="text-nowrap text-end min-w-200px">Petunjuk</th>
+                                                    <th class="text-nowrap min-w-150px">Catatan / Pesan</th>
+                                                    <th class="text-nowrap min-w-150px">Petunjuk</th>
                                                 </tr>
                                             </thead>
                                             <tbody></tbody>
@@ -437,7 +437,7 @@ $(document).ready(function(){
                         }
                     }
                 },
-                {data:"petunjuk",
+                {data:"petunjuk", className:"text-end",
                     mRender:function(data){
                         if(data == null){
                             return '<span> - </span>';

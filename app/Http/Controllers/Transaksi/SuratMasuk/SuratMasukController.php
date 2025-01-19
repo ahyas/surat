@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
+use PDF;
 
 class SuratMasukController extends Controller
 {
@@ -296,6 +297,59 @@ class SuratMasukController extends Controller
         ->get();
 
         return response()->json($table);
+    }
+
+    public function printDisposisi($id_surat_masuk){
+        $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
+        ->where("detail_surat_masuk.id_surat", $id_surat_masuk)
+        //->whereNotIn("detail_surat_masuk.status", [4,5])//sembunyikan status diteruskan dan dari pimpinan
+        ->select(
+            "penerima.name AS nama_penerima",
+            "pengirim.name AS nama_pengirim",
+            "detail_surat_masuk.catatan",
+            DB::raw("(CASE WHEN detail_surat_masuk.status = 1 THEN 'Disposisi' WHEN detail_surat_masuk.status = 2 THEN 'Diteruskan' WHEN detail_surat_masuk.status = 3 THEN 'Tindak lanjut' WHEN detail_surat_masuk.status = 4 THEN 'Dinaikan' WHEN detail_surat_masuk.status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+            DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%Y-%m-%d') AS tanggal"),
+            DB::raw("DATE_FORMAT(detail_surat_masuk.created_at, '%H:%i') AS waktu"),
+            "jabatan_penerima.nama AS jab_penerima",
+            "jabatan_pengirim.nama AS jab_pengirim",
+            "ref_petunjuk_disposisi.name AS petunjuk"
+        )
+        ->join("users AS penerima", "detail_surat_masuk.id_penerima","=","penerima.id")
+        ->join("users AS pengirim", "detail_surat_masuk.id_asal", "=","pengirim.id")
+        ->leftJoin("daftar_pegawai AS pegawai_penerima", "penerima.id", "=", "pegawai_penerima.id_user")
+        ->leftJoin("daftar_pegawai AS pegawai_pengirim", "pengirim.id", "=", "pegawai_pengirim.id_user")
+        ->leftJoin("ref_jabatan AS jabatan_penerima", "pegawai_penerima.id_jabatan", "=","jabatan_penerima.id")
+        ->leftJoin("ref_jabatan AS jabatan_pengirim", "pegawai_pengirim.id_jabatan", "=","jabatan_pengirim.id")
+        ->leftJoin("ref_petunjuk_disposisi", "detail_surat_masuk.petunjuk","=","ref_petunjuk_disposisi.id")
+        ->orderBy("detail_surat_masuk.created_at","ASC")
+        ->get();
+
+        $detail_surat=DB::table("transaksi_surat_masuk AS surat_masuk")
+        ->where("surat_masuk.id", $id_surat_masuk)
+        ->select(
+            "surat_masuk.no_surat",
+            "surat_masuk.pengirim",
+            "surat_masuk.rahasia",
+            "surat_masuk.perihal",
+            "surat_masuk.tgl_surat",
+            "surat_masuk.id_status",
+            "surat_masuk.catatan_tindaklanjut",
+            DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
+            "users.name AS tindaklanjut_oleh",
+            DB::raw("DATE_FORMAT(surat_masuk.tgl_tindak_lanjut, '%Y-%m-%d') AS tgl_tindak_lanjut"),
+            DB::raw("DATE_FORMAT(surat_masuk.tgl_tindak_lanjut, '%H:%i') AS waktu_tindak_lanjut"),
+            DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+            "ref_jabatan.nama AS jabatan_pegawai",
+        )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+        ->leftJoin("users","surat_masuk.id_user_tindak_lanjut","=","users.id")
+        ->leftJoin("daftar_pegawai", "users.id", "=", "daftar_pegawai.id_user")
+        ->leftJoin("ref_jabatan", "daftar_pegawai.id_jabatan", "=","ref_jabatan.id")
+        ->orderBy("surat_masuk.created_at","DESC")
+        ->first();
+
+        $pdf = PDF::loadView('arsip/disposisi/print', ['table'=>$table,'detail_surat'=>$detail_surat])->setPaper('a4', 'portrait');
+
+        return $pdf->stream("file.pdf");
     }
 
     public function daftarDisposisi($id_surat_masuk){

@@ -961,6 +961,7 @@ $(document).ready(function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Surat Keluar</h2>`;
         document.getElementById("klasifikasi").value = 0;
         document.getElementById("notification").innerHTML ='';
+        document.getElementById("pilih_semua").checked = false;
         const d = new Date();
         let current_year = d.getFullYear();
         console.log(current_year);
