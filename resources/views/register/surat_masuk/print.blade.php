@@ -6,7 +6,7 @@
 
 <style>
     * {
-    font-size: 10pt;
+    font-size: 9pt;
 }
 
 @page { margin: 10mm;} 
@@ -55,14 +55,28 @@ table {
                     <th align="left" style="padding:8px; width:150px">Nomor</th>
                     <th align="left" style="padding:8px;">Tujuan</th>
                     <th align="left" style="padding:8px; width:80px">Tanggal</th>
-                    <th align="left" style="padding:8px; width:300px">Perihal</th>
+                    <th align="left" style="padding:8px;">Status</th>
+                    <th align="left" style="padding:8px; width:200px">Perihal</th>
+                    <th align="left" style="padding:8px; width:120px">DIbuat oleh</th>
                 </tr>
                 @foreach($table as $row)
                 <tr>
                     <td style="padding:8px;">{{$row->no_surat}}</td>
                     <td style="padding:8px;">{{$row->pengirim}}</td>
                     <td style="padding:8px;">{{$row->tgl_surat}}</td>
+                    <td style="padding:8px;">
+                        @if($row->id_status == 3)
+                                <div style='white-space: nowrap'><i>{{$row->status}}</i></div> 
+                                <span class="badge badge-light-success">Sudah diarsipkan</span>                       
+                        @elseif($row->id_status == 1 || $row->id_status == 2 || $row->id_status == 4 || $row->id_status == 5)
+                                <div style='white-space: nowrap'><i>{{$row->status}}</i></div> 
+                                <span class="badge badge-light-danger">Belum diarsipkan</span>                       
+                        @else
+                                <span class="badge badge-light-danger">Unprocessed</span>
+                        @endif
+                    </td>
                     <td style="padding:8px;">{{$row->perihal}}</td>
+                    <td style="padding:8px;">{{$row->dibuat_oleh}}</td>
                 </tr>
                 @endforeach
             </table>          

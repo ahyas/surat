@@ -49,6 +49,8 @@
                         <th width="400px">Tujuan</th>
                         <th class="w-125px">Tanggal</th>
                         <th>Perihal</th>
+                        <th>Status</th>
+                        <th>Dibuat oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -102,6 +104,30 @@ $(document).ready(function(){
                 },
                 {data:"tgl_surat"},
                 {data:"perihal"},
+                {data:"id_status",
+                    mRender:function(data, type, full){
+                        if(data == 2){
+                            var show = `
+                            <div class="badge badge-light-primary" style='white-space: nowrap; margin-bottom:5px'>Selesai</div>
+                            <span class="badge badge-light-success" style="margin-bottom:10px">Sudah diarsipkan</span>`;
+                        }else{
+                            if(full['file']){
+                                var show = `
+                                <div class="badge badge-light-primary" style='white-space: nowrap; margin-bottom:5px'>Selesai</div>
+                                <span class="badge badge-light-warning" style="margin-bottom:10px">Belum diarsipkan</span>`;
+                            }else{
+                                var show = `
+                                <span class="badge badge-light-danger" style="margin-bottom:10px">Belum selesai</span>`;
+                            }
+                            
+                            
+                        }
+
+                        return show;
+                    }
+                },
+                {data:"dibuat_oleh"},
+                
             ]
         });
 

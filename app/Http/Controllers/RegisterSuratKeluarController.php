@@ -15,7 +15,6 @@ class RegisterSuratKeluarController extends Controller
     public function getData($tahun){
         $table = DB::table("transaksi_surat_keluar AS surat_keluar")
         ->where("surat_keluar.tahun", $tahun)
-        ->where("surat_keluar.id_status",1)
         ->whereNotIn("surat_keluar.internal",[111])
         ->select(
             "surat_keluar.id AS id_surat",
@@ -31,7 +30,10 @@ class RegisterSuratKeluarController extends Controller
             "surat_keluar.tgl_surat",
             "surat_keluar.file",
             "surat_keluar.id_status",
-        )->groupBy(
+            "users.name AS dibuat_oleh",
+        )
+        ->leftJoin("users", "surat_keluar.created_by","=","users.id")
+        ->groupBy(
             "surat_keluar.id",
             "surat_keluar.id_ref_klasifikasi",
             "surat_keluar.id_ref_fungsi",
@@ -44,7 +46,8 @@ class RegisterSuratKeluarController extends Controller
             "surat_keluar.perihal",
             "surat_keluar.tgl_surat",
             "surat_keluar.file",
-            "surat_keluar.id_status")
+            "surat_keluar.id_status",
+            "users.name")
         ->orderBy("surat_keluar.created_at","DESC")
         ->get();
 
@@ -54,7 +57,6 @@ class RegisterSuratKeluarController extends Controller
     public function print(Request $request){
         $table = DB::table("transaksi_surat_keluar AS surat_keluar")
         ->where("surat_keluar.tahun", $request->tahun)
-        ->where("surat_keluar.id_status",1)
         ->whereNotIn("surat_keluar.internal",[111])
         ->select(
             "surat_keluar.id AS id_surat",
@@ -70,7 +72,9 @@ class RegisterSuratKeluarController extends Controller
             "surat_keluar.tgl_surat",
             "surat_keluar.file",
             "surat_keluar.id_status",
-        )->groupBy(
+            "users.name AS dibuat_oleh",
+        )->leftJoin("users", "surat_keluar.created_by","=","users.id")
+        ->groupBy(
             "surat_keluar.id",
             "surat_keluar.id_ref_klasifikasi",
             "surat_keluar.id_ref_fungsi",
@@ -83,7 +87,9 @@ class RegisterSuratKeluarController extends Controller
             "surat_keluar.perihal",
             "surat_keluar.tgl_surat",
             "surat_keluar.file",
-            "surat_keluar.id_status")
+            "surat_keluar.id_status",
+            "users.name"
+            )
         ->orderBy("surat_keluar.created_at","DESC")
         ->get();
             

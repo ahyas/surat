@@ -45,9 +45,11 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>Nomor</th>
-                        <th width="400px">Pengirim</th>
+                        <th width="350px">Pengirim</th>
                         <th class="w-125px">Tanggal</th>
+                        <th>Status</th>
                         <th>Perihal</th>
+                        <th>Dibuat oleh</th>
                     </tr>
                 </thead>
                 <tbody class="text-gray-600 fw-semibold"></tbody>
@@ -91,7 +93,27 @@ $(document).ready(function(){
                 {data:"no_surat"},
                 {data:"pengirim"},
                 {data:"tgl_surat"},
+                {data:"status",
+                    mRender:function(data, type, full){
+                        if(full['id_status'] == 3){
+                            return `
+                                <div style='white-space: nowrap'>${data}</div> 
+                                <span class="badge badge-light-success">Sudah diarsipkan</span>                       
+                                `;
+                        }else if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 4 || full['id_status'] == 5){
+                            return `
+                                <div style='white-space: nowrap'>${data}</div> 
+                                <span class="badge badge-light-danger">Belum diarsipkan</span>                       
+                                `;
+                        }else{
+                            return `
+                                <span class="badge badge-light-danger">Belum diproses</span>                       
+                                `;
+                        }
+                    }
+                },
                 {data:"perihal"},
+                {data:"dibuat_oleh"},
             ]
         });
 
