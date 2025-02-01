@@ -10,7 +10,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Surat Keluar</p>
+                <p>Otorisasi Dokumen</p>
             </div>
             <!--begin::Card title-->
             <!--begin::Card toolbar-->
@@ -78,41 +78,23 @@
             
             <div class="modal-body" >
                 <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+
+                <form name="esign_form" id="kt_modal_esign_form" method="POST">
+                    {{csrf_field()}}
+                    <input type="hidden" id="id_surat" name="id_surat">
+
+                    <div class="text-center pt-10">
+                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="otorisasi_dokumen" data-kt-indicator="off">
+                            <span class="indicator-progress">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            Otorisasi dokumen
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>      
-</div>
-
-<div class="modal fade" id="kt_modal_tembusan" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content">
-            <!--begin::Modal header-->
-            <div class="modal-header">
-                <h2 class="modal-title">Daftar tembusan surat</h2>
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
-                </div>
-            </div>
-            <div class="modal-body">
-                <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_tembusan">
-                    <thead>
-                        <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-600 fw-semibold"></tbody>
-                </table>
-                <div class="text-center pt-10">
-                    <button type="button" id="btn-cancel" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-            <!--end::Modal body-->
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
 </div>
 
 @endsection
@@ -127,7 +109,7 @@ $(document).ready(function(){
 
     $("#tb_surat_keluar").DataTable({
         ajax        : {
-            url:"{{route('transaksi.surat_keluar.get_data')}}",
+            url:"{{route('transaksi.surat_keluar.esign.get_data')}}",
             dataSrc:""
         },
         serverSide  :false,
@@ -165,42 +147,13 @@ $(document).ready(function(){
             },
             {data:"tgl_surat"},
             {data:"file",
-                mRender:function(data){
+                mRender:function(data, type, full){
                     //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
             {data:"dibuat_oleh"}
         ]
-    });
-
-    $("body").on("click","#daftar_tembusan",function(){
-        var id_surat = $(this).data("id_surat");
-        $("#kt_modal_tembusan").modal("show");
-        $("#tb_tembusan").DataTable({
-            ajax        : {
-                url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,
-                dataSrc:""
-            },
-            "bDestroy": true,
-            searching   : false, paging: true, info: false,
-            pageLength  :5,
-            lengthMenu  : [[5, 10, 20], [5, 10, 20]],
-            serverSide  : false,
-            ordering    : false,
-            responsive  : true,
-            columns     :
-            [
-                {data:"nama_penerima",
-                    mRender:function(data, type, full){
-                        return`<div class="d-flex flex-column">
-                            <div class="text-gray-800 mb-1">${data}</div>
-                            <span>${full['email']}</span>
-                        </div>`;
-                    }
-                }
-            ]
-        });
     });
 
     $("body").on("click", "#lampiran", function(){
@@ -214,9 +167,34 @@ $(document).ready(function(){
             document.getElementById("preview").src = url;
             document.getElementById("download_pdf").href = url;
         }else{
+            var id_surat = $(this).data('id_surat');
+
+            $("#id_surat").val(id_surat);
+
             $("#office_preview").modal("show");
             document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
             document.getElementById("download_office").href = url;
+        }
+    });
+
+    $("#otorisasi_dokumen").click(function(e){
+        e.preventDefault();
+        var id_surat_keluar = $("#id_surat").val();
+        console.log(id_surat_keluar)
+        var formData = $("#kt_modal_esign_form").serializeArray(); 
+
+        if(confirm("Sebelum melanjutkan, pastikan seluruh data sudah sesuai")){
+            $.ajax({
+                url:`{{route('transaksi.surat_keluar.esign.otorisasi')}}`,
+                type:"POST",
+                data:formData,
+                success:function(data){
+                    console.log(data);
+                    $("#office_preview").modal("hide");
+                    $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                    alert("Proses otorisasi berhasil.");
+                }
+            })
         }
     });
 

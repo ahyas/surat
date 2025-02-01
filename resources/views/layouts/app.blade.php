@@ -428,6 +428,10 @@ License: For each use you must have a valid license purchased only from above li
 																	&nbsp;
 																		@if($data['tot_count_surat_keluar']>0)<span class="badge badge-circle badge-danger count_surat_keluar" id="count_surat_keluar">{{$data['tot_count_surat_keluar']}}</span>
 																		@endif
+																	@elseif($sub_key == 'eSIGN' && $key == 'Transaksi')
+																	&nbsp;
+																		@if($data['tot_count_esign']>0)<span class="badge badge-circle badge-danger count_surat_keluar" id="count_surat_keluar">{{$data['tot_count_esign']}}</span>
+																		@endif
 																	@endif
 																	</span>
 																	

@@ -42,6 +42,7 @@ class Controller extends BaseController
                             ->orderBy("surat_masuk.created_at","ASC")
                             ->count();
                             $tot_count_surat_keluar = 0;
+                            $tot_count_esign = 0;
                             
                             $menu = 
                             [
@@ -70,6 +71,7 @@ class Controller extends BaseController
                             //$count_unprocessed = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
                             $tot_count = $count_onprocessed;
                             $tot_count_surat_keluar = 0;
+                            $tot_count_esign = 0;
 
                             $menu = 
                             [
@@ -92,6 +94,8 @@ class Controller extends BaseController
                             ->whereNotIn("surat_keluar.internal",[111])
                             ->where("surat_keluar.id_status",1)
                             ->count();
+
+                            $tot_count_esign = 0;
 
                             $menu = 
                             [
@@ -128,6 +132,8 @@ class Controller extends BaseController
                             ->whereNotNull("surat_keluar.file")
                             ->count();
 
+                            $tot_count_esign=0;
+
                             $menu = 
                             [
                                 'Transaksi'=>[
@@ -163,6 +169,8 @@ class Controller extends BaseController
                             ->where("surat_keluar.id_status",1)
                             ->count();
 
+                            $tot_count_esign = DB::table('transaksi_esign')->where('status', 1)->count();
+
                             $menu = 
                             [
                                 'Transaksi'=>[
@@ -191,6 +199,7 @@ class Controller extends BaseController
                             ->whereNotIn("surat_keluar.internal",[111])
                             ->where("surat_keluar.id_status",1)
                             ->count();
+                            $tot_count_esign = 0;
 
                             $menu = 
                             [
@@ -216,14 +225,17 @@ class Controller extends BaseController
                             ->count();
                             
                             $tot_count_surat_keluar = 0;
+                            $tot_count_esign = DB::table('transaksi_esign')->where('status', 1)->count();
+
                             $menu = 
                             [
                                 'Transaksi'=>[
                                     'Surat Masuk' => route('transaksi.surat_masuk'),
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
+                                    'eSIGN' => route('transaksi.surat_keluar.esign.index'),
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index')
+                                    'Semua surat' => route('arsip.semua_surat.index')
                                 ]
                             ];
                             
@@ -238,6 +250,8 @@ class Controller extends BaseController
                             ->count();
                             
                             $tot_count_surat_keluar = 0;
+                            $tot_count_esign = 0;
+
                             $menu = 
                             [
                                 'Transaksi'=>[
@@ -256,6 +270,8 @@ class Controller extends BaseController
                             $count_onprocessed = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
                             $tot_count = $count_unprocessed + $count_onprocessed;
                             $tot_count_surat_keluar = 0;
+                            $tot_count_esign = 0;
+
                             $menu = 
                             [
                                 'Arsip'=>[
@@ -269,6 +285,7 @@ class Controller extends BaseController
                             $count_unprocessed = DB::table("transaksi_surat_masuk")->where("id_status",'!=', 3)->count();
                             $count_onprocessed = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
                             $tot_count = $count_unprocessed + $count_onprocessed;
+                            $tot_count_esign = 0;
                             
                             $menu = 
                             [
@@ -289,7 +306,7 @@ class Controller extends BaseController
 
                     }
 
-                    View::share('data', compact('menu', 'role_name', 'id_role','jabatan', 'tot_count', 'tot_count_surat_keluar'));
+                    View::share('data', compact('menu', 'role_name', 'id_role','jabatan', 'tot_count', 'tot_count_surat_keluar', 'tot_count_esign'));
 
                 }else{
                     return response(view('unauthenticated'));

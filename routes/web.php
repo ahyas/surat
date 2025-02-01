@@ -152,6 +152,9 @@ Auth::routes();
         Route::get('/transaksi/surat_keluar/{id_surat}/edit', 'Transaksi\SuratKeluar\SuratKeluarController@edit')->name('transaksi.surat_keluar.edit');
         Route::post('/transaksi/surat_keluar/{id_surat}/update', 'Transaksi\SuratKeluar\SuratKeluarController@update')->name('transaksi.surat_keluar.update');
         Route::get('/transaksi/surat_keluar/{id_surat}/delete', 'Transaksi\SuratKeluar\SuratKeluarController@delete')->name('transaksi.surat_keluar.delete');
+
+        Route::get('/transaksi/surat_keluar/esign/index', 'Transaksi\SuratKeluar\EsignController@index')->name('transaksi.surat_keluar.index');
+        Route::post('/transaksi/surat_keluar/esign/save', 'Transaksi\SuratKeluar\EsignController@saveEsign')->name('transaksi.surat_keluar.esign');
         
         //menambah daftar penerima surat keluar
         Route::get('/transaksi/surat_keluar/detail/add','Transaksi\SuratKeluar\SuratKeluarController@addDetail');
@@ -207,6 +210,9 @@ Auth::routes();
         Route::get('/transaksi/surat_keluar/get_data', 'Transaksi\SuratKeluar\SuratKeluarController@getData')->name('transaksi.surat_keluar.get_data');
         Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail_eksternal','Transaksi\SuratKeluar\SuratKeluarController@getDetailSuratEksternal');
         Route::get('/transaksi/surat_keluar/{id_surat_keluar}/detail','Transaksi\SuratKeluar\SuratKeluarController@getDetailSurat');
+        Route::get('/transaksi/surat_keluar/esign/index', 'Transaksi\SuratKeluar\EsignController@index')->name('transaksi.surat_keluar.esign.index');
+        Route::get('/transaksi/surat_keluar/esign/get_data', 'Transaksi\SuratKeluar\EsignController@getData')->name('transaksi.surat_keluar.esign.get_data');
+        Route::post('/transaksi/surat_keluar/esign/otorisasi', 'Transaksi\SuratKeluar\EsignController@otorisasi')->name('transaksi.surat_keluar.esign.otorisasi');
     });
     
 Auth::routes();

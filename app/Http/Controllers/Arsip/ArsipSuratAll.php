@@ -318,6 +318,7 @@ class ArsipSuratAll extends Controller
             ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
             ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
             ->leftJoin("users", "surat_keluar.created_by","=","users.id")
+            ->leftjoin('transaksi_esign', 'surat_keluar.id', '=', 'transaksi_esign.id_surat')
             ->groupBy("surat_keluar.id",
                 "surat_keluar.no_surat",
                 "surat_keluar.perihal",

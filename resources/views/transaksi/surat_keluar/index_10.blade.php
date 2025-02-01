@@ -324,6 +324,7 @@
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th>Dibuat Oleh</th>
+                        <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -376,7 +377,21 @@
             </div>
             
             <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+                <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+
+                <form name="esign_form" id="kt_modal_esign_form" method="POST">
+                    {{csrf_field()}}
+                    <input type="hidden" id="id_surat" name="id_surat">
+
+                    <div class="text-center pt-10" id="show_control_button">
+                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save_esign" data-kt-indicator="off">
+                            <span class="indicator-progress">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            Add eSIGN to this document
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>      
@@ -487,47 +502,67 @@ $(document).ready(function(){
             },
             {data:"tgl_surat"},
             {data:"file",
-                mRender:function(data){
+                mRender:function(data, type, full){
                     if(data !== null ){
                         //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/public/uploads/surat_keluar/${data}')}}" data-id_status_esign=${full['id_status_esign']}><span class="badge badge-light-secondary">Berkas</span></a>`;
                     }else{
                         return`<span class="badge badge-light-danger">Kosong</span>`;
                     }
                 }
             },
             {data:"dibuat_oleh"},
+            {data:"file",
+                mRender:function(data, type, full){
+                    if(full['status_esign']){
+                        if(full['id_status_esign'] == 1){ //status on ptocess
+                            return `<span class="badge badge-light-success">${full['status_esign']}</span>`;
+                        }else{ //status lengkap
+                            return `<span class="badge badge-light-primary">${full['status_esign']}</span>`;
+                        }
+                    }else{
+                        if(data){
+                            return '<span class="badge badge-light-primary">Lengkap</span>';
+                        }else{
+                            return '<span class="badge badge-light-danger">Draft</span>';
+                        }
+                    }
+                    
+                }
+            },
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
-                    
-                    if(full["id_user"] == current_user_id){
-                        if(full["file"]){
-                            var disabled_arsip = ""
-                        }else{
-                            var disabled_arsip = "disabled"
-                        }
-                        var disabled = "";
-                    }else{
-                        var disabled_arsip = "disabled";
-                        var disabled = "disabled";
+
+                    if(full['id_status_esign'] == 1){ //status on process
+                        var disable_edit = 'disabled';
+                        var disable_arsip = 'disabled';
+                        var disable_delete = 'disabled';
+                    }else if(full['id_status_esign'] == 2){ //status lengkap
+                        var disable_edit = 'disabled';
+                        var disable_arsip = '';
+                        var disable_delete = 'disabled';
+                    }else if(full['id_status_esign'] == null ){
+                        var disable_edit = '';
+                        var disable_arsip = '';
+                        var disable_delete = '';
                     }
 
                     return`<div class="dropdown">
-                            <button ${disabled} class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
+                            <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${disable_edit}" style='' id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${disabled_arsip}" id="arsip_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Arsipkan</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${disable_arsip}" style='' id="arsip_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}' data-file='${full['file']}'>Arsipkan</a>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${disable_delete} text-danger" style='' id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -537,21 +572,50 @@ $(document).ready(function(){
         ]
     });
 
-    $("body").on("click", "#arsip_surat_keluar",function(){
-        var id_surat_keluar = $(this).data("id_surat_keluar");
+    $("#save_esign").click(function(e){
+        e.preventDefault();
+        var id_surat_keluar = $("#id_surat").val();
+        console.log(id_surat_keluar)
+        var formData = $("#kt_modal_esign_form").serializeArray(); 
 
-        if(confirm("Pastikan seluruh data telah sesuai sebelum mengarsipkan. Lanjutkan?")){
-            console.log(id_surat_keluar)
-
+        if(confirm("Apakah seluruh data sudah sesuai?")){
             $.ajax({
-                url:`transaksi/surat_keluar/${id_surat_keluar}/arsipkan`,
-                type:'GET',
-                dataType:'JSON',
+                url:`{{route('transaksi.surat_keluar.esign')}}`,
+                type:"POST",
+                data:formData,
                 success:function(data){
-                    //$("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                    location.reload();
+                    console.log(data);
+                    if(!data == ''){
+                        alert(data)
+                    }
+                    
+                    $("#office_preview").modal("hide");
+                    $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                    alert("Dokumen telah dikririm untuk dilakukan otorisasi");
                 }
             })
+        }
+    });
+
+    $("body").on("click", "#arsip_surat_keluar",function(){
+        var id_surat_keluar = $(this).data("id_surat_keluar");
+        var file = $(this).data("file");
+        console.log(file)
+        if(confirm("Pastikan seluruh data telah sesuai sebelum mengarsipkan. Lanjutkan?")){
+            console.log(id_surat_keluar)
+            if(file == null){ //masih draft
+                alert("Error: Lampiran file belum tersedia.")
+            }else{
+                $.ajax({
+                    url:`transaksi/surat_keluar/${id_surat_keluar}/arsipkan`,
+                    type:'GET',
+                    dataType:'JSON',
+                    success:function(data){
+                        //$("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                        location.reload();
+                    }
+                })
+            }
             
         }
     });
@@ -650,13 +714,24 @@ $(document).ready(function(){
             document.getElementById("preview").src = url;
             document.getElementById("download_pdf").href = url;
         }else{
+            var id_surat = $(this).data('id_surat');
+            var id_status_esign = $(this).data('id_status_esign');
+            
+            console.log(id_status_esign)
+
+            $("#id_surat").val(id_surat);
+            if(id_status_esign){ //status esign 
+                document.getElementById('save_esign').disabled = true;
+            }else{
+                document.getElementById('save_esign').disabled = false;
+            }
             $("#office_preview").modal("show");
             document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
             document.getElementById("download_office").href = url;
         }
     });
 
-    $(("body")).on("click","#tujuan", function(){
+    $("body").on("click","#tujuan", function(){
         let id_surat = $(this).data("id_surat");
         $.ajax({
             url:`{{url('transaksi/surat_keluar/${id_surat}/detail')}}`,

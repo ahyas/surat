@@ -556,7 +556,7 @@ $(document).ready(function(){
                         
                     }else{
                         document.getElementById("template-nomor_surat_keluar").innerHTML = data.no_surat;
-                        document.getElementById("template-pengirim_surat_keluar").innerHTML = data.pengirim;
+                        document.getElementById("template-pengirim_surat_keluar").innerHTML = data.name;
                         document.getElementById("template-perihal_surat_keluar").innerHTML = data.perihal;
                         document.getElementById("template-tgl_surat_keluar").innerHTML = data.tgl_surat;
                         $("#office_preview").modal("show");
