@@ -35,6 +35,24 @@
                         <option value="2025" >2025</option>
                         <option value="2024">2024</option>
                     </select>
+
+                    <label class="fw-semibold fs-6 mb-2">Bulan</label>
+                    <select name="bulan" id="bulan" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" disabled>
+                        <option selected value="0" >Pilih bulan</option>
+                        <option value="01" >Januari</option>
+                        <option value="02" >Februari</option>
+                        <option value="03" >Maret</option>
+                        <option value="04" >April</option>
+                        <option value="05" >Mei</option>
+                        <option value="06" >Juni</option>
+                        <option value="07" >Juli</option>
+                        <option value="08" >Agustus</option>
+                        <option value="09" >September</option>
+                        <option value="10" >Oktober</option>
+                        <option value="11" >November</option>
+                        <option value="12">Desember</option>
+                    </select>
+
                     <div class="pt-5">
                         <button type="submit" class="btn btn-primary btn-sm" id="btn_print" disabled>
                         <i class="ki-duotone ki-plus fs-2"></i>Print register</a>
@@ -45,8 +63,9 @@
             <table class="table align-middle table-row-dashed fs-6 gy-5" id="tb_bidang">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-                        <th>Nomor</th>
-                        <th width="400px">Tujuan</th>
+                        <th width="20px">No</th>
+                        <th>Nomor surat</th>
+                        <th width="100px">Tujuan</th>
                         <th class="w-125px">Tanggal</th>
                         <th>Perihal</th>
                         <th>Status</th>
@@ -67,11 +86,11 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    function getData(tahun){
+    function getData(tahun, bulan){
         $("#tb_bidang").DataTable().clear().destroy();
         var table = $("#tb_bidang").DataTable({
             ajax        : {
-                url:"register/surat_keluar/"+tahun+"/get_data",
+                url:"register/surat_keluar/"+tahun+"/"+bulan+"/get_data",
                 dataSrc:""
             },
             "drawCallback": function (settings) { 
@@ -91,6 +110,10 @@ $(document).ready(function(){
             searching   : false,
             columns     :
             [
+                {"data": "no_surat",
+                render: function (data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }},
                 {data:"no_surat"},
                 {data:"tujuan", 
                     mRender:function(data, type, full){
@@ -133,16 +156,28 @@ $(document).ready(function(){
 
     }
     let tahun = "0000";
-    getData(tahun);
+    let bulan = "0";
+    getData(tahun, bulan);
 
     $("body").on("click","#tahun", function(){
-        let selected = $(this).val();
-        getData(selected);
-        if(selected !== "0000"){
+        let tahun = $(this).val();
+        let bulan = document.getElementById("bulan").value;
+
+        getData(tahun, bulan);
+
+        if(tahun !== "0000"){
             document.getElementById("btn_print").disabled = false;
+            document.getElementById("bulan").disabled = false;
         }else{
             document.getElementById("btn_print").disabled = true;
+            document.getElementById("bulan").disabled = true;
         }
+    });
+
+    $("body").on("click","#bulan", function(){
+        let tahun = document.getElementById("tahun").value;
+        let bulan = $(this).val();
+        getData(tahun, bulan);
     });
 });
 </script>

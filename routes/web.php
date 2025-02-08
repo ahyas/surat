@@ -75,13 +75,13 @@ Auth::routes();
 
         //Begin::register surat masuk
         Route::get('/register/surat_masuk', 'RegisterSuratMasukController@index')->name('register.surat_masuk'); 
-        Route::get('/register/surat_masuk/{tahun}/get_data', 'RegisterSuratMasukController@getData')->name('register.get_data');
+        Route::get('/register/surat_masuk/{tahun}/{bulan}/get_data', 'RegisterSuratMasukController@getData')->name('register.get_data');
         Route::post('/register/surat_masuk/print', 'RegisterSuratMasukController@print')->name('register.print'); 
         //End::register surat masuk
 
         //Begin::register surat keluar
         Route::get('/register/surat_keluar', 'RegisterSuratKeluarController@index')->name('register.surat_keluar'); 
-        Route::get('/register/surat_keluar/{tahun}/get_data', 'RegisterSuratKeluarController@getData');
+        Route::get('/register/surat_keluar/{tahun}/{bulan}/get_data', 'RegisterSuratKeluarController@getData');
         Route::post('/register/surat_keluar/print', 'RegisterSuratKeluarController@print')->name('register.surat_keluar.print'); 
         //End::register surat keluar
 

@@ -48,19 +48,72 @@ table {
         <section class="sheet">
             <h3 style=" text-align:center">REGISTER SURAT KELUAR</h3>
             <h3 style="line-height:5px; text-align:center">PENGADILAN TINGGI AGAMA PAPUA BARAT</h3>
-            <h3 style="line-height:5px; text-align:center">TAHUN {{$tahun}}</h3>
+            <h3 style="line-height:5px; text-align:center"><?php if($bulan !== ''){
+                switch ($bulan){
+                    case '01':
+                        echo 'BULAN JANUARI';
+                    break;
 
+                    case '02':
+                        echo 'BULAN FEBRUARI';
+                    break;
+
+                    case '03':
+                        echo 'BULAN MARET';
+                    break;
+
+                    case '04':
+                        echo 'BULAN APRIL';
+                    break;
+
+                    case '05':
+                        echo 'BULAN MEI';
+                    break;
+
+                    case '06':
+                        echo 'BULAN JUNI';
+                    break;
+
+                    case '07':
+                        echo 'BULAN JULI';
+                    break;
+
+                    case '08':
+                        echo 'BULAN AGUSTUS';
+                    break;
+
+                    case '09':
+                        echo 'BULAN SEPTEMBER';
+                    break;
+
+                    case '10':
+                        echo 'BULAN OKTOBER';
+                    break;
+
+                    case '11':
+                        echo 'BULAN NOVEMBER';
+                    break;
+
+                    default:
+                        echo 'BULAN DESEMBER';
+                }
+                 
+                } ?> TAHUN {{$tahun}}</h3>
+                
+            @php $row_num = 1; @endphp
             <table style="width:100%; font-size:12px; margin-right:30px;">
                 <tr style="background-color:gray; color:white">
-                    <th align="left" style="padding:8px; width:250px">Nomor</th>
-                    <th align="left" style="padding:8px;">Tujuan</th>
+                    <th align="left" style="padding:8px; width:20px">No.</th>
+                    <th align="left" style="padding:8px; width:250px">Nomor surat</th>
+                    <th align="left" style="padding:8px; width:100px">Tujuan</th>
                     <th align="left" style="padding:8px; width:80px">Tanggal</th>
                     <th align="left" style="padding:8px; width:200px">Perihal</th>
                     <th align="left" style="padding:8px;">Status</th>
-                    <th align="left" style="padding:8px;">Dibuat oleh</th>
+                    <th align="left" style="padding:8px; width:150px">Dibuat oleh</th>
                 </tr>
                 @foreach($table as $row)
                 <tr>
+                    <td style="padding:8px;">{{$row_num}}</td>
                     <td style="padding:8px;">{{$row->no_surat}}</td>
                     <td style="padding:8px;">{{$row->tujuan}}</td>
                     <td style="padding:8px;">{{$row->tgl_surat}}</td>
@@ -80,6 +133,7 @@ table {
                     </td>
                     <td style="padding:8px;">{{$row->dibuat_oleh}}</td>
                 </tr>
+                @php $row_num += 1; @endphp
                 @endforeach
             </table>          
         </section>
