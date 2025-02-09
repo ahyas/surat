@@ -103,7 +103,7 @@ class EsignController extends Controller
         
         $templateProcessor = new TemplateProcessor($current_doc_path);
         //$templateProcessor->setValue('esign', "BARCODE");
-        $templateProcessor->setImageValue('esign', asset('public/qr.png'));
+        $templateProcessor->setImageValue('esign', array('path' => asset('public/qr.png'), 'width' => 100, 'height' => 100, 'ratio' => false));
 
         //$templateProcessor->save();
         File::delete(public_path('/uploads/surat_keluar/'.$file->file));
