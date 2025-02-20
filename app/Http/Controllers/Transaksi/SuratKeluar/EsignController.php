@@ -80,17 +80,17 @@ class EsignController extends Controller
         $variable = $templateProcessor->getVariables();
 
         if($variable){
-            if($variable[0] == 'esign'){
+            if($variable[0] == 'esign' || $variable[0] == 'no_surat'){
                 DB::table('transaksi_esign')
                 ->insert([
                     'id_surat' => $request->id_surat,
                     'status' => 1,
                 ]);
 
-                $msg='';
             }
+            $msg='';
         }else{
-            $msg= 'Error: Variabel ${{esign}} belum didefinisikan. Periksa kembali dokumen Anda.';
+            $msg= 'Error: Variabel tanda tangan digital ${esign} atau nomor surat ${no_surat} belum didefinisikan. Periksa kembali dokumen Anda sebelum melanjutkan.';
         }
 
         return response()->json($msg);
@@ -103,14 +103,21 @@ class EsignController extends Controller
         
         $templateProcessor = new TemplateProcessor($current_doc_path);
         //$templateProcessor->setValue('esign', "BARCODE");
-        $templateProcessor->setImageValue('esign', array('path' => asset('public/qr.png'), 'width' => 100, 'height' => 100, 'ratio' => false));
+        $templateProcessor->setValue('no_surat', $file->no_surat);
+        $templateProcessor->setImageValue('esign', array('path' => asset('public/qr.jpg'), 'width' => 100, 'height' => 100, 'ratio' => false));
 
         //$templateProcessor->save();
         File::delete(public_path('/uploads/surat_keluar/'.$file->file));
-        $templateProcessor->saveAs(public_path('/uploads/surat_keluar/'.$file->file));
+        $new_file = 'signed_'.$file->file;
+        $templateProcessor->saveAs(public_path('/uploads/surat_keluar/'.$new_file));
 
         DB::table('transaksi_esign')->where('id_surat', $request->id_surat)->update([
-            'status' => 2
+            'status' => 2,
+        ]);
+        
+        DB::table('transaksi_surat_keluar')->where('id',$request->id_surat)
+        ->update([
+            'file'=>$new_file    
         ]);
 
         return response()->json($file->file);
