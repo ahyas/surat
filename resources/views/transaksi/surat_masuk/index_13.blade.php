@@ -203,6 +203,12 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
 
+                    if(full['is_internal'] == 1){
+                        var b = `<span class="badge badge-light-default">${full['kode_klasifikasi']} - ${full['klasifikasi']}</span>`;
+                    }else{
+                        var b = '';
+                    }
+
                     if(data.length>=29){
                         var result = data.slice(0, 29)+" ...";   
                     }else{
@@ -210,12 +216,29 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
+                            <span>${b}</span>
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${result}</div> 
                             <span>${a}</span>                       
                             </div>`;
                 }
             },
-            {data:"pengirim"},
+            {data:"pengirim",
+                mRender:function(data, type, full){
+                    if(full['is_internal'] == 1){
+                        var a = `<span class="badge badge-light-primary">Mahkamah Agung</span>`;
+                    }else if(full['is_internal'] == 2){
+                        var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
+                    }else{
+                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                    }
+
+                    return `
+                    <div class="d-flex flex-column">
+                        <span>${a}</span>
+                        <span>${data}</span>
+                    </div>`;
+                }
+            },
             {data:"perihal",
                 mRender:function(data){
                     if(data.length>=90){

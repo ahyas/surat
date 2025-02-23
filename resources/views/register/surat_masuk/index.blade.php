@@ -115,8 +115,48 @@ $(document).ready(function(){
                 render: function (data, type, row, meta) {
                     return meta.row + meta.settings._iDisplayStart + 1;
                 }},
-                {data:"no_surat"},
-                {data:"pengirim"},
+                {data:"no_surat", 
+                    mRender:function(data, type, full){
+                        if(full['rahasia'] !== 'true'){
+                            var a = `<span class="badge badge-light-success">Biasa</span>`;
+                        }
+
+                        if(full['is_internal'] == 1){
+                            var b = `<span class="badge badge-light-default">${full['kode_klasifikasi']} - ${full['klasifikasi']}</span>`;
+                        }else{
+                            var b = '';
+                        }
+                        
+                        if(data.length>=29){
+                            var result = data.slice(0, 29)+" ...";   
+                        }else{
+                            var result = data
+                        }
+
+                        return`<div class="d-flex flex-column">
+                                    <span>${b}</span>
+                                    <div class="text-gray-800 mb-1">${result} <div>
+                                    <span>${a}</span>                   
+                                </div>`;
+                    }
+                },
+                {data:"pengirim",
+                    mRender:function(data, type, full){
+                        if(full['is_internal'] == 1){
+                            var a = `<span class="badge badge-light-primary">Mahkamah Agung</span>`;
+                        }else if(full['is_internal'] == 2){
+                            var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
+                        }else{
+                            var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        }
+
+                        return `
+                        <div class="d-flex flex-column">
+                            <span>${a}</span>
+                            <span>${data}</span>
+                        </div>`;
+                    }
+                },
                 {data:"tgl_surat"},
                 {data:"perihal"},
                 {data:"status",

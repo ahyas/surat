@@ -28,9 +28,13 @@ class RegisterSuratMasukController extends Controller
                 "surat_masuk.tgl_surat",
                 "surat_masuk.file",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode AS kode_klasifikasi",
+                "ref_klasifikasi.deskripsi AS klasifikasi",
                 "users.name AS dibuat_oleh",
                 DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
             )->leftJoin("users", "surat_masuk.created_by","=","users.id")
+            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
             ->orderBy("surat_masuk.created_at","DESC")
             ->get();
         }else{
@@ -48,9 +52,13 @@ class RegisterSuratMasukController extends Controller
                 "surat_masuk.tgl_surat",
                 "surat_masuk.file",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode AS kode_klasifikasi",
+                "ref_klasifikasi.deskripsi AS klasifikasi",
                 "users.name AS dibuat_oleh",
                 DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
             )->leftJoin("users", "surat_masuk.created_by","=","users.id")
+            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
             ->orderBy("surat_masuk.created_at","DESC")
             ->get();
         }
@@ -73,9 +81,13 @@ class RegisterSuratMasukController extends Controller
                 "surat_masuk.file",
                 "users.name AS dibuat_oleh",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode AS kode_klasifikasi",
+                "ref_klasifikasi.deskripsi AS klasifikasi",
                 DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
             )
             ->leftJoin("users", "surat_masuk.created_by","=","users.id")
+            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
             ->orderBy("surat_masuk.created_at","DESC")
             ->get();
         }else{
@@ -93,9 +105,13 @@ class RegisterSuratMasukController extends Controller
                 "surat_masuk.file",
                 "users.name AS dibuat_oleh",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode AS kode_klasifikasi",
+                "ref_klasifikasi.deskripsi AS klasifikasi",
                 DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
             )
             ->leftJoin("users", "surat_masuk.created_by","=","users.id")
+            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
             ->orderBy("surat_masuk.created_at","DESC")
             ->get();
         }

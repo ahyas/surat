@@ -103,8 +103,8 @@ table {
             <table style="width:100%; font-size:13px; margin-right:30px;">
                 <tr style="background-color:gray; color:white">
                     <th align="left" style="padding:8px; width:20px">No.</th>
-                    <th align="left" style="padding:8px; width:150px">Nomor surat</th>
-                    <th align="left" style="padding:8px;">Tujuan</th>
+                    <th align="left" style="padding:8px; width:120px">Nomor surat</th>
+                    <th align="left" style="padding:8px;">Pengirim</th>
                     <th align="left" style="padding:8px; width:80px">Tanggal</th>
                     <th align="left" style="padding:8px; width:200px">Perihal</th>
                     <th align="left" style="padding:8px;">Status</th>
@@ -113,8 +113,39 @@ table {
                 @foreach($table as $row)
                 <tr>
                     <td style="padding:8px;">{{$row_num}}</td>
-                    <td style="padding:8px;">{{$row->no_surat}}</td>
-                    <td style="padding:8px;">{{$row->pengirim}}</td>
+                    <td style="padding:8px;">
+                        @if($row->rahasia !== 'true')
+                            @php $a = 'Biasa'; @endphp
+                        @elseif($row->rahasia == 'true')
+                            @php $a = 'Rahasia'; @endphp
+                        @else
+                            @php $a = ''; @endphp
+                        @endif
+
+                        @if($row->is_internal == 1)
+                            @php $b = $row->kode_klasifikasi.' - '.$row->klasifikasi; @endphp
+                        @else
+                            @php $b = ''; @endphp
+                        @endif
+
+                        <span><i>{{$b}}</i></span>
+                        <br>
+                        {{$row->no_surat}}
+                        <br>
+                        <span><i>{{$a}}</i></span>
+                    </td>
+                    <td style="padding:8px;">
+                        @if($row->is_internal == 1)
+                            @php $a = "Mahkamah Agung"; @endphp
+                        @elseif($row->is_internal == 2)
+                            @php $a = "Non Mahkamah Agung"; @endphp
+                        @else
+                            @php $a = "Undefined"; @endphp
+                        @endif
+                        <span><i>{{$a}}</i></span>
+                        <br>
+                        {{$row->pengirim}}
+                    </td>
                     <td style="padding:8px;">{{$row->tgl_surat}}</td>
                     <td style="padding:8px;">{{$row->perihal}}</td>
                     <td style="padding:8px;">
@@ -125,7 +156,7 @@ table {
                                 <div style='white-space: nowrap'><i>{{$row->status}}</i></div> 
                                 <span class="badge badge-light-danger">Belum diarsipkan</span>                       
                         @else
-                                <span class="badge badge-light-danger">Unprocessed</span>
+                                <span class="badge badge-light-danger"><i>Unprocessed</i></span>
                         @endif
                     </td>
                     <td style="padding:8px;">{{$row->dibuat_oleh}}</td>

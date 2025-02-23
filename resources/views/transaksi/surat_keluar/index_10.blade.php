@@ -586,7 +586,8 @@ $(document).ready(function(){
                 success:function(data){
                     console.log(data);
                     if(!data == ''){
-                        alert(data)
+                        alert(data);
+                        return false;
                     }
                     
                     $("#office_preview").modal("hide");
@@ -760,7 +761,7 @@ $(document).ready(function(){
                     document.getElementById("display-penerima-surat-internal").style.display = 'block'
                     document.getElementById("penerima_eksternal").removeAttribute("disabled");
                     document.getElementById("update_penerima_eksternal").removeAttribute("disabled");
-                    
+                        
                 }else{
                     document.getElementById("display-penerima-surat-internal").style.display = 'none'
                     document.getElementById("penerima_eksternal").setAttribute("disabled", "disabled");

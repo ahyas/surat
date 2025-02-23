@@ -39,10 +39,45 @@
                                             <label class="required fw-semibold fs-6 mb-2">Nomor surat</label>
                                             <input type="text" name="nomor_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Nomor surat" required/>
                                         </div>
+
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Pengirim</label>
-                                            <input type="text" name="pengirim" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Pengirim surat" required/>
+                                            <div class="d-flex fv-row">
+                                                <!--begin::Radio-->
+                                                <div class="form-check form-check-custom form-check-solid">
+                                                    <!--begin::Input-->
+                                                    <input class="form-check-input me-3" name="pengirim_surat" type="radio" value="1" id="kt_modal_update_role_option_0" />
+                                                    <label class="form-check-label" for="kt_modal_update_role_option_0">
+                                                        <div class="fw-bold text-gray-800">Mahkamah Agung</div>
+                                                    </label>
+                                                    
+                                                    <input class="form-check-input me-3" name="pengirim_surat" type="radio" value="2" id="kt_modal_update_role_option_1" style="margin-left:20px"/>
+                                                    <label class="form-check-label" for="kt_modal_update_role_option_1">
+                                                        <div class="fw-bold text-gray-800">Non Mahkamah Agung</div>
+                                                    </label>
+                                                    <!--end::Label-->
+                                                </div>
+                                                <!--end::Radio-->
+                                            </div>
+                                            
                                         </div>
+                                        <div>
+                                            <div class="fv-row mb-7">
+                                                <input type="text" name="pengirim" id="pengirim" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Pengirim surat" disabled/>
+                                            </div>
+                                        </div>
+                                        <div id="display-pengirim-internal">
+                                            <div class="fv-row mb-7">
+                                                <label class="required fw-semibold fs-6 mb-2">Kode Klasifikasi</label>
+                                                <select name="klasifikasi" id="klasifikasi" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true">
+                                                    <option disabled selected value="0">Pilih kategori klasifikasi</option>
+                                                    @foreach($klasifikasi as $row)
+                                                        <option value="{{$row->id_klasifikasi}}">{{$row->kode_klasifikasi}} - {{$row->deskripsi_klasifikasi}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Perihal / Isi ringkas</label>
                                             <textarea class="form-control form-control-solid" placeholder="Perihal surat" id="perihal" name="perihal" rows="3" required></textarea>
@@ -140,7 +175,10 @@
                                         <table class="table table-sm">
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
-                                                <td><span class="fs-6" id="detail-nomor_surat"></span></td>
+                                                <td>
+                                                    <span class="fs-6" id="detail-nomor_surat"></span>
+                                                    <span class="fs-6" id="detail-klasifikasi"></span>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
@@ -335,6 +373,12 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
 
+                    if(full['is_internal'] == 1){
+                        var b = `<span class="badge badge-light-default">${full['kode_klasifikasi']} - ${full['klasifikasi']}</span>`;
+                    }else{
+                        var b = '';
+                    }
+
                     if(data.length>=29){
                         var result = data.slice(0, 29)+" ...";   
                     }else{
@@ -342,12 +386,29 @@ $(document).ready(function(){
                     }
 
                     return`<div class="d-flex flex-column">
+                            <span>${b}</span>
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${result}</div> 
                             <span>${a}</span>                       
                             </div>`;
                 }
             },
-            {data:"pengirim"},
+            {data:"pengirim",
+                mRender:function(data, type, full){
+                    if(full['is_internal'] == 1){
+                        var a = `<span class="badge badge-light-primary">Mahkamah Agung</span>`;
+                    }else if(full['is_internal'] == 2){
+                        var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
+                    }else{
+                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                    }
+
+                    return `
+                    <div class="d-flex flex-column">
+                        <span>${a}</span>
+                        <span>${data}</span>
+                    </div>`;
+                }
+            },
             {data:"perihal",
                 mRender:function(data){
                     if(data.length>=90){
@@ -448,6 +509,13 @@ $(document).ready(function(){
                 }else{
                     document.getElementById("detail-tindak_lanjut").style.display = "none";
                 }
+
+                if(data[0].is_internal == 1){
+                    document.getElementById("detail-klasifikasi").innerHTML = '<span>'+data[0].kode_klasifikasi+' - '+data[0].klasifikasi+'</span>';
+                }else{
+                    document.getElementById("detail-klasifikasi").innerHTML = '';
+                }
+
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
@@ -586,6 +654,10 @@ $(document).ready(function(){
     $("body").on("click","#add_surat_masuk", function(){
         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
         document.querySelector(".save_surat_masuk").removeAttribute("disabled");
+
+        document.getElementById("display-pengirim-internal").style.display = "none";
+        document.getElementById("pengirim").setAttribute("disabled", "disabled");
+
         $("#tujuan").val("").trigger("change");
         document.getElementById("update_surat_masuk").style.display = "none";
         document.getElementById("save_surat_masuk").style.display = "inline-block";
@@ -598,6 +670,28 @@ $(document).ready(function(){
         $("#bidang").val("").trigger('change');
         $("#kt_modal_add_surat_masuk").modal("show");
     });
+
+    document.getElementById("display-pengirim-internal").style.display = "none";
+
+    $("body").on("change", "input[name='pengirim_surat']", function(){
+
+        var penerima = $(this).val();
+        console.log(penerima)
+        
+        document.getElementById("pengirim").removeAttribute("disabled");
+        document.getElementById("pengirim").value = '';
+        document.getElementById("pengirim").focus();
+
+        if(penerima == 2){
+            console.log("external")
+            document.getElementById("display-pengirim-internal").style.display = "none";
+        }else{
+            console.log("internal")
+            document.getElementById("display-pengirim-internal").style.display = "inline-block";
+        }
+
+    });
+
 
     $("#save_surat_masuk").click(function(e){
         e.preventDefault();
@@ -618,12 +712,14 @@ $(document).ready(function(){
                     console.log(data)
                     if (!data.success) {
                         let err_nomor_surat = data.errors.nomor_surat  ? `<li>${data.errors.nomor_surat}</li>` : ``;
+                        let err_pengirim_surat = data.errors.pengirim_surat  ? `<li>${data.errors.pengirim_surat}</li>` : ``;
+                        let err_klasifikasi = data.errors.klasifikasi  ? `<li>${data.errors.klasifikasi}</li>` : ``;
                         let err_pengirim = data.errors.pengirim  ? `<li>${data.errors.pengirim}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim_surat+err_klasifikasi+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
                         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".save_surat_masuk").removeAttribute("disabled");                       
                         return false;
@@ -640,7 +736,7 @@ $(document).ready(function(){
         document.getElementById("update_surat_masuk").style.display = "inline-block";
         document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
         document.querySelector(".update_surat_masuk").removeAttribute("disabled");
-
+        document.getElementById("pengirim").removeAttribute("disabled");
         document.getElementById("save_surat_masuk").style.display = "none";
         document.getElementById("file_surat").className += "required";
         document.getElementById("notification").innerHTML ='';
@@ -654,6 +750,17 @@ $(document).ready(function(){
             dataType:"JSON",
             success:function(data){
                 console.log(data)
+
+                document.add_surat_masuk_form.pengirim_surat.value=data.table[0].is_internal;
+
+                if(data.table[0].is_internal == 1){
+                    console.log("internal")
+                    document.getElementById("display-pengirim-internal").style.display = "inline-block";
+                    document.getElementById("klasifikasi").value = data.table[0].id_klasifikasi;
+                }else{
+                    document.getElementById("display-pengirim-internal").style.display = "none";
+                }
+
                 $("input[name='nomor_surat']").val(data.table[0].no_surat);
                 $("input[name='pengirim']").val(data.table[0].pengirim);
                 $("#perihal").val(data.table[0].perihal);
@@ -688,13 +795,14 @@ $(document).ready(function(){
                 console.log(data);
                     if (!data.success) {
                         let err_nomor_surat = data.errors.nomor_surat  ? `<li>${data.errors.nomor_surat}</li>` : ``;
+                        let err_pengirim_surat = data.errors.pengirim_surat  ? `<li>${data.errors.pengirim_surat}</li>` : ``;
+                        let err_klasifikasi = data.errors.klasifikasi  ? `<li>${data.errors.klasifikasi}</li>` : ``;
                         let err_pengirim = data.errors.pengirim  ? `<li>${data.errors.pengirim}</li>` : ``;
-                        let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>"; 
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim_surat+err_pengirim+err_klasifikasi+err_perihal+err_tgl_surat+err_file_surat+"</div></div>"; 
                         document.querySelector(".update_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".update_surat_masuk").removeAttribute("disabled");                         
                         return false;
