@@ -323,6 +323,7 @@
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
                         <th>Dibuat Oleh</th>
+                        <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
                 </thead>
@@ -373,7 +374,21 @@
             </div>
             
             <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+                <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+
+                <form name="esign_form" id="kt_modal_esign_form" method="POST">
+                    {{csrf_field()}}
+                    <input type="hidden" id="id_surat" name="id_surat">
+
+                    <div class="text-center pt-10" id="show_control_button">
+                        <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save_esign" data-kt-indicator="off">
+                            <span class="indicator-progress">
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            Add eSIGN to this document
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>      
@@ -511,10 +526,10 @@ $(document).ready(function(){
             },
             {data:"tgl_surat"},
             {data:"file",
-                mRender:function(data){
+                mRender:function(data, type, full){
                     if(data){
                         //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/public/uploads/surat_keluar/${data}')}}" data-id_status_esign=${full['id_status_esign']}><span class="badge badge-light-secondary">Berkas</span></a>`;
                     }else{
                         return`<span class="badge badge-light-danger">Kosong</span>`;
                     }
@@ -522,6 +537,24 @@ $(document).ready(function(){
                 }
             },
             {data:"dibuat_oleh"},
+            {data:"file",
+                mRender:function(data, type, full){
+                    if(full['status_esign']){
+                        if(full['id_status_esign'] == 1){ //status on ptocess
+                            return `<span class="badge badge-light-success">${full['status_esign']}</span>`;
+                        }else{ //status lengkap
+                            return `<span class="badge badge-light-primary">${full['status_esign']}</span>`;
+                        }
+                    }else{
+                        if(data){
+                            return '<span class="badge badge-light-primary">Lengkap</span>';
+                        }else{
+                            return '<span class="badge badge-light-danger">Draft</span>';
+                        }
+                    }
+                    
+                }
+            },
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
                     if(full["id_user"] == current_user_id){
@@ -559,6 +592,32 @@ $(document).ready(function(){
             }
         ]
     })
+
+    $("#save_esign").click(function(e){
+        e.preventDefault();
+        var id_surat_keluar = $("#id_surat").val();
+        console.log(id_surat_keluar)
+        var formData = $("#kt_modal_esign_form").serializeArray(); 
+
+        if(confirm("Apakah seluruh data sudah sesuai?")){
+            $.ajax({
+                url:`{{route('transaksi.surat_keluar.esign')}}`,
+                type:"POST",
+                data:formData,
+                success:function(data){
+                    console.log(data);
+                    if(!data == ''){
+                        alert(data);
+                        return false;
+                    }
+                    
+                    $("#office_preview").modal("hide");
+                    $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
+                    alert("Dokumen telah dikririm untuk dilakukan otorisasi");
+                }
+            })
+        }
+    });
 
     $("#pilih_semua").click(function(){
         if($("#pilih_semua").is(':checked') ){
@@ -670,6 +729,18 @@ $(document).ready(function(){
             document.getElementById("preview").src = url;
             document.getElementById("download_pdf").href = url;
         }else{
+            var id_surat = $(this).data('id_surat');
+            var id_status_esign = $(this).data('id_status_esign');
+            
+            console.log("id_status_esign ",id_status_esign)
+            
+            $("#id_surat").val(id_surat);
+            if(id_status_esign){ //status esign 
+                document.getElementById('save_esign').disabled = true;
+            }else{
+                document.getElementById('save_esign').disabled = false;
+            }
+
             $("#office_preview").modal("show");
             document.getElementById("preview_office").src = `https://view.officeapps.live.com/op/embed.aspx?src=${url}`;
             document.getElementById("download_office").href = url;

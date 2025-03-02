@@ -267,6 +267,8 @@ class SuratKeluarController extends Controller
                     "surat_keluar.id_status",
                     "users.name AS dibuat_oleh",
                     "users.id AS id_user",
+                    "transaksi_esign.status AS id_status_esign",
+                    DB::raw("(CASE WHEN transaksi_esign.status = 1 THEN 'On Process' WHEN transaksi_esign.status = 2 THEN 'Lengkap' ELSE '' END) As status_esign"),
                     DB::raw("(CASE WHEN surat_keluar.id_status = 1 THEN 'Draft' ELSE 'Done' END) AS status"),
                     DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -276,6 +278,7 @@ class SuratKeluarController extends Controller
                 ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
                 ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->leftJoin("users", "surat_keluar.created_by","=","users.id")
+                ->leftJoin('transaksi_esign', 'surat_keluar.id','=','transaksi_esign.id_surat')
                 ->groupBy(
                     "surat_keluar.id",
                     "surat_keluar.id_ref_klasifikasi",
@@ -296,7 +299,8 @@ class SuratKeluarController extends Controller
                     "ref_transaksi.deskripsi",
                     "surat_keluar.internal",
                     "users.name",
-                    "users.id")
+                    "users.id",
+                    "transaksi_esign.status")
                 ->orderBy("surat_keluar.created_at","DESC")->get();
 
                 return Datatables::of($table)->make(true);
@@ -467,6 +471,8 @@ class SuratKeluarController extends Controller
                 "users.name AS dibuat_oleh",
                 "users.id AS id_user",
                 "permission.id_role",
+                "transaksi_esign.status AS id_status_esign",
+                DB::raw("(CASE WHEN transaksi_esign.status = 1 THEN 'On Process' WHEN transaksi_esign.status = 2 THEN 'Lengkap' ELSE '' END) As status_esign"),
                 DB::raw("(CASE WHEN surat_keluar.id_status = 1 THEN 'Draft' ELSE 'Done' END) AS status"),
                 DB::raw('COUNT(detail_transaksi_surat.id_surat) AS jumlah_tembusan'),
                 DB::raw("(CASE WHEN surat_keluar.id_ref_transaksi IS NULL THEN ref_kegiatan.deskripsi ELSE ref_transaksi.deskripsi END) AS deskripsi"),
@@ -477,6 +483,7 @@ class SuratKeluarController extends Controller
             ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
             ->leftJoin("users", "surat_keluar.created_by","=","users.id")
             ->leftJoin("permission","users.id","=","permission.id_user")
+            ->leftJoin('transaksi_esign', 'surat_keluar.id','=','transaksi_esign.id_surat')
             ->groupBy(
                 "surat_keluar.id",
                 "surat_keluar.id_ref_klasifikasi",
@@ -497,7 +504,8 @@ class SuratKeluarController extends Controller
                 "surat_keluar.internal",
                 "users.name",
                 "users.id",
-                "permission.id_role")
+                "permission.id_role",
+                "transaksi_esign.status")
             ->orderBy("surat_keluar.created_at","DESC")->get();
 
             //return response()->json($table);

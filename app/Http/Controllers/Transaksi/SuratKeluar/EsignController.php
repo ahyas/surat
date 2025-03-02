@@ -79,18 +79,22 @@ class EsignController extends Controller
 
         $variable = $templateProcessor->getVariables();
 
-        if($variable){
-            if($variable[0] == 'esign' || $variable[0] == 'no_surat'){
-                DB::table('transaksi_esign')
-                ->insert([
-                    'id_surat' => $request->id_surat,
-                    'status' => 1,
-                ]);
-
+        if($file->id_nomenklatur_jabatan == 1){
+            if($variable){
+                if($variable[0] == 'esign' || $variable[0] == 'no_surat'){
+                    DB::table('transaksi_esign')
+                    ->insert([
+                        'id_surat' => $request->id_surat,
+                        'status' => 1,
+                    ]);
+    
+                }
+                $msg='';
+            }else{
+                $msg= 'Error: Variabel tanda tangan digital ${esign} atau nomor surat ${no_surat} belum didefinisikan. Periksa kembali dokumen Anda sebelum melanjutkan.';
             }
-            $msg='';
         }else{
-            $msg= 'Error: Variabel tanda tangan digital ${esign} atau nomor surat ${no_surat} belum didefinisikan. Periksa kembali dokumen Anda sebelum melanjutkan.';
+            $msg= 'Error: Tanda tangan digital untuk nomenklatur jabatan Ketua.';
         }
 
         return response()->json($msg);

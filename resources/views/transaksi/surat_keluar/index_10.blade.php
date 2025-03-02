@@ -541,9 +541,9 @@ $(document).ready(function(){
                         var disable_edit = 'disabled';
                         var disable_arsip = '';
                         var disable_delete = 'disabled';
-                    }else if(full['id_status_esign'] == null ){
+                    }else if(full['file'] == null ){
                         var disable_edit = '';
-                        var disable_arsip = '';
+                        var disable_arsip = 'disabled';
                         var disable_delete = '';
                     }
 
