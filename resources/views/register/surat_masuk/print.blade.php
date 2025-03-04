@@ -114,10 +114,12 @@ table {
                 <tr>
                     <td style="padding:8px;">{{$row_num}}</td>
                     <td style="padding:8px;">
-                        @if($row->rahasia !== 'true')
+                        @if($row->kerahasiaan == 0)
                             @php $a = 'Biasa'; @endphp
-                        @elseif($row->rahasia == 'true')
+                        @elseif($row->kerahasiaan == 1)
                             @php $a = 'Rahasia'; @endphp
+                        @elseif($row->kerahasiaan == 2)
+                            @php $a = 'Sangat Rahasia'; @endphp
                         @else
                             @php $a = ''; @endphp
                         @endif

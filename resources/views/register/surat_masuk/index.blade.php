@@ -117,7 +117,11 @@ $(document).ready(function(){
                 }},
                 {data:"no_surat", 
                     mRender:function(data, type, full){
-                        if(full['rahasia'] !== 'true'){
+                        if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                        }else if(full['kerahasiaan'] == 1){
+                            var a = `<span class="badge badge-light-warning">Rahasia</span>`;
+                        }else{
                             var a = `<span class="badge badge-light-success">Biasa</span>`;
                         }
 

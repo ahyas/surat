@@ -87,9 +87,30 @@
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tanggal surat" required/>
                                         </div>
                                         <div class="fv-row mb-7">
+                                            <label class="required fw-semibold fs-6 mb-2">Sifat</label>
                                             <div class="form-check">
-                                                <input type="checkbox" name="rahasia" class="form-check-input" id="rahasia">
-                                                <label class="fw-semibold fs-6 mb-2" for="rahasia">Rahasia</label>
+                                                <div class="d-flex fv-row">
+                                                    <!--begin::Radio-->
+                                                    <div class="form-check form-check-custom form-check-solid">
+                                                        <!--begin::Input-->
+                                                        <input class="form-check-input me-3" id="kt_modal_update_role_option_0" name="kerahasiaan" type="radio" value="0" />
+                                                        <label class="form-check-label" for="kt_modal_update_role_option_0">
+                                                            <div class="fw-bold text-gray-800">Biasa</div>
+                                                        </label>
+                                                        
+                                                        <input class="form-check-input me-3" id="kt_modal_update_role_option_1" name="kerahasiaan" type="radio" value="1" style="margin-left:20px"/>
+                                                        <label class="form-check-label" for="kt_modal_update_role_option_1">
+                                                            <div class="fw-bold text-gray-800">Rahasia</div>
+                                                        </label>
+
+                                                        <input class="form-check-input me-3" id="kt_modal_update_role_option_2" name="kerahasiaan" type="radio" value="2" style="margin-left:20px"/>
+                                                        <label class="form-check-label" for="kt_modal_update_role_option_2">
+                                                            <div class="fw-bold text-gray-800">Sangat rahasia</div>
+                                                        </label>
+                                                        <!--end::Label-->
+                                                    </div>
+                                                    <!--end::Radio-->
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="fv-row mb-7">
@@ -193,7 +214,7 @@
                                                 <td><span class="fs-6" id="detail-tgl_surat"></span></td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
+                                                <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
                                             </tr>
                                         </table>
@@ -292,8 +313,8 @@
                                                     <td><span class="fs-6" id="teruskan-tgl_surat"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold fs-6 text-gray-800">Rahasia</td>
-                                                    <td><span class="fs-6" id="teruskan-rahasia"></span></td>
+                                                    <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
+                                                    <td><span class="fs-6" id="teruskan-sifat"></span></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -367,8 +388,10 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full['rahasia'] == 'true'){
-                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
+                    if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 1){
+                        var a = `<span class="badge badge-light-warning">Rahasia</span>`;
                     }else{
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
@@ -502,7 +525,7 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
-                console.log(data[0].rahasia )
+                console.log(data[0].kerahasiaan )
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
@@ -520,7 +543,14 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                if(data[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else{
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }
+                document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
                 document.getElementById("detail-user_tindak_lanjut").innerHTML = data[0].tindaklanjut_oleh ? data[0].tindaklanjut_oleh : ' - ';
                 document.getElementById("detail-tgl_tindak_lanjut").innerHTML = data[0].tgl_tindak_lanjut ? data[0].tgl_tindak_lanjut : ' - ';
@@ -554,7 +584,7 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
-                    
+                    console.log(data);
                 let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
                 $("#tujuan").val(id_penerima).trigger('change');
 
@@ -562,9 +592,18 @@ $(document).ready(function(){
                 document.getElementById("teruskan-nomor_surat").innerHTML = data.table[0].no_surat;
                 document.getElementById("teruskan-pengirim").innerHTML = data.table[0].pengirim
                 document.getElementById("teruskan-perihal").innerHTML = data.table[0].perihal;
-                document.getElementById("teruskan-rahasia").innerHTML = data.table[0].rahasia == 'false' ? 'Tidak' : 'Ya';
                 document.getElementById("teruskan-tgl_surat").innerHTML = data.table[0].tgl_surat;
+                
+                if(data.table[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data.table[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else{
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }
 
+                document.getElementById("teruskan-sifat").innerHTML  = sifat;
+                
                 loadingPage(false);
                 $("#kt_modal_teruskan").modal("show");
             }
@@ -698,7 +737,6 @@ $(document).ready(function(){
         var btn = document.querySelector(".save_surat_masuk");
         btn.setAttribute("data-kt-indicator", "on");
         btn.setAttribute("disabled","disabled");
-        console.log(document.getElementById("rahasia").checked);
         var formData = new FormData(document.getElementById("kt_modal_add_surat_masuk_form"));        
             $.ajax({
                 url:`{{route('transaksi.surat_masuk.save')}}`,
@@ -718,8 +756,9 @@ $(document).ready(function(){
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
+                        let err_kerahasiaan = data.errors.kerahasiaan  ? `<li>${data.errors.kerahasiaan}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim_surat+err_klasifikasi+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";  
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomor_surat+err_pengirim_surat+err_klasifikasi+err_pengirim+err_perihal+err_tgl_surat+err_file_surat+err_kerahasiaan+"</div></div>";  
                         document.querySelector(".save_surat_masuk").setAttribute("data-kt-indicator", "off");
                         document.querySelector(".save_surat_masuk").removeAttribute("disabled");                       
                         return false;
@@ -767,7 +806,9 @@ $(document).ready(function(){
                 let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
                 $("#tujuan").val(id_penerima).trigger('change');
                 fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
-                document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
+                console.log('kerahasiaan ',data.table[0].kerahasiaan)
+                document.add_surat_masuk_form.kerahasiaan[data.table[0].kerahasiaan].checked = true;
+                
                 loadingPage(false);
                 $("#kt_modal_add_surat_masuk").modal("show");
             }

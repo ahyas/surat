@@ -76,7 +76,7 @@
                                                     <td><span class="fs-6" id="naikan-tgl_surat"></span></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
+                                                    <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
                                                     <td><span class="fs-6" id="naikan-rahasia"></span></td>
                                                 </tr>
                                             </table>
@@ -163,7 +163,7 @@
                                                 <td><span class="fs-6" id="detail-tgl_surat"></span></td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
+                                                <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
                                             </tr>
                                         </table>
@@ -402,8 +402,10 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full['rahasia'] == 'true'){
-                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
+                    if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 1){
+                        var a = `<span class="badge badge-light-warning">Rahasia</span>`;
                     }else{
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
@@ -641,7 +643,14 @@ $(document).ready(function(){
                 document.getElementById("naikan-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("naikan-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("naikan-perihal").innerHTML = data[0].perihal;
-                document.getElementById("naikan-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                if(data[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else{
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }
+                document.getElementById("naikan-rahasia").innerHTML = sifat;
                 document.getElementById("naikan-tgl_surat").innerHTML = data[0].tgl_surat;
                 loadingPage(false);
                 $("#kt_modal_naikan").modal("show");
@@ -711,7 +720,14 @@ $(document).ready(function(){
                     document.getElementById("nomor_surat").innerHTML = data.table[0].no_surat;
                     document.getElementById("pengirim").innerHTML = data.table[0].pengirim
                     document.getElementById("perihal").innerHTML = data.table[0].perihal;
-                    document.getElementById("rahasia").innerHTML = data.table[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                    if(data.table[0].kerahasiaan == 0){
+                        var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                    }else if(data.table[0].kerahasiaan == 1){
+                        var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                    }else{
+                        var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                    }
+                    document.getElementById("rahasia").innerHTML = sifat;
                     document.getElementById("tgl_surat").innerHTML = data.table[0].tgl_surat;
 
                     loadingPage(false);
@@ -745,7 +761,14 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                if(data[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else{
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }
+                document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
                 document.getElementById("detail-user_tindak_lanjut").innerHTML = data[0].tindaklanjut_oleh ? data[0].tindaklanjut_oleh : ' - ';
                 document.getElementById("detail-tgl_tindak_lanjut").innerHTML = data[0].tgl_tindak_lanjut ? data[0].tgl_tindak_lanjut : ' - ';

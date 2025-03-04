@@ -98,7 +98,7 @@ class SuratMasukController extends Controller
             case 5:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("surat_masuk.created_by", Auth::user()->id)
-                ->where("surat_masuk.rahasia", 'false')
+                ->where("surat_masuk.kerahasiaan", 0)
                 ->whereNull("surat_masuk.id_status")
                 ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
                 ->select(
@@ -132,7 +132,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -149,7 +149,7 @@ class SuratMasukController extends Controller
                 ->groupBy("surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -174,7 +174,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -202,7 +202,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -230,7 +230,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -259,7 +259,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -284,7 +284,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
-                    "surat_masuk.rahasia",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
@@ -311,7 +311,7 @@ class SuratMasukController extends Controller
             "surat_masuk.id",
             "surat_masuk.no_surat",
             "surat_masuk.pengirim",
-            "surat_masuk.rahasia",
+            "surat_masuk.kerahasiaan",
             "surat_masuk.perihal",
             "surat_masuk.tgl_surat",
             "surat_masuk.file",
@@ -368,7 +368,7 @@ class SuratMasukController extends Controller
         ->select(
             "surat_masuk.no_surat",
             "surat_masuk.pengirim",
-            "surat_masuk.rahasia",
+            "surat_masuk.kerahasiaan",
             "surat_masuk.perihal",
             "surat_masuk.tgl_surat",
             "surat_masuk.id_status",
@@ -778,10 +778,8 @@ class SuratMasukController extends Controller
             }
         }
 
-        if(empty($request["rahasia"])){
-            $rahasia = 'false';
-        }else{
-            $rahasia = 'true';
+        if($request["kerahasiaan"] == ""){
+            $errors['kerahasiaan'] = 'Sifat surat tidak boleh kosong';
         }
 
         if (!empty($errors)) {
@@ -804,7 +802,7 @@ class SuratMasukController extends Controller
                 "klasifikasi_id"=>$request["klasifikasi"],
                 "pengirim"=>$request["pengirim"],
                 "perihal"=>$request["perihal"],
-                "rahasia"=>$rahasia,
+                "kerahasiaan"=>$request["kerahasiaan"],
                 "tgl_surat"=>$request["tgl_surat"],
                 "tahun"=>$tahun,
                 "created_by"=>Auth::user()->id,
@@ -824,7 +822,7 @@ class SuratMasukController extends Controller
             "surat_masuk.pengirim",
             "surat_masuk.perihal",
             "surat_masuk.tgl_surat",
-            "surat_masuk.rahasia",
+            "surat_masuk.kerahasiaan",
             "surat_masuk.is_internal",
             "ref_klasifikasi.id AS id_klasifikasi"
         )->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
@@ -913,7 +911,7 @@ class SuratMasukController extends Controller
                         "pengirim"=>$request["pengirim"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
-                        "rahasia"=>isset($request["rahasia"]) ? 'true' : 'false',
+                        "kerahasiaan"=>$request["kerahasiaan"],
                         "file"=>$fileName
                     ]
                 );
@@ -929,7 +927,7 @@ class SuratMasukController extends Controller
                         "pengirim"=>$request["pengirim"],
                         "perihal"=>$request["perihal"],
                         "tgl_surat"=>$request["tgl_surat"],
-                        "rahasia"=>isset($request["rahasia"]) ? 'true' : 'false',
+                        "kerahasiaan"=>$request["kerahasiaan"],
                     ]
                 );
             }
