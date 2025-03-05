@@ -836,7 +836,9 @@ class SuratMasukController extends Controller
         $count_disposisi=DB::table("detail_transaksi_surat_masuk")
         ->where("id_surat", $id)
         ->where("id_asal", Auth::user()->id)
-        ->where("status", 1)
+        ->where(function($query){
+            return $query->where('status', 1)->orWhere('status', 5);
+        })
         ->count();
 
         return response()->json(["table"=>$table,"tujuan_surat"=>$tujuan_surat, "count_disposisi"=>$count_disposisi]);

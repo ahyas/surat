@@ -73,7 +73,7 @@
                                                 <td><span class="fs-6" id="detail-tgl_surat"></span></td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Rahasia ?</td>
+                                                <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
                                             </tr>
                                         </table>
@@ -170,10 +170,8 @@
                                             <input type="text" name="tgl_surat" id="tgl_surat" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="Tanggal surat" disabled/>
                                         </div>
                                         <div class="fv-row mb-7">
-                                            <div class="form-check">
-                                                <input type="checkbox" name="rahasia" class="form-check-input" id="rahasia" disabled>
-                                                <label class="fw-semibold fs-6 mb-2" for="rahasia">Rahasia</label>
-                                            </div>
+                                            <label class="fw-semibold fs-6 mb-2">Sifat surat</label>
+                                            <span class="fs-6" id="rahasia"></span>
                                         </div>
                                         <div class="fv-row mb-7">
                                             <label class="required fw-semibold fs-6 mb-2">Disposisi kepada</label>
@@ -255,8 +253,10 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full['rahasia'] == 'true'){
-                        var a = `<span class="badge badge-light-danger">Rahasia</span>`;
+                    if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 1){
+                        var a = `<span class="badge badge-light-warning">Rahasia</span>`;
                     }else{
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
@@ -423,16 +423,29 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
-                document.getElementById("preview_disposisi").src = url; 
-                $("input[name='nomor_surat']").val(data.table[0].no_surat);
-                $("input[name='pengirim']").val(data.table[0].pengirim);
-                $("#perihal").val(data.table[0].perihal);
-                let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
-                $("#tujuan").val(id_penerima).trigger('change');    
-                fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
-                document.getElementById("rahasia").checked = data.table[0].rahasia == 'true' ? true : false;
-                loadingPage(false);
-                $("#kt_modal_add_disposisi").modal("show");
+                console.log(data)
+                if(data.count_disposisi == 0){
+                    document.getElementById("preview_disposisi").src = url; 
+                    $("input[name='nomor_surat']").val(data.table[0].no_surat);
+                    $("input[name='pengirim']").val(data.table[0].pengirim);
+                    $("#perihal").val(data.table[0].perihal);
+                    let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
+                    $("#tujuan").val(id_penerima).trigger('change');    
+                    fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
+                    if(data.table[0].kerahasiaan == 0){
+                            var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                        }else if(data.table[0].kerahasiaan == 1){
+                            var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                        }else{
+                            var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                        }
+                        document.getElementById("rahasia").innerHTML = sifat;
+                    loadingPage(false);
+                    $("#kt_modal_add_disposisi").modal("show");
+                }else{
+                    loadingPage(false);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi / diturunkan`);
+                }
             }
         });
         
@@ -459,7 +472,14 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                if(data[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else{
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }
+                document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
                 document.getElementById("detail-user_tindak_lanjut").innerHTML = data[0].tindaklanjut_oleh ? data[0].tindaklanjut_oleh : ' - ';
                 document.getElementById("detail-tgl_tindak_lanjut").innerHTML = data[0].tgl_tindak_lanjut ? data[0].tgl_tindak_lanjut : ' - ';
