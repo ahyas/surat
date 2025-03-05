@@ -63,7 +63,7 @@ class Controller extends BaseController
                         case 5 :
                             $count_onprocessed = DB::table("transaksi_surat_masuk AS surat_masuk")
                             ->where("surat_masuk.created_by", Auth::user()->id)
-                            ->where("surat_masuk.rahasia", 'false')
+                            
                             ->whereNull("surat_masuk.id_status")
                             ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
                             ->leftJoin("users", "surat_masuk.created_by","=","users.id")

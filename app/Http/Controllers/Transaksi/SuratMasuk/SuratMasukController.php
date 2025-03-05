@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use DB;
 use Auth;
 use PDF;
+use PhpParser\Node\Expr\Isset_;
 
 class SuratMasukController extends Controller
 {
@@ -98,7 +99,9 @@ class SuratMasukController extends Controller
             case 5:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("surat_masuk.created_by", Auth::user()->id)
-                ->where("surat_masuk.kerahasiaan", 0)
+                ->where(function($query){
+                    return $query->where('surat_masuk.kerahasiaan', null)->orWhere('surat_masuk.kerahasiaan', 0);
+                })
                 ->whereNull("surat_masuk.id_status")
                 ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
                 ->select(
@@ -107,6 +110,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.pengirim",
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
+                    "surat_masuk.kerahasiaan",
                     "surat_masuk.file",
                     "users.name AS dibuat_oleh",
                     "surat_masuk.id_status",
@@ -777,9 +781,15 @@ class SuratMasukController extends Controller
                 $errors['file_surat'] = 'Jenis file harus PDF';
             }
         }
-
-        if($request["kerahasiaan"] == ""){
-            $errors['kerahasiaan'] = 'Sifat surat tidak boleh kosong';
+        
+        if(Auth::user()->getRole()->id_role !== 5 ){
+            if($request["kerahasiaan"] == ""){
+                $errors['kerahasiaan'] = 'Sifat surat tidak boleh kosong';
+            }else{
+                $kerahasiaan = $request["kerahasiaan"];
+            }
+        }else{
+            $kerahasiaan = 0;
         }
 
         if (!empty($errors)) {
@@ -802,7 +812,7 @@ class SuratMasukController extends Controller
                 "klasifikasi_id"=>$request["klasifikasi"],
                 "pengirim"=>$request["pengirim"],
                 "perihal"=>$request["perihal"],
-                "kerahasiaan"=>$request["kerahasiaan"],
+                "kerahasiaan"=>$kerahasiaan,
                 "tgl_surat"=>$request["tgl_surat"],
                 "tahun"=>$tahun,
                 "created_by"=>Auth::user()->id,

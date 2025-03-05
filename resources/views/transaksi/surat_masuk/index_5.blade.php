@@ -282,7 +282,11 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full['rahasia'] !== 'true'){
+                    if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 1){
+                        var a = `<span class="badge badge-light-warning">Rahasia</span>`;
+                    }else{
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }
 
@@ -512,6 +516,7 @@ $(document).ready(function(){
             contentType: false,
             processData: false,
             success:function(data){
+            console.log(data.errors)
                 if (!data.success) {
                     let err_nomor_surat = data.errors.nomor_surat  ? `<li>${data.errors.nomor_surat}</li>` : ``;
                     let err_pengirim_surat = data.errors.pengirim_surat  ? `<li>${data.errors.pengirim_surat}</li>` : ``;
