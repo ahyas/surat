@@ -119,13 +119,14 @@ Auth::routes();
         Route::post('/transaksi/surat_masuk/{id}/update', 'Transaksi\SuratMasuk\SuratMasukController@update')->name('transaksi.surat_masuk.update');
         Route::get('/transaksi/surat_masuk/{id}/delete', 'Transaksi\SuratMasuk\SuratMasukController@delete')->name('transaksi.surat_masuk.delete');
         Route::get('/transaksi/surat_masuk/{id}/detail', 'Transaksi\SuratMasuk\SuratMasukController@detail')->name('transaksi.surat_masuk.detail');
+
+        Route::get('/transaksi/surat_masuk/{id}/get_last_penerima', 'Transaksi\SuratMasuk\SuratMasukController@getLastPenerima');
         //End::Transaksi surat masuk
 
         //Begin::disposisi
         Route::get('/transaksi/surat_masuk/disposisi/{id}/daftar_disposisi', 'Transaksi\SuratMasuk\SuratMasukController@daftarDisposisi');
         Route::post('/transaksi/surat_masuk/disposisi/kirim', 'Transaksi\SuratMasuk\SuratMasukController@kirim')->name('transaksi.surat_masuk.disposisi.kirim');
         Route::get('/transaksi/surat_masuk/disposisi/{id}/lembar_disposisi/print', 'Transaksi\SuratMasuk\SuratMasukController@printDisposisi');
-
         //End::Disposisi
 
         //Begin::teruskan

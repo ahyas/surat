@@ -81,6 +81,11 @@ class SuratMasukController extends Controller
 
                 return view('transaksi/surat_masuk/index_17', compact("user", "petunjuk"));
             break;
+
+            //login sebagai end user
+            case 18:
+                return view('transaksi/surat_masuk/index_18', compact("user", "petunjuk"));
+            break;
             //login sebagai admin monitoring
             case 101:
                 return view('transaksi/surat_masuk/index_101');
@@ -99,11 +104,8 @@ class SuratMasukController extends Controller
             case 5:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("surat_masuk.created_by", Auth::user()->id)
-                ->where(function($query){
-                    return $query->where('surat_masuk.kerahasiaan', null)->orWhere('surat_masuk.kerahasiaan', 0);
-                })
                 ->whereNull("surat_masuk.id_status")
-                ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
+                ->where('surat_masuk.kerahasiaan', 0)
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -131,7 +133,6 @@ class SuratMasukController extends Controller
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
                 ->whereNotIn("surat_masuk.id_status", [3])
-                //->where("detail_surat_masuk.status",2)
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -142,6 +143,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    "detail_surat_masuk.id_penerima",
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
@@ -158,6 +160,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "detail_surat_masuk.id_penerima",
                     "surat_masuk.created_at",
                     "surat_masuk.is_internal",
                     "ref_klasifikasi.kode",
@@ -268,11 +271,44 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "surat_masuk.is_internal",
+                    "ref_klasifikasi.kode AS kode_klasifikasi",
+                    "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                     "users.name AS dari"
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
+                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
+                ->orderBy("surat_masuk.created_at","DESC")
+                ->get();
+
+                return response()->json($table);
+            break;
+
+            //login sebagai end user
+            case 18:
+                $table=DB::table("transaksi_surat_masuk AS surat_masuk")
+                ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                ->whereNotIn("surat_masuk.id_status",[3])
+                ->select(
+                    "surat_masuk.id",
+                    "surat_masuk.no_surat",
+                    "surat_masuk.pengirim",
+                    "surat_masuk.kerahasiaan",
+                    "surat_masuk.perihal",
+                    "surat_masuk.tgl_surat",
+                    "surat_masuk.file",
+                    "surat_masuk.is_internal",
+                    "ref_klasifikasi.kode AS kode_klasifikasi",
+                    "ref_klasifikasi.deskripsi AS klasifikasi",
+                    'detail_surat_masuk.status AS status_id',
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
+                    "surat_masuk.id_status",
+                    DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                )
+                ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
                 ->orderBy("surat_masuk.created_at","DESC")
                 ->get();
 
@@ -298,13 +334,30 @@ class SuratMasukController extends Controller
                     "surat_masuk.is_internal",
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
+                    DB::raw('MAX(detail_surat_masuk.created_at)')
                 )
                 ->leftJoin("users", "surat_masuk.created_by","=","users.id")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
+                ->leftjoin('detail_transaksi_surat_masuk AS detail_surat_masuk', 'surat_masuk.id', 'detail_surat_masuk.id_surat')
+                ->groupBy(
+                    'detail_surat_masuk.id_surat',
+                    'surat_masuk.id',
+                    'surat_masuk.no_surat',
+                    'surat_masuk.pengirim',
+                    'surat_masuk.kerahasiaan',
+                    'surat_masuk.perihal',
+                    'surat_masuk.tgl_surat',
+                    'surat_masuk.file',
+                    'users.name',
+                    'surat_masuk.id_status',
+                    'surat_masuk.is_internal',
+                    'ref_klasifikasi.kode',
+                    'ref_klasifikasi.deskripsi',
+                )
                 ->orderBy("surat_masuk.created_at","DESC")
                 ->get();
 
-                return response()->json($table);
+                return response()->json(['table'=>$table]);
         }
     }
 
@@ -842,7 +895,7 @@ class SuratMasukController extends Controller
         ->select("id_penerima")
         ->where("id_surat", $id)
         ->get();
-
+        //periksa apakanh surat sudah di disposisi
         $count_disposisi=DB::table("detail_transaksi_surat_masuk")
         ->where("id_surat", $id)
         ->where("id_asal", Auth::user()->id)
@@ -851,7 +904,47 @@ class SuratMasukController extends Controller
         })
         ->count();
 
-        return response()->json(["table"=>$table,"tujuan_surat"=>$tujuan_surat, "count_disposisi"=>$count_disposisi]);
+        //periksa penerima surat terakhir
+        $penerima_terakhir = DB::table("detail_transaksi_surat_masuk")
+        ->where('id_surat', $id)
+        ->select(
+            'id_penerima AS id_last_penerima',
+            'status',
+            'created_at',
+        )
+        ->orderBy('created_at', 'DESC')
+        ->first();
+
+
+        return response()->json(["table"=>$table,"tujuan_surat"=>$tujuan_surat, "count_disposisi"=>$count_disposisi, 'penerima_terakhir'=>$penerima_terakhir]);
+    }
+
+    public function getLastPenerima($id_surat){
+         //periksa penerima surat terakhir
+         $no_surat = DB::table("transaksi_surat_masuk")
+         ->where('id', $id_surat)
+         ->select('no_surat')
+         ->first();
+
+         $count_disposisi=DB::table("detail_transaksi_surat_masuk")
+        ->where("id_surat", $id_surat)
+        ->where("id_asal", Auth::user()->id)
+        ->where(function($query){
+            return $query->where('status', 1)->orWhere('status', 5);
+        })
+        ->count();
+        
+         $penerima_terakhir = DB::table("detail_transaksi_surat_masuk")
+         ->where('id_surat', $id_surat)
+         ->select(
+             'id_penerima AS id_last_penerima',
+             'status',
+             'created_at',
+         )
+         ->orderBy('created_at', 'DESC')
+         ->first();
+
+        return response()->json(["count_disposisi"=>$count_disposisi, 'penerima_terakhir'=>$penerima_terakhir, 'no_surat'=>$no_surat->no_surat]);
     }
 
     public function update(Request $request, $id){

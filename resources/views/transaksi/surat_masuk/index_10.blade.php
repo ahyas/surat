@@ -57,7 +57,10 @@
                                         <table class="table table-sm">
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
-                                                <td><span class="fs-6" id="detail-nomor_surat"></span></td>
+                                                <td>
+                                                    <span class="fs-6" id="detail-nomor_surat"></span>
+                                                    <span class="fs-6" id="detail-klasifikasi"></span>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
@@ -314,8 +317,10 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
                     }else if(full['kerahasiaan'] == 1){
                         var a = `<span class="badge badge-light-warning">Rahasia</span>`;
-                    }else{
+                    }else if(full['kerahasiaan'] == 0){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = '';
                     }
 
                     if(full['is_internal'] == 1){
@@ -344,7 +349,7 @@ $(document).ready(function(){
                     }else if(full['is_internal'] == 2){
                         var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
                     }else{
-                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        var a = ``;
                     }
 
                     return `
@@ -516,7 +521,7 @@ $(document).ready(function(){
                     $("#kt_modal_add_disposisi").modal("show");
                 }else{
                     loadingPage(false);
-                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sedang di disposisi dan masih dalam proses. Lihat detail surat untuk mengetahui lebih lanjut.`);
                 }
             }
         });
@@ -539,6 +544,13 @@ $(document).ready(function(){
                 }else{
                     document.getElementById("detail-tindak_lanjut").style.display = "none";
                 }
+
+                if(data[0].is_internal == 1){
+                    document.getElementById("detail-klasifikasi").innerHTML = '<span>'+data[0].kode_klasifikasi+' - '+data[0].klasifikasi+'</span>';
+                }else{
+                    document.getElementById("detail-klasifikasi").innerHTML = '';
+                }
+                
                 showDaftarDisposisi(id_surat);
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
@@ -548,8 +560,10 @@ $(document).ready(function(){
                     var sifat = '<span class="badge badge-light-success">Biasa</span>';
                 }else if(data[0].kerahasiaan == 1){
                     var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
-                }else{
+                }else if(data[0].kerahasiaan == 2){
                     var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }else{
+                    var sifat = '<span class="badge badge-light-secondary">Undefined</span>';
                 }
                 document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
@@ -586,7 +600,7 @@ $(document).ready(function(){
                     $("#kt_modal_add_tindaklanjut").modal("show");
                 }else{
                     loadingPage(false);
-                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sedang di disposisi dan masih dalam proses. Lihat detail surat untuk mengetahui lebih lanjut.`);
                 }
             }
         });

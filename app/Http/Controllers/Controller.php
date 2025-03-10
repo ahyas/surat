@@ -259,21 +259,31 @@ class Controller extends BaseController
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
                                 ],
                                 'Arsip'=>[
-                                    'Surat Masuk' => route('arsip.surat_masuk.index')
+                                    'Semua surat' =>route('arsip.semua_surat.index')
                                 ]
                             ];
                             
                             break;
                         //login sebagai end user
                         case 18 :
-                            $count_unprocessed = DB::table("transaksi_surat_masuk")->where("id_status",'!=', 3)->count();
-                            $count_onprocessed = DB::table("transaksi_surat_masuk")->whereNull("id_status")->count();
-                            $tot_count = $count_unprocessed + $count_onprocessed;
+          
+                            $table=DB::table("transaksi_surat_masuk AS surat_masuk")
+                            ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                            ->whereNotIn("surat_masuk.id_status",[3])
+                            ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
+                            ->get();
+
+                            $tot_count = $table->count();
+
                             $tot_count_surat_keluar = 0;
                             $tot_count_esign = 0;
 
                             $menu = 
                             [
+                                'Transaksi'=>[
+                                    'Surat Masuk' => route('transaksi.surat_masuk')
+                                ],
                                 'Arsip'=>[
                                     'Semua surat' =>route('arsip.semua_surat.index')
                                 ]

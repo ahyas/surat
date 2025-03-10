@@ -357,6 +357,58 @@
         <!--end::Modal dialog-->
     </div>
     <!--End modal teruskan -->
+
+    <!--Start::tindak lanjut-->
+    <div class="modal fade" id="kt_modal_add_tindaklanjut" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <div class="modal-content">
+                <!--begin::Modal header-->
+                <div class="modal-header">
+                    <div id="tindaklanjut-title"></div>
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                    </div>
+                </div>
+                <div class="modal-body px-5 my-7">
+                
+                    <form id="kt_modal_add_tindaklanjut_form" name="add_tindaklanjut_form" class="form" action="#" enctype="multipart/form-data">
+                    {{csrf_field()}}
+                        <!--begin::Scroll-->
+                        <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
+
+                            <div id="tindaklanjut-notification"></div>
+
+                            <input type="hidden" name="id_surat_masuk" class="form-control" />
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2">Keterangan</label>
+                                <textarea class="form-control form-control-solid" placeholder="Keterangan tindak lanjut" id="tindaklanjut_catatan" name="tindaklanjut_catatan" rows="3"></textarea>
+                            </div>
+                            <div class="fv-row mb-7">
+                                <label class="required fw-semibold fs-6 mb-2" id="file_tindaklanjut">File eviden</label>
+                                <input class="form-control form-control-solid mb-3 mb-lg-0" name="file_tindaklanjut" type="file" id="file_tindaklanjut" required>
+                            </div>
+                        </div>
+                        <!--end::Scroll-->
+                        <!--begin::Actions-->
+                        <div class="text-center pt-10">
+                            <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary save_tindaklanjut" id="save_tindaklanjut" data-kt-indicator="off">
+                                <span class="indicator-progress"> 
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                Save
+                            </button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end::Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
+    </div>
+    <!--End::Modal tindak lanjut-->
 @endsection
 @push('scripts')
 
@@ -375,7 +427,7 @@ $(document).ready(function(){
     $("#tb_surat_masuk").DataTable({
         ajax        : {
             url:"{{route('transaksi.surat_masuk.get_data')}}",
-            dataSrc:""
+            dataSrc:"table"
         },
         serverSide  : false,
         ordering    :false,
@@ -392,8 +444,10 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
                     }else if(full['kerahasiaan'] == 1){
                         var a = `<span class="badge badge-light-warning">Rahasia</span>`;
-                    }else{
+                    }else if(full['kerahasiaan'] == 0){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = '';
                     }
 
                     if(full['is_internal'] == 1){
@@ -422,7 +476,7 @@ $(document).ready(function(){
                     }else if(full['is_internal'] == 2){
                         var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
                     }else{
-                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        var a = ``;
                     }
 
                     return `
@@ -480,10 +534,16 @@ $(document).ready(function(){
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     var file = full["file"];
-                    if(full['id_status'] == 1 || full['id_status'] == 2 || full['id_status'] == 3 || full['id_status'] == 4 || full['id_status'] == 5){
+                    if(full['id_status'] == 1 || full['id_status'] == 3 || full['id_status'] == 4 || full['id_status'] == 5){
                         var btn = 'disabled';
+                        var btn_teruskan = '';
+                    }
+                    else if(full['id_status'] == 2){
+                        var btn = 'disabled';
+                        var btn_teruskan = 'disabled';
                     }else{
                         var btn = '';
+                        var btn_teruskan = 'disabled';
                     }
 
                     return`<div class="dropdown">
@@ -501,7 +561,12 @@ $(document).ready(function(){
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${btn}" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn ${btn_teruskan}" id="tindaklanjut_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Tindak lanjut</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-primary ${btn}" id="edit_surat_masuk" data-id_surat_masuk='${data}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
@@ -547,8 +612,10 @@ $(document).ready(function(){
                     var sifat = '<span class="badge badge-light-success">Biasa</span>';
                 }else if(data[0].kerahasiaan == 1){
                     var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
-                }else{
+                }else if(data[0].kerahasiaan == 2){
                     var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }else{
+                    var sifat = '<span class="badge badge-light-secondary">Undefined</span>';
                 }
                 document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
@@ -565,6 +632,64 @@ $(document).ready(function(){
                 console.log(data);
             }
         });
+    });
+
+    $("body").on("click","#tindaklanjut_surat_masuk", function(){
+        var id_surat = $(this).data("id_surat_masuk");
+
+        $.ajax({
+            url:`{{url('/transaksi/surat_masuk/${id_surat}/get_last_penerima')}}`,
+            type:"GET",
+            success:function(data){
+                console.log(data)
+                if(data.count_disposisi == 0 && data.penerima_terakhir.id_last_penerima == "{{auth()->user()->id}}"){      
+                    document.getElementById("tindaklanjut-title").innerHTML = `<h2 class="fw-bold">Add Tindak Lanjut</h2>`;
+                    $("input[name='id_surat_masuk']").val(id_surat);
+                    console.log(id_surat);
+                    $("#kt_modal_add_tindaklanjut").modal("show");
+                }else{
+                    loadingPage(false);
+                    alert(`Error: Surat Nomor ${data.no_surat} sedang di disposisi dan masih dalam proses. Lihat detail surat untuk mengetahui lebih lanjut.`);
+                }
+            }
+        });
+        
+    });
+
+    $("#save_tindaklanjut").click(function(e){
+        e.preventDefault();
+        setButtonSpinner(".save_tindaklanjut", "on");
+        var formData = new FormData(document.getElementById("kt_modal_add_tindaklanjut_form"));  
+        $.ajax({
+            url:"{{route('transaksi.surat_masuk.tindak_lanjut')}}",
+            type:"POST",
+            dataType:"JSON",
+            data:formData,
+            cache:false,
+            contentType: false,
+            processData: false,
+            success:function(data){
+                console.log(data);
+
+                if(!data.success){
+                    let err_catatan = data.message.err_catatan  ? `<li>${data.message.err_catatan}</li>` : ``;
+                    let err_file = data.message.err_file_tindaklanjut  ? `<li>${data.message.err_file_tindaklanjut}</li>` : ``;
+
+                    document.getElementById("tindaklanjut-notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='tindaklanjut-notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_catatan+err_file+"</div></div>";  
+
+                    setButtonSpinner(".save_tindaklanjut", "off");
+                    
+                    return false;
+                }
+
+                $("#kt_modal_add_tindaklanjut").modal("hide");
+                setButtonSpinner(".save_tindaklanjut", "off");
+                loadingPage(true);
+                $("#tb_surat_masuk").DataTable().ajax.reload(null, false);
+                alert("Surat telah ditindaklanjuti dan akan di arsipkan")
+
+            }
+        })
     });
 
     $("body").on("click", "#teruskan_surat_masuk", function(){
@@ -807,7 +932,10 @@ $(document).ready(function(){
                 $("#tujuan").val(id_penerima).trigger('change');
                 fp.setDate(data.table[0].tgl_surat, true, "Y-m-d");
                 console.log('kerahasiaan ',data.table[0].kerahasiaan)
-                document.add_surat_masuk_form.kerahasiaan[data.table[0].kerahasiaan].checked = true;
+
+                if(data.table[0].kerahasiaan !== null){
+                    document.add_surat_masuk_form.kerahasiaan[data.table[0].kerahasiaan].checked = true;
+                }
                 
                 loadingPage(false);
                 $("#kt_modal_add_surat_masuk").modal("show");
@@ -893,6 +1021,19 @@ $(document).ready(function(){
             KTApp.hidePageLoading();
             loadingEl.remove();
         }
+    }
+
+    function setButtonSpinner(query_selector, status){
+        var btn = document.querySelector(query_selector);
+        btn.setAttribute("data-kt-indicator", status);
+
+        if(status == "off"){
+            btn.removeAttribute("disabled");
+        }else{
+            btn.setAttribute("disabled","disabled");
+        }
+
+        return btn;
     }
 
 });

@@ -21,6 +21,7 @@
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th>No. Surat</th>
+                        <th>Jenis surat</th>
                         <th >Perihal / Isi ringkas</th>
                         <!--<th class="min-w-150px">Tujuan / Penerima</th>-->
                         <th class="min-w-125px">Tanggal Surat</th>
@@ -349,10 +350,20 @@ $(document).ready(function(){
         [
             {data:"no_surat", 
                 mRender:function(data, type, full){
-                    if(full["jenis_surat"] == 1){
-                        var jenis_surat = `<span class="badge badge-light-success" style="margin-bottom:10px">Surat Masuk</span>`;
+                    if(full['kerahasiaan'] == 2){
+                        var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 1){
+                        var a = `<span class="badge badge-light-warning">Rahasia</span>`;
+                    }else if(full['kerahasiaan'] == 0){
+                        var a = `<span class="badge badge-light-success">Biasa</span>`;
                     }else{
-                        var jenis_surat = `<span class="badge badge-light-info" style="margin-bottom:10px">Surat Keluar</span>`;
+                        var a = '';
+                    }
+
+                    if(full['is_internal'] == 1){
+                        var b = `<span class="badge badge-light-default">${full['kode_klasifikasi']} - ${full['klasifikasi']}</span>`;
+                    }else{
+                        var b = '';
                     }
 
                     if(full["deskripsi"]){
@@ -361,29 +372,25 @@ $(document).ready(function(){
                         var deskripsi = '';
                     }
                     return`<div class="d-flex flex-column">
+                            <span>${b}</span>
                             <div style='white-space: nowrap' class="text-gray-800 mb-1">${data}</div> 
+                            <span>${a}</span>
                             ${deskripsi}                      
-                            </div>${jenis_surat}`;
+                            </div>`;
+                }
+            },
+            {data:"jenis_surat",
+                mRender:function(data, type, full){
+                    if(data == 1){
+                        var jenis_surat = `<span class="badge badge-light-success" style="margin-bottom:10px">Surat Masuk</span>`;
+                    }else{
+                        var jenis_surat = `<span class="badge badge-light-info" style="margin-bottom:10px">Surat Keluar</span>`;
+                    }
+
+                    return`${jenis_surat}`;
                 }
             },
             {data:"perihal"},
-            /*{data:"jumlah_tembusan", 
-                mRender:function(data, type, full){
-                    if(full["internal"] == 1){
-                        var internal = `<span class="badge badge-light-primary" style="margin-bottom:10px">Internal</span>`;
-                        var tujuan = `<a href="javascript:void(0)" id="daftar_tujuan" data-id_surat='${full['id']}'>
-                        <span class="badge badge-info">${data} orang</span></a>`;
-                    }else if(full["internal"] == 2){
-                        var internal = `<span class="badge badge-light-danger" style="margin-bottom:10px">External</span>` ;
-                        var tujuan = `<span style="color:white; font-size:11px; font-weight:600; cursor: pointer;" id="tujuan_eksternal" data-id_surat='${full['id']}'><div class="bg-info" style="padding:6px; border-radius:5px">${full['tujuan']}</div></span>`;
-                    }else{
-                        var internal = "";
-                        var tujuan = "Lihat detail";
-                    }
-                    return internal+' <br>'+tujuan;
-                    
-                }
-            },*/
             {data:"tgl_surat"},
             {data:"status",
                 mRender:function(data, type, full){
@@ -408,7 +415,27 @@ $(document).ready(function(){
                     }
                 }
             },
-            {data:"pengirim"},
+            {data:"pengirim",
+                mRender:function(data, type, full){
+                    if(full['jenis_surat'] == 1){
+                        if(full['is_internal'] == 1){
+                            var a = `<span class="badge badge-light-primary">Mahkamah Agung</span>`;
+                        }else if(full['is_internal'] == 2){
+                            var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
+                        }else{
+                            var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        }
+                    }else{
+                        var a = '';
+                    }
+
+                    return `
+                    <div class="d-flex flex-column">
+                        <span>${a}</span>
+                        <span>${data}</span>
+                    </div>`;
+                }
+            },
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     var file = full["file"];

@@ -208,7 +208,7 @@
                                                 <td><span class="fs-6" id="detail-tgl_surat"></span></td>
                                             </tr>
                                             <tr>
-                                                <td class="fw-bold fs-6 text-gray-800">Rahasia?</td>
+                                                <td class="fw-bold fs-6 text-gray-800">Sifat surat</td>
                                                 <td><span class="fs-6" id="detail-rahasia"></span></td>
                                             </tr>
                                         </table>
@@ -316,7 +316,7 @@ $(document).ready(function(){
                     }else if(full['is_internal'] == 2){
                         var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
                     }else{
-                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        var a = ``;
                     }
 
                     return `
@@ -428,7 +428,16 @@ $(document).ready(function(){
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("detail-perihal").innerHTML = data[0].perihal;
-                document.getElementById("detail-rahasia").innerHTML = data[0].rahasia == 'false' ? 'Tidak' : 'Ya';
+                if(data[0].kerahasiaan == 0){
+                    var sifat = '<span class="badge badge-light-success">Biasa</span>';
+                }else if(data[0].kerahasiaan == 1){
+                    var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
+                }else if(data[0].kerahasiaan == 2){
+                    var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }else{
+                    var sifat = '<span class="badge badge-light-secondary">Undefined</span>';
+                }
+                document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
 
                 loadingPage(false);

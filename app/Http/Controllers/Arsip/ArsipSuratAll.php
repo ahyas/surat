@@ -38,9 +38,13 @@ class ArsipSuratAll extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "surat_masuk.is_internal",
+                    "ref_klasifikasi.kode AS kode_klasifikasi",
+                    "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw('COUNT(detail_surat_masuk.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
                 ->groupBy("surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
@@ -49,6 +53,9 @@ class ArsipSuratAll extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "surat_masuk.is_internal",
+                    "ref_klasifikasi.kode",
+                    "ref_klasifikasi.deskripsi",
                     "detail_surat_masuk.id_surat"
                 );
 
@@ -153,21 +160,28 @@ class ArsipSuratAll extends Controller
                     "surat_masuk.pengirim",
                     "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
+                    "surat_masuk.is_internal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "ref_klasifikasi.kode AS kode_klasifikasi",
+                    "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw('COUNT(detail_surat_masuk.id_surat) AS jumlah_tembusan'),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
                 ->groupBy("surat_masuk.id",
                     "surat_masuk.no_surat",
                     "surat_masuk.pengirim",
                     "surat_masuk.kerahasiaan",
                     "surat_masuk.perihal",
+                    "surat_masuk.is_internal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
-                    "detail_surat_masuk.id_surat"
+                    "detail_surat_masuk.id_surat",
+                    "ref_klasifikasi.kode",
+                    "ref_klasifikasi.deskripsi",
                 );
 
                 $table = $table->addSelect(DB::raw("'1' as jenis_surat"));
@@ -276,9 +290,13 @@ class ArsipSuratAll extends Controller
                 "surat_masuk.tgl_surat",
                 "surat_masuk.file",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode AS kode_klasifikasi",
+                "ref_klasifikasi.deskripsi AS klasifikasi",
                 DB::raw('COUNT(detail_surat_masuk.id_surat) AS jumlah_tembusan'),
                 DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status")
             )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
+            ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
             ->groupBy("surat_masuk.id",
                 "surat_masuk.no_surat",
                 "surat_masuk.pengirim",
@@ -287,6 +305,9 @@ class ArsipSuratAll extends Controller
                 "surat_masuk.tgl_surat",
                 "surat_masuk.file",
                 "surat_masuk.id_status",
+                "surat_masuk.is_internal",
+                "ref_klasifikasi.kode",
+                "ref_klasifikasi.deskripsi",
                 "detail_surat_masuk.id_surat"
             );
 

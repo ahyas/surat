@@ -61,7 +61,10 @@
                                             <table class="table table-sm">
                                                 <tr>
                                                     <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
-                                                    <td><span class="fs-6" class="fs-6" id="naikan-nomor_surat"></span></td>
+                                                    <td>
+                                                        <span class="fs-6" id="naikan-nomor_surat"></span>
+                                                        <span class="fs-6" id="naikan-klasifikasi"></span>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
@@ -148,7 +151,10 @@
                                         <table class="table table-sm">
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800" width="120px">Nomor surat</td>
-                                                <td><span class="fs-6" id="detail-nomor_surat"></span></td>
+                                                <td>
+                                                    <span class="fs-6" id="detail-nomor_surat"></span>
+                                                    <span class="fs-6" id="detail-klasifikasi"></span>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td class="fw-bold fs-6 text-gray-800">Pengirim</td>
@@ -406,8 +412,10 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
                     }else if(full['kerahasiaan'] == 1){
                         var a = `<span class="badge badge-light-warning">Rahasia</span>`;
-                    }else{
+                    }else if(full['kerahasiaan'] == 0){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = '';
                     }
 
                     if(full['is_internal'] == 1){
@@ -436,7 +444,7 @@ $(document).ready(function(){
                     }else if(full['is_internal'] == 2){
                         var a = `<span class="badge badge-light-warning">Non Mahkamah Agung</span>`;
                     }else{
-                        var a = `<span class="badge badge-light-danger">Undefined</span>`;
+                        var a = ``;
                     }
 
                     return `
@@ -477,12 +485,13 @@ $(document).ready(function(){
             {data:"id", className: "text-end",
                 mRender:function(data, type, full){
                     var file = full["file"];
+                    var current_user = "{{auth()->user()->id}}";
                     //status disposisi
                     if(full["id_status"] == 1){
                         var btn_naikan = 'disabled';
                         var btn_disposisi = '';
                         var btn_tindaklanjut = 'disabled';
-                        //status diturunkan
+                        //status tindak lanjut
                     }else if(full["id_status"] == 3){
                         var btn_naikan = 'disabled';
                         var btn_disposisi = 'disabled';
@@ -493,7 +502,7 @@ $(document).ready(function(){
                         var btn_disposisi = 'disabled';
                         var btn_tindaklanjut = 'disabled';
                         //status diturunkan
-                    }else if(full["id_status"] == 5){
+                    }else if(full["id_status"] == 5 ){
                         var btn_naikan = 'disabled';
                         var btn_disposisi = '';
                         var btn_tindaklanjut = '';
@@ -580,12 +589,25 @@ $(document).ready(function(){
     }
 
     $("body").on("click","#tindaklanjut_surat_masuk", function(){
-        console.log("tindak lanjut");
-        document.getElementById("tindaklanjut-title").innerHTML = `<h2 class="fw-bold">Add Tindak Lanjut</h2>`;
         var id_surat = $(this).data("id_surat_masuk");
-        $("input[name='id_surat_masuk']").val(id_surat);
-        console.log(id_surat);
-        $("#kt_modal_add_tindaklanjut").modal("show");
+
+        $.ajax({
+            url:`{{url('/transaksi/surat_masuk/${id_surat}/get_last_penerima')}}`,
+            type:"GET",
+            success:function(data){
+                console.log(data)
+                if(data.count_disposisi == 0 && data.penerima_terakhir.id_last_penerima == "{{auth()->user()->id}}"){      
+                    document.getElementById("tindaklanjut-title").innerHTML = `<h2 class="fw-bold">Add Tindak Lanjut</h2>`;
+                    $("input[name='id_surat_masuk']").val(id_surat);
+                    console.log(id_surat);
+                    $("#kt_modal_add_tindaklanjut").modal("show");
+                }else{
+                    loadingPage(false);
+                    alert(`Error: Surat Nomor ${data.no_surat} sedang di disposisi dan masih dalam proses. Lihat detail surat untuk mengetahui lebih lanjut.`);
+                }
+            }
+        });
+        
     });
 
     $("#save_tindaklanjut").click(function(e){
@@ -638,17 +660,26 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
+
+                if(data[0].is_internal == 1){
+                    document.getElementById("naikan-klasifikasi").innerHTML = '<span>'+data[0].kode_klasifikasi+' - '+data[0].klasifikasi+'</span>';
+                }else{
+                    document.getElementById("naikan-klasifikasi").innerHTML = '';
+                }
+
                 showDaftarDisposisi(id_surat);
                 document.getElementById("preview_naikan").src = url;  
                 document.getElementById("naikan-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("naikan-pengirim").innerHTML = data[0].pengirim;
                 document.getElementById("naikan-perihal").innerHTML = data[0].perihal;
-                if(data[0].kerahasiaan == 0){
+                 if(data[0].kerahasiaan == 0){
                     var sifat = '<span class="badge badge-light-success">Biasa</span>';
                 }else if(data[0].kerahasiaan == 1){
                     var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
-                }else{
+                }else if(data[0].kerahasiaan == 2){
                     var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }else{
+                    var sifat = '<span class="badge badge-light-secondary">Undefined</span>';
                 }
                 document.getElementById("naikan-rahasia").innerHTML = sifat;
                 document.getElementById("naikan-tgl_surat").innerHTML = data[0].tgl_surat;
@@ -710,8 +741,8 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
-                console.log(data.count_disposisi);
-                if(data.count_disposisi == 0){      
+                console.log(data);
+                if(data.count_disposisi == 0 && data.penerima_terakhir.id_last_penerima == "{{auth()->user()->id}}"){      
                     
                     let id_penerima = data.tujuan_surat[0] ? data.tujuan_surat[0].id_penerima : "";
                     $("#tujuan").val(id_penerima).trigger('change');
@@ -734,7 +765,7 @@ $(document).ready(function(){
                     $("#kt_modal_add_disposisi").modal("show");
                 }else{
                     loadingPage(false);
-                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sudah di disposisi`);
+                    alert(`Error: Surat Nomor ${data.table[0].no_surat} sedang di disposisi dan masih dalam proses. Lihat detail surat untuk mengetahui lebih lanjut.`);
                 }
             }
         });
@@ -750,13 +781,20 @@ $(document).ready(function(){
             url:`{{url('transaksi/surat_masuk/${id_surat}/detail')}}`,
             type:"GET",
             success:function(data){
-                console.log(data[0].rahasia )
+                console.log(data[0] )
                 showDaftarDisposisi(id_surat);
                 if(data[0].id_status == 3){
                     document.getElementById("detail-tindak_lanjut").style.display = "inline-block";
                 }else{
                     document.getElementById("detail-tindak_lanjut").style.display = "none";
                 }
+
+                if(data[0].is_internal == 1){
+                    document.getElementById("detail-klasifikasi").innerHTML = '<span>'+data[0].kode_klasifikasi+' - '+data[0].klasifikasi+'</span>';
+                }else{
+                    document.getElementById("detail-klasifikasi").innerHTML = '';
+                }
+
                 document.getElementById("preview_detail").src = url;  
                 document.getElementById("detail-nomor_surat").innerHTML = data[0].no_surat;
                 document.getElementById("detail-pengirim").innerHTML = data[0].pengirim;
@@ -765,8 +803,10 @@ $(document).ready(function(){
                     var sifat = '<span class="badge badge-light-success">Biasa</span>';
                 }else if(data[0].kerahasiaan == 1){
                     var sifat = '<span class="badge badge-light-warning">Rahasia</span>';
-                }else{
+                }else if(data[0].kerahasiaan == 2){
                     var sifat = '<span class="badge badge-light-danger">Sangat rahasia</span>'
+                }else{
+                    var sifat = '<span class="badge badge-light-secondary">Undefined</span>';
                 }
                 document.getElementById("detail-rahasia").innerHTML = sifat;
                 document.getElementById("detail-tgl_surat").innerHTML = data[0].tgl_surat;
