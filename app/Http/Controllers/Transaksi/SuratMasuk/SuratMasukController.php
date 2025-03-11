@@ -104,7 +104,6 @@ class SuratMasukController extends Controller
             case 5:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
                 ->where("surat_masuk.created_by", Auth::user()->id)
-                ->whereNull("surat_masuk.id_status")
                 ->where('surat_masuk.kerahasiaan', 0)
                 ->select(
                     "surat_masuk.id",

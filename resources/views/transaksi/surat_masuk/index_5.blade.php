@@ -286,8 +286,10 @@ $(document).ready(function(){
                         var a = `<span class="badge badge-light-danger">Sangat Rahasia</span>`;
                     }else if(full['kerahasiaan'] == 1){
                         var a = `<span class="badge badge-light-warning">Rahasia</span>`;
-                    }else{
+                    }else if(full['kerahasiaan'] == 0){
                         var a = `<span class="badge badge-light-success">Biasa</span>`;
+                    }else{
+                        var a = '';
                     }
 
                     if(full['is_internal'] == 1){
