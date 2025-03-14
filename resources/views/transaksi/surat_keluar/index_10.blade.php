@@ -323,7 +323,6 @@
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
-                        <th>Dibuat Oleh</th>
                         <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
@@ -511,7 +510,6 @@ $(document).ready(function(){
                     }
                 }
             },
-            {data:"dibuat_oleh"},
             {data:"file",
                 mRender:function(data, type, full){
                     if(full['status_esign']){

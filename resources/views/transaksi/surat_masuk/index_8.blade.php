@@ -20,6 +20,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>
+                        <th class="min-w-125px">Diinput pada</th>
                         <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
@@ -471,6 +472,7 @@ $(document).ready(function(){
                     return`<div style='white-space: nowrap'>${data}</div>`
                 }
             },
+            {data:"tanggal_input"},
             {data:"status",
                 mRender:function(data, type, full){
                     if(full['id_status'] == 3){

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Transaksi\SuratMasuk;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
-use Auth;
-use PDF;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\PDF;
 use PhpParser\Node\Expr\Isset_;
 
 class SuratMasukController extends Controller
@@ -116,6 +116,7 @@ class SuratMasukController extends Controller
                     "users.name AS dibuat_oleh",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
@@ -142,6 +143,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "detail_surat_masuk.id_penerima",
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
@@ -159,6 +161,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.id_status",
+                    "surat_masuk.created_at",
                     "detail_surat_masuk.id_penerima",
                     "surat_masuk.created_at",
                     "surat_masuk.is_internal",
@@ -186,6 +189,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
@@ -213,6 +217,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
@@ -242,6 +247,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
@@ -271,6 +277,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.file",
                     "surat_masuk.id_status",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
@@ -299,6 +306,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
                     "surat_masuk.is_internal",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     'detail_surat_masuk.status AS status_id',
@@ -327,6 +335,7 @@ class SuratMasukController extends Controller
                     "surat_masuk.perihal",
                     "surat_masuk.tgl_surat",
                     "surat_masuk.file",
+                    DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "users.name AS dibuat_oleh",
                     "surat_masuk.id_status",
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
@@ -347,6 +356,7 @@ class SuratMasukController extends Controller
                     'surat_masuk.perihal',
                     'surat_masuk.tgl_surat',
                     'surat_masuk.file',
+                    'surat_masuk.created_at',
                     'users.name',
                     'surat_masuk.id_status',
                     'surat_masuk.is_internal',

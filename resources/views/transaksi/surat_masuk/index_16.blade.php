@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header border-0 pt-6">
             <div class="card-title">
-                <p>Surat Masuk</p>
+                <p>Surat Masuks</p>
             </div>
         </div>
         <!--end::Card header-->
@@ -20,6 +20,7 @@
                         <th class="min-w-125px">Pengirim</th>
                         <th >Perihal / Isi ringkas</th>
                         <th class="min-w-125px">Tanggal Surat</th>
+                        <th class="min-w-125px">Diinput pada</th>
                         <th>Dari</th>
                         <th>Status</th>
                         <th class="text-end min-w-125px"></th>
@@ -319,6 +320,7 @@ $(document).ready(function(){
                     return`<div style='white-space: nowrap'>${data}</div>`
                 }
             },
+            {data:"tanggal_input"},
             {data:"dari"},
             {data:"status",
                 mRender:function(data, type, full){
