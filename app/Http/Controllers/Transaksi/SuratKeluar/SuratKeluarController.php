@@ -703,10 +703,10 @@ class SuratKeluarController extends Controller
         }
 
         if($request->hasFile('file_surat')){
-            $allowed = ["pdf", "doc", "docx"];
+            $allowed = ["pdf", "docx"]; //format surat tidak boleh .doc karena tidak terbaca module esign
             $ext = strtolower($request->file_surat->extension());
             if(!in_array($ext, $allowed)){
-                $errors['file_surat'] = 'Jenis file harus PDF, DOC atau DOCX';
+                $errors['file_surat'] = 'Jenis file harus PDF atau DOCX';
             }
         }
 
@@ -989,10 +989,10 @@ class SuratKeluarController extends Controller
         }
 
         if($request->hasFile('file_surat')){
-            $allowed = ["pdf","doc", "docx"];
+            $allowed = ["pdf", "docx"];
             $ext = strtolower($request->file_surat->extension());
             if(!in_array($ext, $allowed)){
-                $errors['file_surat'] = 'Jenis file harus PDF, DOC atau DOCX';
+                $errors['file_surat'] = 'Jenis file harus PDF atau DOCX';
             }
         }
 
