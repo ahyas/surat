@@ -8,7 +8,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use View;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
@@ -132,13 +132,24 @@ class Controller extends BaseController
                             ->whereNotNull("surat_keluar.file")
                             ->count();
 
-                            $tot_count_esign=0;
+                            $nomenklatur = DB::table("users")
+                            ->where('users.id', auth()->user()->id)
+                            ->join("transaksi_nomenklatur_jabatan", 'users.id','transaksi_nomenklatur_jabatan.user_id')
+                            ->select('transaksi_nomenklatur_jabatan.nomenklatur_id')
+                            ->first();
+
+                            $tot_count_esign = DB::table('transaksi_esign')
+                            ->where('transaksi_esign.status', 1)
+                            ->where('transaksi_surat_keluar.id_nomenklatur_jabatan', $nomenklatur->nomenklatur_id)
+                            ->join('transaksi_surat_keluar', 'transaksi_esign.id_surat', 'transaksi_surat_keluar.id')
+                            ->count();
 
                             $menu = 
                             [
                                 'Transaksi'=>[
                                     'Surat Masuk' => route('transaksi.surat_masuk'),
                                     'Surat Keluar' => route('transaksi.surat_keluar'),
+                                    'eSIGN' => route('transaksi.surat_keluar.esign.index'),
                                 ],
                                 'Arsip'=>[
                                     //'Surat Masuk' => route('arsip.surat_masuk.index'),
@@ -225,7 +236,11 @@ class Controller extends BaseController
                             ->count();
                             
                             $tot_count_surat_keluar = 0;
-                            $tot_count_esign = DB::table('transaksi_esign')->where('status', 1)->count();
+                            $tot_count_esign = DB::table('transaksi_esign')
+                            ->where('transaksi_esign.status', 1)
+                            ->where('transaksi_surat_keluar.id_nomenklatur_jabatan', 1)
+                            ->join('transaksi_surat_keluar', 'transaksi_esign.id_surat', 'transaksi_surat_keluar.id')
+                            ->count();
 
                             $menu = 
                             [

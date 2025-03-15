@@ -881,6 +881,13 @@ class SuratKeluarController extends Controller
         //check if surat keluar uses template or not
         if($count_is_template == 0){
 
+             //chek apakah dokumen ditanda tangani digital/ diajukan ttd digital
+            $is_signed = DB::table('transaksi_surat_keluar AS a')
+            ->where('a.id', $id_surat)
+            ->join('transaksi_esign AS b', 'a.id', 'b.id_surat')
+            ->select('b.status')
+            ->first();
+
             $data["use_template"] = false;
 
             $ref_fungsi = DB::table("ref_fungsi")
@@ -924,6 +931,7 @@ class SuratKeluarController extends Controller
                 "id_transaksi"=>$id_transaksi,
                 "ref_transaksi"=>$transaksi,
                 "id_nomenklatur"=>$id_nomenklatur,
+                'is_signed'=>$is_signed,
                 "data"=>$data
             ]);
 

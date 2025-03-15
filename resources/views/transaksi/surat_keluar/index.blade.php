@@ -374,12 +374,13 @@
             </div>
             
             <div class="modal-body" >
+                <div id="notification_esign"></div>
                 <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
 
                 <form name="esign_form" id="kt_modal_esign_form" method="POST">
                     {{csrf_field()}}
                     <input type="hidden" id="id_surat" name="id_surat">
-
+                    
                     <div class="text-center pt-10" id="show_control_button">
                         <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="save_esign" data-kt-indicator="off">
@@ -558,22 +559,40 @@ $(document).ready(function(){
             {data:"id_surat", className: "text-end",
                 mRender:function(data, type, full){
                     if(full["id_user"] == current_user_id){
-                        if(full["file"]){
-                            var disabled_arsip = ""
-                        }else{
-                            var disabled_arsip = "disabled"
+                        
+
+                        if(full['id_status_esign'] == 1){ //status on process
+                            var disable_edit = 'disabled';
+                            var disabled_arsip = 'disabled';
+                            var disable_delete = 'disabled';
+                            var disabled = "";
+                        }else if(full['id_status_esign'] == 2){ //status lengkap
+                            var disable_edit = 'disabled';
+                            var disabled_arsip = '';
+                            var disable_delete = 'disabled';
+                            var disabled = "";
+                        }else if(full['file'] == null ){
+                            var disable_edit = '';
+                            var disabled_arsip = 'disabled';
+                            var disable_delete = '';
+                            var disabled = "";
+                        }else if(full['file']){
+                            var disable_edit = '';
+                            var disabled_arsip = "";
+                            var disable_delete = '';
+                            var disabled = "";
                         }
-                        var disabled = "";
                     }else{
                         var disabled_arsip = "disabled";
                         var disabled = "disabled";
                     }
+                    
                     return`<div class="dropdown">
                             <button ${disabled} class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="edit_surat_keluar" data-id_surat_keluar='${data}' data-kode_surat='${full['kode_surat']}'>Edit</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="edit_surat_keluar" data-id_surat_keluar='${data}' ${disable_edit}" data-kode_surat='${full['kode_surat']}'>Edit</a>
                                         </div>
                                     </li>
                                     <li>
@@ -583,7 +602,7 @@ $(document).ready(function(){
                                     </li>
                                     <li>
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}'>Delete</a>
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn text-danger" id="delete_surat_keluar" data-id_surat_keluar='${data}' ${disable_delete}>Delete</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -605,15 +624,24 @@ $(document).ready(function(){
                 type:"POST",
                 data:formData,
                 success:function(data){
-                    console.log(data);
-                    if(!data == ''){
-                        alert(data);
+                    if (data.success == false) {
+                        let err_marking_sekretaris = data.errors.err_marking_sekretaris ? `<li>${data.errors.err_marking_sekretaris}</li>` : ``;
+                        let err_marking_ketua = data.errors.err_marking_ketua  ? `<li>${data.errors.err_marking_ketua}</li>` : ``;
+                        let err_marking_panitera = data.errors.err_marking_panitera  ? `<li>${data.errors.err_marking_panitera}</li>` : ``;
+
+                        document.getElementById("notification_esign").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_marking_sekretaris+err_marking_ketua+err_marking_panitera+"</div></div>";      
+                        btn.setAttribute("data-kt-indicator", "off");
+                        btn.removeAttribute("disabled");
+                        //scroll to the top to see errors message
+                        var scroll = document.querySelector("#kt_modal_add_user_scroll");
+                        scroll.scrollTop = 0;
+
                         return false;
                     }
                     
                     $("#office_preview").modal("hide");
+                    alert("Dokumen berhasil dikirim untuk dilakukan otorisasi");
                     $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                    alert("Dokumen telah dikririm untuk dilakukan otorisasi");
                 }
             })
         }
@@ -723,6 +751,7 @@ $(document).ready(function(){
         var filename = $(this).data("filename");
         var extension = filename.substr(filename.indexOf('.')); 
         var url = $(this).data("url");
+        document.getElementById("notification_esign").innerHTML ='';
         console.log($(this).data("url"))
         if(extension == '.pdf'){
             $("#modal_preview").modal("show");
@@ -1127,67 +1156,78 @@ $(document).ready(function(){
             type:"GET",
             dataType:"JSON",
             success:function(data){
+            console.log(data)
             //memakai data dukung manual
             if(data.data.use_template === false){
-                console.log("Non template")
-                enabledAll();
-                disabledList();
+                console.log("Non template", data.is_signed)
+                //dokumen belum di ttd digital
+                if(!data.is_signed){
+                    enabledAll();
+                    disabledList();
 
-                // document.querySelector("#kt_data_dukung_1").disabled=true;
-                // document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
-                // document.getElementById("kt_data_dukung_0").checked =true;
+                    // document.querySelector("#kt_data_dukung_1").disabled=true;
+                    // document.querySelector("#kt_data_dukung_0").removeAttribute("disabled");
+                    // document.getElementById("kt_data_dukung_0").checked =true;
 
-                document.getElementById("display-gunakan-template").style.display = "none";
-                document.getElementById("display-upload-file").style.display = "inline-block";
-                document.getElementById("display-choose-template").style.display = "none";
+                    document.getElementById("display-gunakan-template").style.display = "none";
+                    document.getElementById("display-upload-file").style.display = "inline-block";
+                    document.getElementById("display-choose-template").style.display = "none";
 
-                $("#klasifikasi").val(data.id_klasifikasi);
-                if(data.ref_fungsi.length>0){
-                    document.getElementById("fungsi").removeAttribute("disabled");
-                    document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
-                    for(var i=0; i<data.ref_fungsi.length; i++){
-                        let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
-                        document.getElementById("fungsi").innerHTML += `<option ${selected} value='${data.ref_fungsi[i].id_fungsi}' data-kode_fungsi='${data.ref_fungsi[i].kode_fungsi}'>${data.ref_fungsi[i].kode_fungsi} - ${data.ref_fungsi[i].deskripsi_fungsi}</option>`; 
+                    $("#klasifikasi").val(data.id_klasifikasi);
+                    if(data.ref_fungsi.length>0){
+                        document.getElementById("fungsi").removeAttribute("disabled");
+                        document.getElementById("fungsi").innerHTML = `<option disabled value="0">Pilih fungsi</option>`;
+                        for(var i=0; i<data.ref_fungsi.length; i++){
+                            let selected = data.ref_fungsi[i].id_fungsi == data.id_fungsi ? 'selected' : '';                    
+                            document.getElementById("fungsi").innerHTML += `<option ${selected} value='${data.ref_fungsi[i].id_fungsi}' data-kode_fungsi='${data.ref_fungsi[i].kode_fungsi}'>${data.ref_fungsi[i].kode_fungsi} - ${data.ref_fungsi[i].deskripsi_fungsi}</option>`; 
+                        }
+                        
                     }
                     
-                }
-                
-                if(data.ref_kegiatan.length>0){
-                    document.getElementById("kegiatan").removeAttribute("disabled");
-                    document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
-                    for(var i=0; i<data.ref_kegiatan.length; i++){
-                        let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
-                        document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_kegiatan='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
+                    if(data.ref_kegiatan.length>0){
+                        document.getElementById("kegiatan").removeAttribute("disabled");
+                        document.getElementById("kegiatan").innerHTML = `<option disabled value="0">Pilih kegiatan</option>`;
+                        for(var i=0; i<data.ref_kegiatan.length; i++){
+                            let selected = data.ref_kegiatan[i].id_kegiatan == data.id_kegiatan ? 'selected' : '';                    
+                            document.getElementById("kegiatan").innerHTML += `<option ${selected} value='${data.ref_kegiatan[i].id_kegiatan}' data-kode_kegiatan='${data.ref_kegiatan[i].kode_kegiatan}'>${data.ref_kegiatan[i].kode_kegiatan} - ${data.ref_kegiatan[i].deskripsi_kegiatan}</option>`; 
+                        }
+                        
                     }
-                    
-                }
 
-                if(data.ref_transaksi.length>0){
-                    console.log("Transaksi length "+data.ref_transaksi.length)
-                    document.getElementById("row-transaksi").style.display = 'inline-block';
-                    document.getElementById("transaksi").removeAttribute("disabled");
-                    document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
-                    for(var i=0; i<data.ref_transaksi.length; i++){
-                        let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
-                        document.getElementById("transaksi").innerHTML += `<option ${selected} value='${data.ref_transaksi[i].id_transaksi}' data-kode_transaksi='${data.ref_transaksi[i].kode_transaksi}'>${data.ref_transaksi[i].kode_transaksi} - ${data.ref_transaksi[i].deskripsi_transaksi}</option>`;
+                    if(data.ref_transaksi.length>0){
+                        console.log("Transaksi length "+data.ref_transaksi.length)
+                        document.getElementById("row-transaksi").style.display = 'inline-block';
+                        document.getElementById("transaksi").removeAttribute("disabled");
+                        document.getElementById("transaksi").innerHTML = `<option disabled value="0">Pilih transaksi</option>`;
+                        for(var i=0; i<data.ref_transaksi.length; i++){
+                            let selected = data.ref_transaksi[i].id_transaksi == data.id_transaksi ? 'selected' : '';                    
+                            document.getElementById("transaksi").innerHTML += `<option ${selected} value='${data.ref_transaksi[i].id_transaksi}' data-kode_transaksi='${data.ref_transaksi[i].kode_transaksi}'>${data.ref_transaksi[i].kode_transaksi} - ${data.ref_transaksi[i].deskripsi_transaksi}</option>`;
+                        }
+                        
+                    }else{
+                        document.getElementById("row-transaksi").style.display = 'none';
                     }
-                    
+
+                    document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
+
+                    document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
+                    $("#nomenklatur_jabatan").val(data.id_nomenklatur);
+                    $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
+                    $("#tahun").val(data.surat_keluar.tahun);
+                    document.getElementById("tahun").disabled = true;
+                    $("#perihal").val(data.surat_keluar.perihal);
+                    fp.setDate(data.surat_keluar.tgl_surat, true, "Y-m-d");
+
+                    loadingPage(false);
+                    $("#kt_modal_add_surat_keluar").modal("show");
                 }else{
-                    document.getElementById("row-transaksi").style.display = 'none';
+                    loadingPage(false);
+                    if(data.is_signed.status == 1){
+                        alert("Error: Dokumen sedang diproses pengajuan tandatangan digital.")
+                    }else{
+                        alert('Error: Dokumen yang sudah ditandatangani secara digital tidak dapat diubah.');
+                    }
                 }
-
-                document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
-
-                document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
-                $("#nomenklatur_jabatan").val(data.id_nomenklatur);
-                $("input[name='nomor_surat']").val(data.surat_keluar.no_surat);
-                $("#tahun").val(data.surat_keluar.tahun);
-                document.getElementById("tahun").disabled = true;
-                $("#perihal").val(data.surat_keluar.perihal);
-                fp.setDate(data.surat_keluar.tgl_surat, true, "Y-m-d");
-
-                loadingPage(false);
-                $("#kt_modal_add_surat_keluar").modal("show");
             }else{
                 // document.querySelector("#kt_data_dukung_0").disabled=true;
                 // document.querySelector("#kt_data_dukung_1").removeAttribute("disabled");

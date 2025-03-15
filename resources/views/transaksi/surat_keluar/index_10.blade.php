@@ -323,6 +323,7 @@
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
                         <th>Lampiran</th>
+                        <th>Dibuat Oleh</th>
                         <th>Status</th>
                         <th class="text-end min-w-125px"></th>
                     </tr>
@@ -376,12 +377,13 @@
             </div>
             
             <div class="modal-body" >
+                <div id="notification_esign"></div>
                 <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
 
                 <form name="esign_form" id="kt_modal_esign_form" method="POST">
                     {{csrf_field()}}
                     <input type="hidden" id="id_surat" name="id_surat">
-
+                    
                     <div class="text-center pt-10" id="show_control_button">
                         <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary" id="save_esign" data-kt-indicator="off">
@@ -510,6 +512,7 @@ $(document).ready(function(){
                     }
                 }
             },
+            {data:"dibuat_oleh"},
             {data:"file",
                 mRender:function(data, type, full){
                     if(full['status_esign']){
@@ -583,14 +586,24 @@ $(document).ready(function(){
                 data:formData,
                 success:function(data){
                     console.log(data);
-                    if(!data == ''){
-                        alert(data);
+                    if (data.success == false) {
+                        let err_marking_sekretaris = data.errors.err_marking_sekretaris ? `<li>${data.errors.err_marking_sekretaris}</li>` : ``;
+                        let err_marking_ketua = data.errors.err_marking_ketua  ? `<li>${data.errors.err_marking_ketua}</li>` : ``;
+                        let err_marking_panitera = data.errors.err_marking_panitera  ? `<li>${data.errors.err_marking_panitera}</li>` : ``;
+
+                        document.getElementById("notification_esign").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_marking_sekretaris+err_marking_ketua+err_marking_panitera+"</div></div>";      
+                        btn.setAttribute("data-kt-indicator", "off");
+                        btn.removeAttribute("disabled");
+                        //scroll to the top to see errors message
+                        var scroll = document.querySelector("#kt_modal_add_user_scroll");
+                        scroll.scrollTop = 0;
+
                         return false;
                     }
                     
                     $("#office_preview").modal("hide");
                     $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
-                    alert("Dokumen telah dikririm untuk dilakukan otorisasi");
+                    alert("Dokumen telah dikirim untuk dilakukan otorisasi");
                 }
             })
         }
@@ -707,6 +720,8 @@ $(document).ready(function(){
         var filename = $(this).data("filename");
         var extension = filename.substr(filename.indexOf('.')); 
         var url = $(this).data("url");
+        document.getElementById("notification_esign").innerHTML ='';
+
         console.log($(this).data("url"))
         if(extension == '.pdf'){
             $("#modal_preview").modal("show");
@@ -860,12 +875,10 @@ $(document).ready(function(){
             console.log("external")
             document.getElementById("display-tujuan-internal").style.display = "none";
             document.getElementById("display-tujuan-external").style.display = "inline-block";
-            document.getElementById("display-lampiran").style.display = "none";
         }else{
             console.log("internal")
             document.getElementById("display-tujuan-internal").style.display = "inline-block";
             document.getElementById("display-tujuan-external").style.display = "none";
-            document.getElementById("display-lampiran").style.display = "inline-block";
         }
 
     });

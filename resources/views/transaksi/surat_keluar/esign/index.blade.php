@@ -193,6 +193,7 @@ $(document).ready(function(){
                     $("#office_preview").modal("hide");
                     $("#tb_surat_keluar").DataTable().ajax.reload(null, false);
                     alert("Proses otorisasi berhasil.");
+                    location.reload();
                 }
             })
         }

@@ -56,7 +56,12 @@
             </div>
             
             <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe></div>
+                <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview" src="#" width='100%' height='650px' frameborder='0'></iframe></div>
+
+                <div class="text-center pt-10" id="show_control_button">
+                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
             </div>
         </div>
     </div>      
@@ -78,7 +83,12 @@
             </div>
             
             <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+                <div style="left: 0; width: 100%; height: 100%; position: relative;"><iframe id="preview_office" src='#' width='100%' height='650px' frameborder='0'></iframe></div>
+
+                <div class="text-center pt-10" id="show_control_button">
+                    <button type="button" id="btn-cancel" class="btn btn-light-danger" data-bs-dismiss="modal">Cancel</button>
+                </div>
+
             </div>
         </div>
     </div>      

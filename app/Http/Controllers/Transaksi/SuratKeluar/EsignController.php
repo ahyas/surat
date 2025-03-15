@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Transaksi\SuratKeluar;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
+use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\TemplateProcessor;
 use File;
 
@@ -20,6 +20,7 @@ class EsignController extends Controller
         ->whereNotNull("surat_keluar.file")
         ->whereNotIn("surat_keluar.internal",[111])
         ->where('transaksi_esign.status', 1)
+        ->where('transaksi_nomenklatur_jabatan.user_id', auth()->user()->id)
         //s->whereNotNull('surat_keluar.file')
         ->select(
             "surat_keluar.id AS id_surat",
@@ -46,6 +47,7 @@ class EsignController extends Controller
         ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
         ->leftJoin("users", "surat_keluar.created_by","=","users.id")
         ->join('transaksi_esign', 'surat_keluar.id', '=', 'transaksi_esign.id_surat')
+        ->join('transaksi_nomenklatur_jabatan', 'surat_keluar.id_nomenklatur_jabatan', 'transaksi_nomenklatur_jabatan.nomenklatur_id')
         ->groupBy("surat_keluar.id",
             "surat_keluar.id_ref_klasifikasi",
             "surat_keluar.id_ref_fungsi",
@@ -70,6 +72,8 @@ class EsignController extends Controller
     }
 
     public function saveEsign(Request $request){
+        $errors = [];
+        $data = [];
 
         $file = DB::table('transaksi_surat_keluar')->where('id',$request->id_surat)->first();
 
@@ -78,37 +82,58 @@ class EsignController extends Controller
         $templateProcessor = new TemplateProcessor($current_doc_path);
 
         $variable = $templateProcessor->getVariables();
-
-        if($file->id_nomenklatur_jabatan == 1){
+            //chek if variable defined inside document
             if($variable){
-                if($variable[0] == 'esign' || $variable[0] == 'no_surat'){
+                if($file->id_nomenklatur_jabatan == 1 && !in_array('esign_ketua', $variable)){ //ketua
+                    $errors['err_marking_ketua'] = "Error: Marking tidak sesuai dengan Nomenklatur Jabatan Ketua. Periksa kembali dokumen Anda.";
+                }elseif($file->id_nomenklatur_jabatan == 2 && !in_array('esign_panitera', $variable)){ //panitera
+                    $errors['err_marking_panitera'] = "Error: Marking tidak sesuai dengan Nomenklatur Jabatan Panitera. Periksa kembali dokumen Anda.";
+                }elseif($file->id_nomenklatur_jabatan == 3 && !in_array('esign_sekretaris', $variable)){ //sekretaris
+                    $errors['err_marking_sekretaris'] = "Error: Marking tidak sesuai dengan Nomenklatur Jabatan Sekretaris. Periksa kembali dokumen Anda.";
+                }else{
                     DB::table('transaksi_esign')
                     ->insert([
                         'id_surat' => $request->id_surat,
                         'status' => 1,
                     ]);
-    
                 }
-                $msg='';
-            }else{
-                $msg= 'Error: Variabel tanda tangan digital ${esign} atau nomor surat ${no_surat} belum didefinisikan. Periksa kembali dokumen Anda sebelum melanjutkan.';
-            }
-        }else{
-            $msg= 'Error: Tanda tangan digital untuk nomenklatur jabatan Ketua.';
-        }
 
-        return response()->json($msg);
-    }
+            }else{
+                $errors['err_variable']= 'Error: Marking belum di definisikan, periksa kembali dokumen Anda. Pastikan hanya menggunakan marking yang valid untuk dokumen digital: ${esign_ketua}, ${esign_panitera} atau ${esign_sekretaris}';
+            }
+
+            //get error/success message
+            if (!empty($errors)) {
+                $data['success'] = false;
+                $data['errors'] = $errors;
+            } else {
+                $data['success'] = true;
+                $data['message'] = 'Success!';
+            }
+
+            return response()->json($data);
+        }
 
     public function otorisasi(Request $request){
         $file = DB::table('transaksi_surat_keluar')->where('id',$request->id_surat)->first();
+        
+        if($file->id_nomenklatur_jabatan == 1){ //ketua
+            $file_ttd = "esign_ketua.jpg";
+            $marking_ttd = "esign_ketua";
+        }else if($file->id_nomenklatur_jabatan == 2){ //panitera
+            $file_ttd = "esign_panitera.jpg";
+            $marking_ttd = "esign_panitera";
+        }else{//sekretaris
+            $file_ttd = "esign_sekretaris.jpg";
+            $marking_ttd = "esign_sekretaris";
+        }
 
         $current_doc_path = public_path('uploads/surat_keluar/'.$file->file);
         
         $templateProcessor = new TemplateProcessor($current_doc_path);
         //$templateProcessor->setValue('esign', "BARCODE");
         $templateProcessor->setValue('no_surat', $file->no_surat);
-        $templateProcessor->setImageValue('esign', array('path' => asset('public/qr.jpg'), 'width' => 100, 'height' => 100, 'ratio' => false));
+        $templateProcessor->setImageValue($marking_ttd, array('path' => asset('public/'.$file_ttd), 'width' => 100, 'height' => 100, 'ratio' => false));
 
         //$templateProcessor->save();
         File::delete(public_path('/uploads/surat_keluar/'.$file->file));
