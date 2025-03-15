@@ -109,15 +109,7 @@ class SuratKeluarController extends Controller
     public function getData(){
         $id_role = Auth::user()->getRole()->id_role;
         //login sebagai pimpinan
-        if(Auth::user()->id_bidang == 1){
-            $id_nomenklatur_jabatan = 1;
-        //login sebagai sekretaris
-        }else if(Auth::user()->id_bidang == 2){
-            $id_nomenklatur_jabatan = 3;
-        //logi  sebagai panitera
-        }else{
-            $id_nomenklatur_jabatan = 2;
-        }
+       
         switch ($id_role){
             //login sebagai admin disposisi 1 (sekretaris/panitera)
             case 8:
@@ -139,6 +131,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
                     "surat_keluar.id_status",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -165,6 +158,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
                     "surat_keluar.id_status",
+                    "surat_keluar.created_at",
                     "ref_fungsi.kode",
                     "ref_kegiatan.kode",
                     "ref_transaksi.kode",
@@ -197,6 +191,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -228,6 +223,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
                     "surat_keluar.id_status",
+                    "surat_keluar.created_at",
                     "ref_fungsi.kode",
                     "ref_kegiatan.kode",
                     "ref_transaksi.kode",
@@ -261,6 +257,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -292,6 +289,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
                     "surat_keluar.id_status",
+                    "surat_keluar.created_at",
                     "ref_fungsi.kode",
                     "ref_kegiatan.kode",
                     "ref_transaksi.kode",
@@ -326,6 +324,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -348,6 +347,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.created_at",
                     "ref_fungsi.kode",
                     "ref_kegiatan.kode",
                     "ref_transaksi.kode",
@@ -380,6 +380,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -402,6 +403,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    "surat_keluar.created_at",
                     "ref_fungsi.kode",
                     "ref_kegiatan.kode",
                     "ref_transaksi.kode",
@@ -432,6 +434,7 @@ class SuratKeluarController extends Controller
                     "surat_keluar.perihal",
                     "surat_keluar.tgl_surat",
                     "surat_keluar.file",
+                    DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                     "ref_fungsi.kode AS kode_fungsi",
                     "ref_kegiatan.kode AS kode_kegiatan",
                     "ref_transaksi.kode AS kode_transaksi",
@@ -441,7 +444,7 @@ class SuratKeluarController extends Controller
                 ->leftJoin("ref_kegiatan", "surat_keluar.id_ref_kegiatan","=", "ref_kegiatan.id")
                 ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
                 ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
-                ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
+                ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","surat_keluar.created_at","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
                 ->orderBy("surat_keluar.created_at","DESC")->get();
 
                 return response()->json($table);
@@ -464,6 +467,7 @@ class SuratKeluarController extends Controller
                 "surat_keluar.perihal",
                 "surat_keluar.tgl_surat",
                 "surat_keluar.file",
+                DB::raw("DATE_FORMAT(surat_keluar.created_at, '%y-%m-%d') AS diinput_tanggal"),
                 "surat_keluar.id_status",
                 "ref_fungsi.kode AS kode_fungsi",
                 "ref_kegiatan.kode AS kode_kegiatan",
@@ -496,6 +500,7 @@ class SuratKeluarController extends Controller
                 "surat_keluar.tgl_surat",
                 "surat_keluar.file",
                 "surat_keluar.id_status",
+                "surat_keluar.created_at",
                 "ref_fungsi.kode",
                 "ref_kegiatan.kode",
                 "ref_transaksi.kode",

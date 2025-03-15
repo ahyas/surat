@@ -26,6 +26,7 @@
                         <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
+                        <th class="min-w-125px">Diinput tanggal</th>
                         <th>Lampiran</th>
                         <th class="min-w-125px">Dibuat Oleh</th>
                     </tr>
@@ -232,6 +233,7 @@ $(document).ready(function(){
                 }
             },
             {data:"tgl_surat"},
+            {data:"diinput_tanggal"},
             {data:"file",
                 mRender:function(data){
                     return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;

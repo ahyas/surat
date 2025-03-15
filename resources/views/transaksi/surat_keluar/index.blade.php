@@ -314,6 +314,10 @@
         <!--begin::Card body-->
         <div class="card-body py-4">
             <!--begin::Table-->
+            <div class='alert alert-danger d-flex align-items-center p-5'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>
+                Mohon perhatian. Setelah dokumen dinyatakan lengkap JANGAN LUPA untuk segera di arsipkan. Terimakasih.
+            </div></div>
+            
             <table class="table table-hover align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
@@ -321,6 +325,7 @@
                         <th>Perihal/Isi ringkas</th>
                         <th class="min-w-125px">Tujuan / Penerima</th>
                         <th class="min-w-125px">Tanggal Surat</th>
+                        <th class="min-w-125px">Diinput tanggal</th>
                         <th>Lampiran</th>
                         <th>Dibuat Oleh</th>
                         <th>Status</th>
@@ -526,6 +531,7 @@ $(document).ready(function(){
                 }
             },
             {data:"tgl_surat"},
+            {data:"diinput_tanggal"},
             {data:"file",
                 mRender:function(data, type, full){
                     if(data){
