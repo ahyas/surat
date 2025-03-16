@@ -357,7 +357,14 @@
             </div>
             
             <div class="modal-body" >
-                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;"><iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe></div>
+                <!-- <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;">
+                    <iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe>
+                </div> -->
+
+                <div style="left: 0; width: 100%; height: 0; position: relative; padding-bottom: 129.4118%;">
+                    <iframe id="preview" src="#" style="top: 0; left: 0; width: 100%; height: 100%; position: absolute; border: 0;" allowfullscreen></iframe>
+                </div>
+
             </div>
         </div>
     </div>      
@@ -761,7 +768,8 @@ $(document).ready(function(){
         console.log($(this).data("url"))
         if(extension == '.pdf'){
             $("#modal_preview").modal("show");
-            document.getElementById("preview").src = url;
+            //preview PDF pada browser mobile
+            document.getElementById("preview").src = `https://docs.google.com/viewer?embedded=true&url=https://simisol.pta-papuabarat.go.id/public/uploads/surat_keluar/${filename}`;
             document.getElementById("download_pdf").href = url;
         }else{
             var id_surat = $(this).data('id_surat');
