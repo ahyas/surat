@@ -731,8 +731,7 @@ $(document).ready(function(){
         console.log($(this).data("url"))
         if(extension == '.pdf'){
             $("#modal_preview").modal("show");
-            //preview PDF pada browser mobile
-            document.getElementById("preview").src = `https://docs.google.com/viewer?embedded=true&url=https://simisol.pta-papuabarat.go.id/public/uploads/surat_keluar/${filename}`;
+            document.getElementById("preview").src = url;
             document.getElementById("download_pdf").href = url;
         }else{
             var id_surat = $(this).data('id_surat');
