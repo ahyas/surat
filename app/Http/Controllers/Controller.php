@@ -337,8 +337,10 @@ class Controller extends BaseController
                     return response(view('unauthenticated'));
                 }
                 
-                return $next($request);
             }
+
+            return $next($request);
+            
         });
     }
 }
