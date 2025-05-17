@@ -14,16 +14,16 @@
 
     <div class="container-fluid">
         <div class="row justify-content-center">
-            <div class="col-8">
+            <div class="col-12">
                 
                     <?php if($surat_keluar == ''){ ?>
                         <div class="alert alert-danger" style="margin-top:40px" role="alert">
-                            <img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
+                            <img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
                             <p style="color: red; font-weight:bold">Oops! Data tidak valid atau tidak ditemukan didalam sistem!</p>
                         </div>
                         <?php }else{ ?>
                             <div class="alert alert-primary" style="margin-top:40px" role="alert">
-                            <img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
+                            <img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
                             <p>Dokumen telah terverifikasi oleh aplikasi SIMISOL dan dinyatakan valid. Pastikan detail surat keluar sesuai dengan informasi dibawah ini:</p>
                         <ul>
                             <li>Nomor: {{$surat_keluar->no_surat}}</li>
