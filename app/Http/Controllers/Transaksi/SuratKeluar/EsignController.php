@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpWord\TemplateProcessor;
 use File;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Crypt;
 
 class EsignController extends Controller
 {
@@ -127,13 +130,24 @@ class EsignController extends Controller
             $file_ttd = "esign_sekretaris.jpg";
             $marking_ttd = "esign_sekretaris";
         }
+        //start generate qrcode
+        $file_qrcode = $request->id_surat.'.png';
+        $path_qrcode = storage_path('app/public/qrcodes/'.$file_qrcode);
+        
+        $generate_qrcode = QrCode::format('png')->size(130)->generate(route('transaksi.surat_keluar.verify', Crypt::encrypt($request->id_surat)));
 
+        //Storage::put('public/qrcodes', $file_qrcode, $generate_qrcode);
+        Storage::disk('local')->put('public/qrcodes/'.$file_qrcode, $generate_qrcode);
+        //end generate qrcode
+
+        //ambil dokumen
         $current_doc_path = public_path('uploads/surat_keluar/'.$file->file);
         
         $templateProcessor = new TemplateProcessor($current_doc_path);
         //$templateProcessor->setValue('esign', "BARCODE");
         $templateProcessor->setValue('no_surat', $file->no_surat);
-        $templateProcessor->setImageValue($marking_ttd, array('path' => asset('public/'.$file_ttd), 'width' => 100, 'height' => 100, 'ratio' => false));
+        //$templateProcessor->setImageValue($marking_ttd, array('path' => asset('public/'.$file_ttd), 'width' => 100, 'height' => 100, 'ratio' => false));
+        $templateProcessor->setImageValue($marking_ttd, array('path' => $path_qrcode, 'width' => 100, 'height' => 100, 'ratio' => false));
 
         //$templateProcessor->save();
         File::delete(public_path('/uploads/surat_keluar/'.$file->file));

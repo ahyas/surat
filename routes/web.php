@@ -19,6 +19,8 @@ Route::get('/', function(){
 Route::get('/document', Document::class)->name('document');
 Auth::routes();
     Route::get("/test","TestController@index");
+    //cek atentikasi surat keluar berdasarkan QR Code
+    Route::get('/transaksi/surat_keluar/{id_surat}/verify', 'Transaksi\SuratKeluar\SuratKeluarController@verify')->name('transaksi.surat_keluar.verify');
 
     Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 17, 18, 101'], function(){
         Route::get('home', 'HomeController@index')->name('home');
