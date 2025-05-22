@@ -18,7 +18,7 @@
                 <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                     <!--begin::Filter-->
                     <!--begin::Add user-->
-                    
+
                     <button type="button" class="btn btn-primary btn-sm" id="add_user">
                     <i class="ki-duotone ki-plus fs-2"></i>Add User</button>
                     <!--end::Add user-->
@@ -44,7 +44,7 @@
                             <!--begin::Modal body-->
                             <div class="modal-body px-5 my-7">
                                 <!--begin::Form-->
-                                <form id="kt_modal_add_user_form" name="add_user_form" class="form" action="#">
+                                <form id="kt_modal_add_user_form" name="add_user_form" class="form" method="POST" enctype="multipart/form-data">
                                 {{csrf_field()}}
                                     <!--begin::Scroll-->
                                     <div class="d-flex flex-column scroll-y px-5 px-lg-10" id="kt_modal_add_user_scroll" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_add_user_header" data-kt-scroll-wrappers="#kt_modal_add_user_scroll" data-kt-scroll-offset="300px">
@@ -119,6 +119,11 @@
                                                 <option value="0">Non aktif</option>
                                             </select>
                                             <!--end::Input-->
+                                        </div>
+
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-light fs-6 mb-2" id="file">Upload Photo</label>
+                                            <input class="form-control form-control-solid mb-3 mb-lg-0 " name="photo_user" type="file" id="photo_user">
                                         </div>
 
                                         <!--end::Input group-->
@@ -197,7 +202,21 @@ $(document).ready(function(){
         [
             {data:"nama", className:"d-flex align-items-center",
                 mRender:function(data, type, full){
+                    
+                    if(full['photo_user'] != null){
+                        var file = full['photo_user'];
+                        var photo_user = `<div class="symbol symbol-30px symbol-md-40px">
+                            <img src="{{asset('public/uploads/photo_user/${file}')}}" alt="image">
+                        </div>
+                        `;
+                    }else{
+                        var photo_user = `<div class="symbol symbol-30px symbol-md-40px">
+                            <img src="{{asset('public/uploads/photo_user/avatar.png')}}" alt="image">
+                        </div>
+                        `;
+                    }
                     return`<div class="d-flex flex-column">
+                                ${photo_user}
                                 <div class="text-gray-800 mb-1">${data}</div>
                                 <span>${full['email']}</span>
                             </div>`;
@@ -263,6 +282,7 @@ $(document).ready(function(){
         document.querySelector("input[name='email']").setAttribute("disabled","disabled");
         document.getElementById("update_user").style.display = "inline-block";
         document.getElementById("save_user").style.display = "none";
+        document.getElementById("notification").innerHTML ='';
         $("#kt_modal_add_user_form").trigger("reset");
         loadingPage(true);
         $.ajax({
@@ -288,19 +308,24 @@ $(document).ready(function(){
         e.preventDefault();
         var id_user = $("input[name='id_user']").val();
         setButtonSpinner(".update_user", "on");
+        var formData = new FormData(document.getElementById("kt_modal_add_user_form")); 
         $.ajax({
             type    : "POST",
             url     : `{{url('user/list/${id_user}/update')}}`,
-            data    : $("#kt_modal_add_user_form").serialize(),
-            dataType: "JSON",
+            data    : formData,
+            cache   : false,
+            contentType: false,
+            processData: false,
+            dataType:"JSON",
             success :function(data){
                 console.log(data);
                 if (!data.success) {
                     let err_name = data.errors.name  ? `<li>${data.errors.name}</li>` : ``;
                     let err_bidang = data.errors.bidang  ? `<li>${data.errors.bidang}</li>` : ``;
                     let err_jabatan = data.errors.jabatan  ? `<li>${data.errors.jabatan}</li>` : ``;
+                    let err_photo_user = data.errors.photo_user  ? `<li>${data.errors.photo_user}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_bidang+err_jabatan+"</div></div>";      
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_bidang+err_jabatan+err_photo_user+"</div></div>";      
                     setButtonSpinner(".update_user", "off");
                 }else{
                     setButtonSpinner(".update_user", "off");
@@ -341,20 +366,25 @@ $(document).ready(function(){
     $("#save_user").click(function(e){
         e.preventDefault();
         setButtonSpinner(".save_user", "on");
-        
+        var formData = new FormData(document.getElementById("kt_modal_add_user_form"));
         $.ajax({
             type    : "POST",
             url     : "{{route('user.list.save')}}",
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
+            data    : formData,
+            cache   : false,
+            contentType: false,
+            processData: false,
             success :function(data){
                 if (!data.success) {
                     let err_name = data.errors.name  ? `<li>${data.errors.name}</li>` : ``;
                     let err_email = data.errors.email  ? `<li>${data.errors.email}</li>` : ``;
                     let err_bidang = data.errors.bidang  ? `<li>${data.errors.bidang}</li>` : ``;
                     let err_jabatan = data.errors.jabatan  ? `<li>${data.errors.jabatan}</li>` : ``;
+                    let err_photo_user = data.errors.photo_user  ? `<li>${data.errors.photo_user}</li>` : ``;
 
-                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_email+err_bidang+err_jabatan+"</div></div>";      
+                    document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_name+err_email+err_bidang+err_jabatan+err_photo_user+"</div></div>";      
                     setButtonSpinner(".save_user", "off");
 
                 }else{

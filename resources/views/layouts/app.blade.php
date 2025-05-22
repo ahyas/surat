@@ -306,7 +306,14 @@ License: For each use you must have a valid license purchased only from above li
 										<!--end::Name-->
 										<!--begin::Symbol-->
 										<div class="symbol symbol-30px symbol-md-40px">
-											<img src="{{asset('public/assets/media/avatars/300-1.jpg')}}" alt="image" />
+											<?php 
+												if($data['photo_user']){
+													$photo_user = $data['photo_user'];
+												}else{
+													$photo_user = 'avatar.png';
+												}
+											?>
+											<img src="<?php echo asset('public/uploads/photo_user/'.$photo_user); ?>" alt="image">
 										</div>
 										<!--end::Symbol-->
 									</div>
@@ -318,7 +325,7 @@ License: For each use you must have a valid license purchased only from above li
 											<div class="menu-content d-flex align-items-center px-3">
 												<!--begin::Avatar-->
 												<div class="symbol symbol-50px me-5">
-													<img alt="Logo" src="{{asset('public/assets/media/avatars/300-1.jpg')}}" />
+													<img alt="Logo" src="<?php echo asset('public/uploads/photo_user/'.$photo_user); ?>" />
 												</div>
 												<!--end::Avatar-->
 												<!--begin::Username-->

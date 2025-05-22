@@ -7,7 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use View;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
@@ -24,10 +24,16 @@ class Controller extends BaseController
                 $role_name = Auth::user()->getRole()->role_name;
                 $user = DB::table("users")
                 ->where("users.id", Auth::user()->id)
-                ->select("ref_jabatan.nama AS nama_jabatan","daftar_pegawai.status")
+                ->select(
+                    "ref_jabatan.nama AS nama_jabatan",
+                    "daftar_pegawai.status",
+                    "daftar_pegawai.photo_user"
+                )
                 ->leftJoin("daftar_pegawai", "users.id","=","daftar_pegawai.id_user")
                 ->leftJoin("ref_jabatan","daftar_pegawai.id_jabatan","=","ref_jabatan.id")
                 ->first();
+
+                $photo_user = $user->photo_user;
                 //if user status inactive
                 if($user->status == 1){
                     $jabatan = $user->nama_jabatan;
@@ -331,7 +337,7 @@ class Controller extends BaseController
 
                     }
 
-                    View::share('data', compact('menu', 'role_name', 'id_role','jabatan', 'tot_count', 'tot_count_surat_keluar', 'tot_count_esign'));
+                    View::share('data', compact('menu', 'role_name', 'id_role','jabatan', 'tot_count', 'tot_count_surat_keluar', 'tot_count_esign', 'photo_user'));
 
                 }else{
                     return response(view('unauthenticated'));

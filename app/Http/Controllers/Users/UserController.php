@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use DB;
-use Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -35,6 +35,7 @@ class UserController extends Controller
             "ref_jabatan.nama AS jabatan",
             "daftar_pegawai.nip",
             "daftar_pegawai.status",
+            "daftar_pegawai.photo_user",
             DB::raw("(CASE WHEN daftar_pegawai.status = 1 THEN 'Aktif' ELSE 'Non Aktif' END) AS status_user")
         )
         ->leftJoin("bidang", "users.id_bidang","=","bidang.id")
@@ -71,6 +72,22 @@ class UserController extends Controller
             $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
         }
 
+        if($request->hasFile('photo_user')){
+            $allowed = ["jpg", "jpeg", "png"];
+            $ext = strtolower($request->photo_user->extension());
+
+            $fileName = time().'.'.$request->photo_user->extension();
+
+            $tujuan_upload = public_path('/uploads/photo_user');
+            $request->photo_user->move($tujuan_upload, $fileName);
+
+            if(!in_array($ext, $allowed)){
+                $errors['photo_user'] = 'Jenis file harus JPG, JPEG atau PNG';
+            }
+        }else{
+            $fileName = null;
+        }
+
         if (!empty($errors)) {
             $data['success'] = false;
             $data['errors'] = $errors;
@@ -100,7 +117,8 @@ class UserController extends Controller
             ->insert([
                 "id_user"=>$userId,
                 "id_jabatan"=>$request["jabatan"],
-                "nip"=>$request["nip"]
+                "nip"=>$request["nip"],
+                "photo_user"=>$fileName
             ]);
         }
 
@@ -143,6 +161,22 @@ class UserController extends Controller
             $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
         }
 
+        if($request->hasFile('photo_user')){
+            $allowed = ["jpg", "jpeg", "png"];
+            $ext = strtolower($request->photo_user->extension());
+
+            $fileName = time().'.'.$request->photo_user->extension();
+
+            $tujuan_upload = public_path('/uploads/photo_user');
+            $request->photo_user->move($tujuan_upload, $fileName);
+
+            if(!in_array($ext, $allowed)){
+                $errors['photo_user'] = 'Jenis file harus JPG, JPEG atau PNG';
+            }
+        }else{
+            $fileName = null;
+        }
+
         if (!empty($errors)) {
             $data['success'] = false;
             $data['errors'] = $errors;
@@ -163,7 +197,8 @@ class UserController extends Controller
                 "id_user"=>$id_user,
                 "id_jabatan"=>$request["jabatan"],
                 "nip"=>$request["nip"],
-                "status"=>$request["status"]
+                "status"=>$request["status"],
+                "photo_user"=>$fileName
             ]);
 
             DB::table("permission")
