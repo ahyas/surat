@@ -10,7 +10,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Arsip Surat Keluar</p>
+                <p>Arsip surat keluar</p>
             </div>
             <!--begin::Card title-->
         </div>
