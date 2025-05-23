@@ -9,7 +9,7 @@
         <div class="card-header border-0 pt-6">
             <!--begin::Card title-->
             <div class="card-title">
-                <p>Arsip semua surat</p>
+                <p>Arsip Semua Surat</p>
             </div>
             <!--end::Card toolbar-->
         </div>
