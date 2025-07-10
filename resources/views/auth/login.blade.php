@@ -48,7 +48,7 @@ License: For each use you must have a valid license purchased only from above li
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Page bg image-->
-			<style>body { background-color: #031c45 } [data-bs-theme="dark"] body { background-image: url("{{asset('assets/media/auth/bg4-dark.jpg')}}"); }</style>
+			<style>body { background-color: #031c45 } body { background-image: url("{{asset('assets/media/auth/bg4-dark.jpg')}}"); }</style>
 			<div class="d-flex flex-column flex-column-fluid flex-lg-row">
 				<div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
 					<div class="d-flex flex-center flex-lg-start flex-column">

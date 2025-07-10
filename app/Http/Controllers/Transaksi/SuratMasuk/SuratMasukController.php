@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\PDF;
+use Barryvdh\DomPDF\Facade\Pdf;
 use PhpParser\Node\Expr\Isset_;
 
 class SuratMasukController extends Controller
@@ -452,7 +452,7 @@ class SuratMasukController extends Controller
         ->orderBy("surat_masuk.created_at","DESC")
         ->first();
 
-        $pdf = PDF::loadView('arsip/disposisi/print', ['table'=>$table,'detail_surat'=>$detail_surat])->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('arsip/disposisi/print', ['table'=>$table,'detail_surat'=>$detail_surat])->setPaper('a4', 'portrait');
 
         return $pdf->stream("file.pdf");
     }
