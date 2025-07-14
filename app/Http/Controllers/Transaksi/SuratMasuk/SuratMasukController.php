@@ -50,6 +50,7 @@ class SuratMasukController extends Controller
                 )
                 ->where("users.id_bidang",1)
                 ->whereIn("ref_jabatan.id", [1, 2]) //hanya ketua
+                ->where("daftar_pegawai.status", 1) //pegawai aktif
                 ->leftJoin("daftar_pegawai", "users.id", "=", "daftar_pegawai.id_user")
                 ->leftJoin("ref_jabatan", "daftar_pegawai.id_jabatan", "=","ref_jabatan.id")
                 ->get();
@@ -235,8 +236,8 @@ class SuratMasukController extends Controller
             //login sebagai ketua
             case 16:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
-                ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
                 ->whereNotIn("surat_masuk.id_status", [3])
+                ->where('permission.id_role', 16) //penerima adalah pimpinan 1 / ketua
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -256,6 +257,7 @@ class SuratMasukController extends Controller
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
+                ->leftJoin('permission', 'detail_surat_masuk.id_penerima', 'permission.id_user')
                 ->orderBy("surat_masuk.created_at","DESC")
                 ->get();
 
@@ -265,8 +267,9 @@ class SuratMasukController extends Controller
             //login sebagai wakil
             case 17:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
-                ->where("detail_surat_masuk.id_penerima", Auth::user()->id)
+                //->where("detail_surat_masuk.id_penerima", Auth::user()->id)
                 ->whereNotIn("surat_masuk.id_status", [3])
+                ->where('permission.id_role', 17) //penerima adalah pimpinan 2 / wakil
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -286,6 +289,7 @@ class SuratMasukController extends Controller
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
+                ->leftJoin('permission', 'detail_surat_masuk.id_penerima', 'permission.id_user')
                 ->orderBy("surat_masuk.created_at","DESC")
                 ->get();
 

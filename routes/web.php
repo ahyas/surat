@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function(){
     return redirect()->route('login');
 });
-Route::get('/document', Document::class)->name('document');
+
 //cek atentikasi surat keluar berdasarkan QR Code
 Route::get('/transaksi/surat_keluar/{id_surat}/verify', 'VerifyDocument@verify')->name('transaksi.surat_keluar.verify');
 
