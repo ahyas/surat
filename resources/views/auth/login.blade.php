@@ -24,6 +24,8 @@ License: For each use you must have a valid license purchased only from above li
 		<meta property="og:locale" content="en_US" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="SIMISOL - Sistem Aplikasi Manajemen Surat Online" />
+		<meta property="og:image" content="{{ asset('assets/media/logos/favicon.ico') }}" />
+		<meta property="og:image:type" content="image/x-icon" />
 		<meta property="og:url" content="{{ url('/') }}" />
 		<meta property="og:site_name" content="SIMISOL PTA Papua Barat" />
 		<link rel="canonical" href="{{ url('/') }}" />

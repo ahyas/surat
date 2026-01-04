@@ -1210,7 +1210,7 @@ class SuratMasukController extends Controller
                 $body[] = $line;
             }
         }
-        $body[] = "🔗 *Aksi* : ".$this->buildActionLink($title, $idSurat);
+        $body[] = "🔗 *Tindak Lanjuti* : ".$this->buildActionLink($title, $idSurat);
         $body[] = "";
         $body[] = "Mohon ditindaklanjuti sesuai kewenangan.";
 
