@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -18,12 +18,12 @@
                 
                     <?php if($surat_keluar == ''){ ?>
                         <div class="alert alert-danger" style="margin-top:40px" role="alert">
-                            <img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
+                            <img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
                             <p style="color: red; font-weight:bold">Oops! Data tidak valid atau tidak ditemukan didalam sistem!</p>
                         </div>
                         <?php }else{ ?>
                             <div class="alert alert-primary" style="margin-top:40px" role="alert">
-                            <img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
+                            <img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" style="margin-bottom:15px; width:50px;"><h2>SIMISOL Document authentication</h2>
                             <p>Dokumen telah terverifikasi oleh aplikasi SIMISOL dan dinyatakan valid. Pastikan detail surat keluar sesuai dengan informasi dibawah ini:</p>
                         <ul>
                             <li>Nomor: {{$surat_keluar->no_surat}}</li>
@@ -32,7 +32,7 @@
                             <li>Tanggal dibuat: {{$surat_keluar->created_at}}</li>
                             <li>Dibuat oleh: {{$surat_keluar->dibuat_oleh}}</li>
                         </ul>
-                        <a href="<?php echo asset('/public/uploads/surat_keluar/'.$surat_keluar->file); ?>" target="_blank"><b>Download</b></a></apan>
+                        <a href="<?php echo asset('/uploads/surat_keluar/'.$surat_keluar->file); ?>" target="_blank"><b>Download</b></a></apan>
                         </div>
                     <?php } ?>
 
@@ -59,7 +59,7 @@
         var filename = "{{$surat_keluar->file}}";
         var extension = filename.substr(filename.indexOf('.'));
         
-        var url = "{{asset('/public/uploads/surat_keluar/'.$surat_keluar->file)}}";
+        var url = "{{asset('/uploads/surat_keluar/'.$surat_keluar->file)}}";
 
         if(extension == '.pdf'){    
             document.getElementById("preview_document").src = url;
@@ -68,3 +68,4 @@
         }
     });
 </script>
+

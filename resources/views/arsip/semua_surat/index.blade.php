@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -451,7 +451,7 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/public/uploads/surat_masuk/${file}')}}">Detail</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/uploads/surat_masuk/${file}')}}">Detail</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -462,7 +462,7 @@ $(document).ready(function(){
                                     <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                         <li>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-id_surat_keluar='${data}' data-filename='${file}' data-url="{{asset('/public/uploads/surat_keluar/${file}')}}">Detail</a>
+                                                <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_arsip" data-id_surat_keluar='${data}' data-filename='${file}' data-url="{{asset('/uploads/surat_keluar/${file}')}}">Detail</a>
                                             </div>
                                         </li>
                                     </ul>
@@ -551,7 +551,7 @@ $(document).ready(function(){
                 document.getElementById("detail-keterangan").innerHTML = data[0].catatan_tindaklanjut ? data[0].catatan_tindaklanjut : ' - ';
                 //status on process                    
                 var url_eviden = $(this).data("url");
-                document.getElementById("detail-eviden_tindak_lanjut").innerHTML = data[0].file_tindak_lanjut ? `<a id="eviden_tindak_lanjut" target="_blank" href="{{asset('/public/uploads/tindak_lanjut/${data[0].file_tindak_lanjut}')}}">${data[0].file_tindak_lanjut}</a>` : ' - ';
+                document.getElementById("detail-eviden_tindak_lanjut").innerHTML = data[0].file_tindak_lanjut ? `<a id="eviden_tindak_lanjut" target="_blank" href="{{asset('/uploads/tindak_lanjut/${data[0].file_tindak_lanjut}')}}">${data[0].file_tindak_lanjut}</a>` : ' - ';
                 loadingPage(false);
                 $("#kt_modal_detail").modal("show");
             }
@@ -698,3 +698,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+

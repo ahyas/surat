@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaksi\SuratMasuk;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendWhatsappNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -629,6 +630,17 @@ class SuratMasukController extends Controller
                 "status"=>3 //status tindak lanjut
             ]);
 
+            $extra = $this->buildExtraLines(null, $request["tindaklanjut_catatan"]);
+            $message = $this->buildMessage('Surat selesai ditindaklanjuti', $request["id_surat_masuk"], $extra);
+            $this->notifyUser(
+                $this->getSuratCreator($request["id_surat_masuk"]),
+                $message
+            );
+            $this->notifyRecipientsChain(
+                $request["id_surat_masuk"],
+                $message
+            );
+
         }
 
         return response()->json($data);
@@ -689,6 +701,16 @@ class SuratMasukController extends Controller
                 "catatan"=>$request["catatan"],
                 "status"=>$status //bila sebagai ketua atau wakil status diturunkan
             ]);
+
+             $petunjuk = DB::table("ref_petunjuk_disposisi")
+                ->where("id", $request["petunjuk"])
+                ->value("name");
+             $extra = $this->buildExtraLines($petunjuk, $request["catatan"]);
+             $this->notifyUser($request["tujuan"], $this->buildMessage(
+                'Surat masuk didisposisi kepada Anda',
+                $request["id_surat_masuk"],
+                $extra
+             ));
         }
 
         return response()->json($data);
@@ -724,6 +746,13 @@ class SuratMasukController extends Controller
                 "catatan" =>$request["catatan"],
                 "status" =>2, //status disposisi
             ]);
+
+            $extra = $this->buildExtraLines(null, $request["catatan"]);
+            $this->notifyUser($request["tujuan"], $this->buildMessage(
+                'Surat masuk diteruskan kepada Anda',
+                $request["teruskan-id_surat_masuk"],
+                $extra
+            ));
         }
 
         return response()->json($data);
@@ -761,6 +790,13 @@ class SuratMasukController extends Controller
                 "catatan"=>$request["naikan-catatan"],
                 "status"=>4, //status dinaikan
             ]);
+
+            $extra = $this->buildExtraLines(null, $request["naikan-catatan"]);
+            $this->notifyUser($request["naikan-tujuan"], $this->buildMessage(
+                'Surat masuk dinaikkan kepada Anda',
+                $request["naikan-id_surat_masuk"],
+                $extra
+            ));
         }
 
         return response()->json($data);
@@ -792,12 +828,19 @@ class SuratMasukController extends Controller
             ]);
              //insert penerima surat
             DB::table('detail_transaksi_surat_masuk')->insertOrIgnore([
-                "id_surat"=>$request["naikan-id_surat_masuk"],
+                "id_surat"=>$request["turunkan-id_surat_masuk"],
                 "id_asal"=>Auth::user()->id,
-                "id_penerima"=>$request["naikan-tujuan"],
-                "catatan"=>$request["naikan-catatan"],
+                "id_penerima"=>$request["turunkan-tujuan"],
+                "catatan"=>$request["turunkan-catatan"],
                 "status"=>5, //status diturunkan
             ]);
+
+            $extra = $this->buildExtraLines(null, $request["turunkan-catatan"]);
+            $this->notifyUser($request["turunkan-tujuan"], $this->buildMessage(
+                'Surat masuk diturunkan kepada Anda',
+                $request["turunkan-id_surat_masuk"],
+                $extra
+            ));
         }
 
         return response()->json($data);
@@ -871,8 +914,8 @@ class SuratMasukController extends Controller
             
             $tahun = date("Y", strtotime($request["tgl_surat"])); 
 
-            DB::table("transaksi_surat_masuk")
-            ->insert([
+            $idSurat = DB::table("transaksi_surat_masuk")
+            ->insertGetId([
                 "no_surat"=>$request["nomor_surat"],
                 "is_internal"=>$request["pengirim_surat"],
                 "klasifikasi_id"=>$request["klasifikasi"],
@@ -884,6 +927,12 @@ class SuratMasukController extends Controller
                 "created_by"=>Auth::user()->id,
                 "file"=>$fileName
             ]);
+
+            // Notifikasi ke Admin TU saja
+            $this->notifyRoles([6], $this->buildMessage(
+                'Surat masuk baru',
+                $idSurat
+            ));
 
         }
 
@@ -1071,5 +1120,153 @@ class SuratMasukController extends Controller
         ->delete();
 
         return response()->json();
+    }
+
+    /**
+     * Dispatch WA notification to a user if number exists.
+     */
+    protected function notifyUser($userId, $message)
+    {
+        if (!$userId || !env('WA_NOTIFY_ENABLED', true)) {
+            return;
+        }
+
+        $target = DB::table('daftar_pegawai')
+            ->where('id_user', $userId)
+            ->value('no_wa');
+
+        if (empty($target)) {
+            return;
+        }
+
+        $personalizedMessage = $this->prependGreeting($userId, $message);
+
+        SendWhatsappNotification::dispatch($target, $personalizedMessage);
+    }
+
+    /**
+     * Notify all users in given roles.
+     */
+    protected function notifyRoles(array $roleIds, string $message)
+    {
+        $userIds = DB::table('permission')
+            ->whereIn('id_role', $roleIds)
+            ->pluck('id_user')
+            ->unique();
+
+        foreach ($userIds as $userId) {
+            $this->notifyUser($userId, $message);
+        }
+    }
+
+    /**
+     * Notify every user ever involved as penerima pada detail surat.
+     */
+    protected function notifyRecipientsChain($idSurat, string $message)
+    {
+        $userIds = DB::table('detail_transaksi_surat_masuk')
+            ->where('id_surat', $idSurat)
+            ->pluck('id_penerima')
+            ->unique();
+
+        foreach ($userIds as $userId) {
+            $this->notifyUser($userId, $message);
+        }
+    }
+
+    /**
+     * Tambahkan salam dan nama penerima (jika ada) di depan pesan.
+     */
+    protected function prependGreeting($userId, string $message): string
+    {
+        $name = DB::table('users')->where('id', $userId)->value('name');
+        $sapaan = $name ? "Yth. {$name}" : "Yth. Bapak/Ibu";
+
+        return "*[SIMISOL NOTIF]*\n".
+            "Assalamualaikum\n".
+            "{$sapaan}\n\n".
+            "{$message}\n\n".
+            "*- SIMISOL PTA Papua Barat*";
+    }
+
+    /**
+     * Build a concise WA message for a surat masuk.
+     */
+    protected function buildMessage(string $title, $idSurat, array $extraLines = []): string
+    {
+        $surat = DB::table('transaksi_surat_masuk')->where('id', $idSurat)->first();
+        if (!$surat) {
+            return $title;
+        }
+
+        $body = [];
+        $body[] = "*{$title}*";
+        $body[] = "🗂️ *No Surat* : {$surat->no_surat}";
+        $body[] = "📝 *Perihal* : {$surat->perihal}";
+        $body[] = "🏢 *Pengirim* : {$surat->pengirim}";
+        $body[] = "📅 *Tanggal* : {$surat->tgl_surat}";
+        foreach ($extraLines as $line) {
+            if ($line !== '') {
+                $body[] = $line;
+            }
+        }
+        $body[] = "🔗 *Aksi* : ".$this->buildActionLink($title, $idSurat);
+        $body[] = "";
+        $body[] = "Mohon ditindaklanjuti sesuai kewenangan.";
+
+        return implode("\n", $body);
+    }
+
+    /**
+     * Build extra lines for petunjuk/catatan.
+     */
+    protected function buildExtraLines($petunjuk = null, $catatan = null): array
+    {
+        $lines = [];
+        if (!empty($petunjuk)) {
+            $lines[] = "📎 *Petunjuk* : {$petunjuk}";
+        }
+        if (!empty($catatan)) {
+            $lines[] = "💬 *Catatan* : {$catatan}";
+        }
+
+        return $lines;
+    }
+
+    /**
+     * Get id pembuat surat.
+     */
+    protected function getSuratCreator($idSurat)
+    {
+        return DB::table('transaksi_surat_masuk')
+            ->where('id', $idSurat)
+            ->value('created_by');
+    }
+
+    /**
+     * Build link ke halaman surat masuk dengan parameter id.
+     */
+    protected function buildLink($idSurat, $action = null): string
+    {
+        $base = rtrim(config('app.url'), '/');
+        $url = $base.'/transaksi/surat_masuk?open='.$idSurat;
+        if ($action) {
+            $url .= '&action='.$action;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Build link aksi berdasarkan konteks notifikasi.
+     */
+    protected function buildActionLink(string $title, $idSurat): string
+    {
+        $action = 'proses';
+        if (stripos($title, 'selesai ditindaklanjuti') !== false) {
+            $action = 'detail';
+        }
+
+        return $this->buildLink($idSurat, $action);
     }
 }

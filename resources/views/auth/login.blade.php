@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <!--
 Author: Keenthemes
@@ -32,8 +32,8 @@ License: For each use you must have a valid license purchased only from above li
 		<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />-->
 		<!--end::Fonts-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
-		<link href="{{asset('public/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
-		<link href="{{asset('public/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link href="{{asset('assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link href="{{asset('assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
 		<script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 	</head>
@@ -53,7 +53,7 @@ License: For each use you must have a valid license purchased only from above li
 				<div class="d-flex flex-center w-lg-50 pt-15 pt-lg-0 px-10">
 					<div class="d-flex flex-center flex-lg-start flex-column">
 						<a href="javascript:void(0)" class="mb-7">
-						<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
+						<img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px"/>
 						</a>
 						<h2 class="text-white fw-bold m-0">SIMISOL</h2> <h4 class="text-white fw-normal">Sistem Aplikasi Manajemen Surat Online</h4>
 					</div>
@@ -65,7 +65,7 @@ License: For each use you must have a valid license purchased only from above li
                             @csrf
 								<div class="text-center mb-11">
 									<a href="javascript:void(0)" class="mb-7">
-										<img alt="Logo" src="{{asset('public/assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px" style="margin-bottom:20px"/>
+										<img alt="Logo" src="{{asset('assets/media/logos/default-small.svg')}}" class="h-25px h-lg-30px" style="margin-bottom:20px"/>
 									</a>
 									<h1 class="text-gray-900 fw-bolder mb-3">Sign In</h1>
 									<div class="text-gray-500 fw-semibold fs-6">Masukan Username dan Password</div>
@@ -86,9 +86,13 @@ License: For each use you must have a valid license purchased only from above li
                                         </span>
                                     @enderror
 								</div>
-								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-									<div></div>
-								</div>
+                                <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+                                    <label class="form-check form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} />
+                                        <span class="form-check-label">Ingat saya</span>
+                                    </label>
+                                    <div></div>
+                                </div>
 								<div class="d-grid mb-10">
 									<button type="submit" class="btn btn-primary spinner spinner-white spinner-left sign_in" id="sign_in" data-kt-indicator="off">
 										<span class="indicator-progress">
@@ -109,9 +113,9 @@ License: For each use you must have a valid license purchased only from above li
 				</div>
 			</div>
 		</div>
-		<script>var hostUrl = "{{asset('public/assets/')}}";</script>
-		<script src="{{asset('public/assets/plugins/global/plugins.bundle.js')}}"></script>
-		<script src="{{asset('public/assets/js/scripts.bundle.js')}}"></script>
+		<script>var hostUrl = "{{asset('assets/')}}";</script>
+		<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+		<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 		<script >
 			$(document).ready(function(){
 				var btn = document.querySelector(".sign_in");

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -322,7 +322,7 @@
 																	
 @endsection
 @push('scripts')
-<script src="{{asset('public/assets/js/custom/apps/user-management/users/list/table.js')}}"></script> 
+<script src="{{asset('assets/js/custom/apps/user-management/users/list/table.js')}}"></script> 
 <script type="text/javascript">
 $(document).ready(function(){
     //** -----------------------------------------------------BEGIN::klasifikasi ----------------------------------------------------------*/
@@ -973,3 +973,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+

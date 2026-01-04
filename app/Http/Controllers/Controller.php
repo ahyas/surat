@@ -144,11 +144,14 @@ class Controller extends BaseController
                             ->select('transaksi_nomenklatur_jabatan.nomenklatur_id')
                             ->first();
 
-                            $tot_count_esign = DB::table('transaksi_esign')
-                            ->where('transaksi_esign.status', 1)
-                            ->where('transaksi_surat_keluar.id_nomenklatur_jabatan', $nomenklatur->nomenklatur_id)
-                            ->join('transaksi_surat_keluar', 'transaksi_esign.id_surat', 'transaksi_surat_keluar.id')
-                            ->count();
+                            $tot_count_esign = 0;
+                            if ($nomenklatur) {
+                                $tot_count_esign = DB::table('transaksi_esign')
+                                ->where('transaksi_esign.status', 1)
+                                ->where('transaksi_surat_keluar.id_nomenklatur_jabatan', $nomenklatur->nomenklatur_id)
+                                ->join('transaksi_surat_keluar', 'transaksi_esign.id_surat', 'transaksi_surat_keluar.id')
+                                ->count();
+                            }
 
                             $menu = 
                             [

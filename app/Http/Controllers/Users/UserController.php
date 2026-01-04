@@ -34,6 +34,7 @@ class UserController extends Controller
             "bidang.id AS id_bidang",
             "ref_jabatan.nama AS jabatan",
             "daftar_pegawai.nip",
+            "daftar_pegawai.no_wa",
             "daftar_pegawai.status",
             "daftar_pegawai.photo_user",
             DB::raw("(CASE WHEN daftar_pegawai.status = 1 THEN 'Aktif' ELSE 'Non Aktif' END) AS status_user")
@@ -70,6 +71,10 @@ class UserController extends Controller
 
         if(empty($request["jabatan"])){
             $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
+        }
+
+        if(!empty($request["no_wa"])){
+            $request["no_wa"] = preg_replace('/[^0-9]/', '', $request["no_wa"]);
         }
 
         if($request->hasFile('photo_user')){
@@ -118,6 +123,7 @@ class UserController extends Controller
                 "id_user"=>$userId,
                 "id_jabatan"=>$request["jabatan"],
                 "nip"=>$request["nip"],
+                "no_wa"=>$request["no_wa"],
                 "photo_user"=>$fileName
             ]);
         }
@@ -135,6 +141,7 @@ class UserController extends Controller
             "users.email",
             "daftar_pegawai.id_jabatan",
             "daftar_pegawai.nip",
+            "daftar_pegawai.no_wa",
             "daftar_pegawai.status"
         )
         ->leftJoin("permission", "users.id","=","permission.id_user")
@@ -159,6 +166,10 @@ class UserController extends Controller
 
         if(empty($request["jabatan"])){
             $errors['jabatan'] = 'Pilih Jabatan yang sesuai';
+        }
+
+        if(!empty($request["no_wa"])){
+            $request["no_wa"] = preg_replace('/[^0-9]/', '', $request["no_wa"]);
         }
 
         if($request->hasFile('photo_user')){
@@ -197,6 +208,7 @@ class UserController extends Controller
                 "id_user"=>$id_user,
                 "id_jabatan"=>$request["jabatan"],
                 "nip"=>$request["nip"],
+                "no_wa"=>$request["no_wa"],
                 "status"=>$request["status"],
                 "photo_user"=>$fileName
             ]);

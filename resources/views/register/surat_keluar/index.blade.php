@@ -30,10 +30,15 @@
                 <form target="_blank" action="{{route('register.surat_keluar.print')}}" method="POST">
                     {{ csrf_field()}}
                     <label class="fw-semibold fs-6 mb-2">Tahun</label>
+                    @php
+                        $currentYear = (int) date('Y');
+                        $startYear = $currentYear - 10;
+                    @endphp
                     <select name="tahun" id="tahun" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" >
                         <option selected value="0000" >Pilih tahun</option>
-                        <option value="2025" >2025</option>
-                        <option value="2024">2024</option>
+                        @for ($year = $currentYear; $year >= $startYear; $year--)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endfor
                     </select>
 
                     <label class="fw-semibold fs-6 mb-2">Bulan</label>

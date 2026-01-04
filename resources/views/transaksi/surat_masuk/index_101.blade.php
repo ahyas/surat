@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -176,7 +176,7 @@ $(document).ready(function(){
                 }},
             {data:"file", className: "text-end",
                 mRender:function(data){
-                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/public/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
+                    return`<a href='javascript:void(0)' id="lampiran" data-url="{{asset('/uploads/surat_masuk/${data}')}}"><span class="badge badge-secondary">Berkas</span></a>`;
                 }
             }
         ]
@@ -190,3 +190,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+

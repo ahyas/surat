@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -69,6 +69,10 @@
                                             <!--begin::Input-->
                                             <input type="text" name="nip" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="NIP" />
                                             <!--end::Input-->
+                                        </div>
+                                        <div class="fv-row mb-7">
+                                            <label class="fw-semibold fs-6 mb-2">Nomor WA</label>
+                                            <input type="text" name="no_wa" class="form-control form-control-solid mb-3 mb-lg-0" placeholder="08xxxxxxxxxx" />
                                         </div>
                                         <!--begin::Input group-->
                                         <div class="fv-row mb-7">
@@ -166,6 +170,7 @@
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                         <th class="min-w-125px">User</th>
                         <th>NIP</th>
+                        <th>No. WA</th>
                         <th class="min-w-125px">Bidang</th>
                         <th>Jabatan</th>
                         <th>Status</th>
@@ -206,12 +211,12 @@ $(document).ready(function(){
                     if(full['photo_user'] != null){
                         var file = full['photo_user'];
                         var photo_user = `<div class="symbol symbol-30px symbol-md-40px">
-                            <img src="{{asset('public/uploads/photo_user/${file}')}}" alt="image">
+                            <img src="{{asset('uploads/photo_user/${file}')}}" alt="image">
                         </div>
                         `;
                     }else{
                         var photo_user = `<div class="symbol symbol-30px symbol-md-40px">
-                            <img src="{{asset('public/uploads/photo_user/avatar.png')}}" alt="image">
+                            <img src="{{asset('uploads/photo_user/avatar.png')}}" alt="image">
                         </div>
                         `;
                     }
@@ -223,6 +228,11 @@ $(document).ready(function(){
                 }
             },
             {data:"nip"},
+            {data:"no_wa",
+                mRender:function(data){
+                    return data ? data : '-';
+                }
+            },
             {data:"bidang",
                 mRender:function(data, type, full){
                     if(full['id_bidang'] == 1){
@@ -285,15 +295,16 @@ $(document).ready(function(){
         document.getElementById("notification").innerHTML ='';
         $("#kt_modal_add_user_form").trigger("reset");
         loadingPage(true);
-        $.ajax({
-            type:"GET",
-            url:`{{url('user/list/${id_user}/edit')}}`,
-            dataType:"JSON",
-            success:function(data){
-                console.log(data);
-                $("input[name='id_user']").val(id_user);
-                $("input[name='nip']").val(data.nip);
-                $("input[name='name']").val(data.nama);
+                $.ajax({
+                    type:"GET",
+                    url:`{{url('user/list/${id_user}/edit')}}`,
+                    dataType:"JSON",
+                    success:function(data){
+                        console.log(data);
+                        $("input[name='id_user']").val(id_user);
+                        $("input[name='nip']").val(data.nip);
+                        $("input[name='no_wa']").val(data.no_wa);
+                        $("input[name='name']").val(data.nama);
                 $("input[name='email']").val(data.email);
                 $("#bidang").val(data.id_bidang).trigger('change');
                 $("#jabatan").val(data.id_jabatan).trigger('change');
@@ -438,3 +449,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+

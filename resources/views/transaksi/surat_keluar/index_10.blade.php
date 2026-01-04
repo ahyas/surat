@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -51,9 +51,14 @@
                                             
                                         <div class="fv-row mb-7">
                                             <label class="fw-semibold fs-6 mb-2">Tahun</label>
+                                            @php
+                                                $currentYear = (int) date('Y');
+                                                $startYear = $currentYear - 10;
+                                            @endphp
                                             <select name="tahun" id="tahun" class="form-select form-select-solid" data-placeholder="Select an option" data-hide-search="true" disabled >
-                                                <option selected value="2025" >2025</option>
-                                                <option value="2024">2024</option>
+                                                @for ($year = $currentYear; $year >= $startYear; $year--)
+                                                    <option value="{{ $year }}" {{ $year === $currentYear ? 'selected' : '' }}>{{ $year }}</option>
+                                                @endfor
                                             </select>
                                         </div>
 
@@ -511,8 +516,8 @@ $(document).ready(function(){
             {data:"file",
                 mRender:function(data, type, full){
                     if(data !== null ){
-                        //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/public/uploads/surat_keluar/${data}')}}" data-id_status_esign=${full['id_status_esign']}><span class="badge badge-light-secondary">Berkas</span></a>`;
+                        //return`<a href="{{asset('/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
+                        return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/uploads/surat_keluar/${data}')}}" data-id_status_esign=${full['id_status_esign']}><span class="badge badge-light-secondary">Berkas</span></a>`;
                     }else{
                         return`<span class="badge badge-light-danger">Kosong</span>`;
                     }
@@ -1311,3 +1316,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+

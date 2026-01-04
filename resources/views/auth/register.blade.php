@@ -1,4 +1,4 @@
-
+﻿
 
 <!DOCTYPE html>
 <!--
@@ -28,13 +28,13 @@ License: For each use you must have a valid license purchased only from above li
 		<meta property="og:url" content="https://keenthemes.com/metronic" />
 		<meta property="og:site_name" content="Metronic by Keenthemes" />
 		<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-		<link rel="shortcut icon" href="{{asset('public/assets/media/logos/favicon.ico')}}" />
+		<link rel="shortcut icon" href="{{asset('assets/media/logos/favicon.ico')}}" />
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
-		<link href="{{asset('public/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
-		<link href="{{asset('public/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link href="{{asset('assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link href="{{asset('assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
 		<script>// Frame-busting to prevent site from being loaded within a frame without permission (click-jacking) if (window.top != window.self) { window.top.location.replace(window.self.location.href); }</script>
 	</head>
@@ -50,7 +50,7 @@ License: For each use you must have a valid license purchased only from above li
 		<!--begin::Root-->
 		<div class="d-flex flex-column flex-root">
 			<!--begin::Page bg image-->
-			<style>body { background-image: url("{{asset('public/assets/media/auth/bg4.jpg')}}"); } [data-bs-theme="dark"] body { background-image: url("{{asset('public/assets/media/auth/bg4-dark.jpg')}}"); }</style>
+			<style>body { background-image: url("{{asset('assets/media/auth/bg4.jpg')}}"); } [data-bs-theme="dark"] body { background-image: url("{{asset('assets/media/auth/bg4-dark.jpg')}}"); }</style>
 			<!--end::Page bg image-->
 			<!--begin::Authentication - Sign-up -->
 			<div class="d-flex flex-column flex-column-fluid flex-lg-row">
@@ -60,7 +60,7 @@ License: For each use you must have a valid license purchased only from above li
 					<div class="d-flex flex-center flex-lg-start flex-column">
 						<!--begin::Logo-->
 						<!--<a href="index.html" class="mb-7">
-							<img alt="Logo" src="{{asset('public/assets/media/logos/custom-3.svg')}}" />
+							<img alt="Logo" src="{{asset('assets/media/logos/custom-3.svg')}}" />
 						</a>-->
 						<!--end::Logo-->
 						<!--begin::Title-->
@@ -165,7 +165,7 @@ License: For each use you must have a valid license purchased only from above li
 							<div class="me-0">
 								<!--begin::Toggle-->
 								<button class="btn btn-flex btn-link btn-color-gray-700 btn-active-color-primary rotate fs-base" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start" data-kt-menu-offset="0px, 0px">
-									<img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{asset('public/assets/media/flags/united-states.svg')}}" alt="" />
+									<img data-kt-element="current-lang-flag" class="w-20px h-20px rounded me-3" src="{{asset('assets/media/flags/united-states.svg')}}" alt="" />
 									<span data-kt-element="current-lang-name" class="me-1">English</span>
 									<i class="ki-duotone ki-down fs-5 text-muted rotate-180 m-0"></i>
 								</button>
@@ -176,7 +176,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item px-3">
 										<a href="#" class="menu-link d-flex px-5" data-kt-lang="English">
 											<span class="symbol symbol-20px me-4">
-												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('public/assets/media/flags/united-states.svg')}}" alt="" />
+												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/united-states.svg')}}" alt="" />
 											</span>
 											<span data-kt-element="lang-name">English</span>
 										</a>
@@ -186,7 +186,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item px-3">
 										<a href="#" class="menu-link d-flex px-5" data-kt-lang="Spanish">
 											<span class="symbol symbol-20px me-4">
-												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('public/assets/media/flags/spain.svg')}}" alt="" />
+												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/spain.svg')}}" alt="" />
 											</span>
 											<span data-kt-element="lang-name">Spanish</span>
 										</a>
@@ -196,7 +196,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item px-3">
 										<a href="#" class="menu-link d-flex px-5" data-kt-lang="German">
 											<span class="symbol symbol-20px me-4">
-												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('public/assets/media/flags/germany.svg')}}" alt="" />
+												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/germany.svg')}}" alt="" />
 											</span>
 											<span data-kt-element="lang-name">German</span>
 										</a>
@@ -206,7 +206,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item px-3">
 										<a href="#" class="menu-link d-flex px-5" data-kt-lang="Japanese">
 											<span class="symbol symbol-20px me-4">
-												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('public/assets/media/flags/japan.svg')}}" alt="" />
+												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/japan.svg')}}" alt="" />
 											</span>
 											<span data-kt-element="lang-name">Japanese</span>
 										</a>
@@ -216,7 +216,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item px-3">
 										<a href="#" class="menu-link d-flex px-5" data-kt-lang="French">
 											<span class="symbol symbol-20px me-4">
-												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('public/assets/media/flags/france.svg')}}" alt="" />
+												<img data-kt-element="lang-flag" class="rounded-1" src="{{asset('assets/media/flags/france.svg')}}" alt="" />
 											</span>
 											<span data-kt-element="lang-name">French</span>
 										</a>
@@ -245,10 +245,10 @@ License: For each use you must have a valid license purchased only from above li
 		<!--end::Root-->
 		<!--end::Main-->
 		<!--begin::Javascript-->
-		<script>var hostUrl = "{{asset('public/assets/')}}";</script>
+		<script>var hostUrl = "{{asset('assets/')}}";</script>
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
-		<script src="{{asset('public/assets/plugins/global/plugins.bundle.js')}}"></script>
-		<script src="{{asset('public/assets/js/scripts.bundle.js')}}"></script>
+		<script src="{{asset('assets/plugins/global/plugins.bundle.js')}}"></script>
+		<script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Custom Javascript(used for this page only)-->
 		<!--<script src="{{asset('assets/js/custom/authentication/sign-up/general.js')}}"></script>-->
@@ -257,3 +257,4 @@ License: For each use you must have a valid license purchased only from above li
 	</body>
 	<!--end::Body-->
 </html>
+

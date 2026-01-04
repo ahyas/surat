@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('content')
 <!--begin::Post-->
@@ -148,8 +148,8 @@ $(document).ready(function(){
             {data:"tgl_surat"},
             {data:"file",
                 mRender:function(data, type, full){
-                    //return`<a href="{{asset('/public/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
-                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/public/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
+                    //return`<a href="{{asset('/uploads/surat_keluar/${data}')}}" target="_blank" >File</a>`;
+                    return`<a href='javascript:void(0)' data-filename='${data}' id="lampiran" data-id_surat='${full['id_surat']}' data-url="{{asset('/uploads/surat_keluar/${data}')}}"><span class="badge badge-light-secondary">Berkas</span></a>`;
                 }
             },
             {data:"dibuat_oleh"}
@@ -202,3 +202,4 @@ $(document).ready(function(){
 });
 </script>
 @endpush
+
