@@ -1143,7 +1143,7 @@ $(document).ready(function(){
 
     $("body").on("click", "#edit_surat_keluar", function(){
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Surat Keluar</h2>`;
-        document.getElementById("display-penerima-surat").style.display = "none";
+        document.getElementById("display-penerima-surat").style.display = "inline-block";
         document.getElementById("display-tujuan-internal").style.display = "none";
         document.getElementById("display-tujuan-external").style.display = "none";
         document.getElementById("update_surat").style.display = "inline-block";
@@ -1155,12 +1155,15 @@ $(document).ready(function(){
         document.getElementById("data_dukung").classList.remove("required");
         document.getElementById("notification").innerHTML ='';
         document.getElementById("row-transaksi").style.display = 'inline-block';
+        document.getElementById("pilih_semua").checked = false;
         var id_surat = $(this).data("id_surat_keluar");
         $("input[name='id_surat_keluar']").val(id_surat);
         $("input[name='kode_surat']").val($(this).data("kode_surat"));
         
         $("#file_surat").val("");
         $("#template_surat_keluar").val("0");
+        $("#tujuan").val([]).trigger("change");
+        $("input[name='tujuan-external']").val("");
         loadingPage(true);
         $.ajax({
             url:`{{url('/transaksi/surat_keluar/${id_surat}/edit')}}`,
@@ -1215,7 +1218,16 @@ $(document).ready(function(){
                     document.getElementById("row-transaksi").style.display = 'none';
                 }
 
-                document.add_surat_keluar_form.penerima_surat.value=data.surat_keluar.internal;
+                let selectedPenerima = String(data.surat_keluar.internal);
+                $(`input[name='penerima_surat'][value='${selectedPenerima}']`).prop('checked', true).trigger('change');
+                if(selectedPenerima === "1"){
+                    let selectedTujuan = data.tujuan_surat.map(function(item){
+                        return String(item.id_penerima);
+                    });
+                    $("#tujuan").val(selectedTujuan).trigger("change");
+                }else{
+                    $("input[name='tujuan-external']").val(data.surat_keluar.tujuan);
+                }
 
                 document.getElementById("nomenklatur_jabatan").removeAttribute("disabled");
                 $("#nomenklatur_jabatan").val(data.id_nomenklatur);
@@ -1264,12 +1276,14 @@ $(document).ready(function(){
                     console.log(data);
                     if (!data.success) {
                         let err_nomenklatur_jabatan = data.errors.nomenklatur_jabatan ? `<li>${data.errors.nomenklatur_jabatan}</li>` : ``;
+                        let err_penerima_surat = data.errors.penerima_surat ? `<li>${data.errors.penerima_surat}</li>` : ``;
                         let err_tujuan = data.errors.tujuan  ? `<li>${data.errors.tujuan}</li>` : ``;
                         let err_perihal = data.errors.perihal  ? `<li>${data.errors.perihal}</li>` : ``;
+                        let err_tahun_surat = data.errors.tahun_surat ? `<li>${data.errors.tahun_surat}</li>` : ``;
                         let err_tgl_surat = data.errors.tgl_surat  ? `<li>${data.errors.tgl_surat}</li>` : ``;
                         let err_file_surat = data.errors.file_surat  ? `<li>${data.errors.file_surat}</li>` : ``;
 
-                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_tujuan+err_perihal+err_tgl_surat+err_file_surat+"</div></div>";      
+                        document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_nomenklatur_jabatan+err_penerima_surat+err_tujuan+err_perihal+err_tahun_surat+err_tgl_surat+err_file_surat+"</div></div>";      
                         btn.setAttribute("data-kt-indicator", "off");
                         btn.removeAttribute("disabled");
                         $("#file_surat").val("");
