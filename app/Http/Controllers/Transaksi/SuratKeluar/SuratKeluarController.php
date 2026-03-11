@@ -10,6 +10,19 @@ use DataTables;
 
 class SuratKeluarController extends Controller
 {
+    protected function applyListFilters(Request $request, $query, string $alias, string $klasifikasiColumn)
+    {
+        if ($request->filled('filter_klasifikasi')) {
+            $query->where("{$alias}.{$klasifikasiColumn}", $request->filter_klasifikasi);
+        }
+
+        if ($request->filled('filter_tahun_surat')) {
+            $query->whereYear("{$alias}.tgl_surat", $request->filter_tahun_surat);
+        }
+
+        return $query;
+    }
+
     public function index(){
         $id_role = Auth::user()->getRole()->id_role;
         $klasifikasi = DB::table("ref_klasifikasi")
@@ -40,7 +53,7 @@ class SuratKeluarController extends Controller
         switch ($id_role){
             //login sebagai admin disposisi 1
             case 8:
-                return view('transaksi.surat_keluar.index_8', compact("user"));
+                return view('transaksi.surat_keluar.index_8', compact("user","klasifikasi"));
             break;
             //login sebagai kabag/panmud
             case 10:
@@ -48,19 +61,19 @@ class SuratKeluarController extends Controller
             break;
             //login sebagai ketua
             case 16:
-                return view('transaksi.surat_keluar.index_16');
+                return view('transaksi.surat_keluar.index_16', compact("klasifikasi"));
             break;
             //login sebagai wakil
             case 17:
-                return view('transaksi.surat_keluar.index_17');
+                return view('transaksi.surat_keluar.index_17', compact("klasifikasi"));
             break;
             //login sebagai end user
             case 18:
-                return view('transaksi.surat_keluar.index_18');
+                return view('transaksi.surat_keluar.index_18', compact("klasifikasi"));
             break;
             //login sebagai admin monitoring
             case 101:
-                return view('transaksi.surat_keluar.index_101');
+                return view('transaksi.surat_keluar.index_101', compact("klasifikasi"));
             break;
             
             default :
@@ -106,7 +119,7 @@ class SuratKeluarController extends Controller
         return response()->json($transaksi);
     }
 
-    public function getData(){
+    public function getData(Request $request){
         $id_role = Auth::user()->getRole()->id_role;
         //login sebagai pimpinan
        
@@ -167,7 +180,9 @@ class SuratKeluarController extends Controller
                     "surat_keluar.internal",
                     "users.name",
                     "users.id")
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return Datatables::of($table)->make(true);
             break;
@@ -233,7 +248,9 @@ class SuratKeluarController extends Controller
                     "users.name",
                     "users.id",
                     "transaksi_esign.status")
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return Datatables::of($table)->make(true);
             break;
@@ -299,7 +316,9 @@ class SuratKeluarController extends Controller
                     "users.name",
                     "users.id",
                     "transaksi_esign.status")
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return Datatables::of($table)->make(true);
             break;
@@ -355,7 +374,9 @@ class SuratKeluarController extends Controller
                     "ref_transaksi.deskripsi",
                     "surat_keluar.internal", 
                     "users.name",)
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return response()->json($table);
             break;
@@ -411,7 +432,9 @@ class SuratKeluarController extends Controller
                     "ref_transaksi.deskripsi",
                     "surat_keluar.internal", 
                     "users.name",)
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return response()->json($table);
             break;
@@ -445,7 +468,9 @@ class SuratKeluarController extends Controller
                 ->leftJoin("ref_transaksi", "surat_keluar.id_ref_transaksi","=", "ref_transaksi.id")
                 ->leftJoin("detail_transaksi_surat", "surat_keluar.id","=","detail_transaksi_surat.id_surat")
                 ->groupBy("surat_keluar.id","surat_keluar.id_ref_klasifikasi","surat_keluar.id_ref_fungsi","surat_keluar.id_ref_kegiatan","surat_keluar.id_ref_transaksi","surat_keluar.id_nomenklatur_jabatan","surat_keluar.no_surat","surat_keluar.tujuan","surat_keluar.perihal","surat_keluar.tgl_surat","surat_keluar.file","surat_keluar.created_at","ref_fungsi.kode","ref_kegiatan.kode","ref_transaksi.kode","ref_kegiatan.deskripsi","ref_transaksi.deskripsi","surat_keluar.internal")
-                ->orderBy("surat_keluar.created_at","DESC")->get();
+                ->orderBy("surat_keluar.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
                 return response()->json($table);
             break;
@@ -511,7 +536,9 @@ class SuratKeluarController extends Controller
                 "users.id",
                 "permission.id_role",
                 "transaksi_esign.status")
-            ->orderBy("surat_keluar.created_at","DESC")->get();
+            ->orderBy("surat_keluar.created_at","DESC");
+
+            $table = $this->applyListFilters($request, $table, "surat_keluar", "id_ref_klasifikasi")->get();
 
             //return response()->json($table);
             return Datatables::of($table)->make(true);

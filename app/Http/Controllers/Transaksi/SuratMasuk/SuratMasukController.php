@@ -12,6 +12,19 @@ use PhpParser\Node\Expr\Isset_;
 
 class SuratMasukController extends Controller
 {
+    protected function applyListFilters(Request $request, $query, string $alias, string $klasifikasiColumn)
+    {
+        if ($request->filled('filter_klasifikasi')) {
+            $query->where("{$alias}.{$klasifikasiColumn}", $request->filter_klasifikasi);
+        }
+
+        if ($request->filled('filter_tahun_surat')) {
+            $query->whereYear("{$alias}.tgl_surat", $request->filter_tahun_surat);
+        }
+
+        return $query;
+    }
+
     public function index(){
         $id_role = Auth::user()->getRole()->id_role;
 
@@ -58,39 +71,39 @@ class SuratMasukController extends Controller
 
                 $bidang = DB::table("bidang")->select("id AS id_bidang","nama AS bidang")->whereIn('id', [2])->get();
 
-                return view('transaksi/surat_masuk/index_8', compact("user","user_pimpinan","bidang","petunjuk"));
+                return view('transaksi/surat_masuk/index_8', compact("user","user_pimpinan","bidang","petunjuk","klasifikasi"));
             break;
 
             //login sebagai admin disposisi 2
             case 10:
 
-                return view('transaksi/surat_masuk/index_10', compact("user","petunjuk"));
+                return view('transaksi/surat_masuk/index_10', compact("user","petunjuk","klasifikasi"));
             break;
 
             //login sebagai admin disposisi 3
             case 13:
 
-                return view('transaksi/surat_masuk/index_13', compact("user"));
+                return view('transaksi/surat_masuk/index_13', compact("user","klasifikasi"));
             break;
 
             //login sebagai ketua
             case 16:
 
-                return view('transaksi/surat_masuk/index_16', compact("user", "petunjuk"));
+                return view('transaksi/surat_masuk/index_16', compact("user", "petunjuk", "klasifikasi"));
             break;
             //login sebagai wakil
             case 17:
 
-                return view('transaksi/surat_masuk/index_17', compact("user", "petunjuk"));
+                return view('transaksi/surat_masuk/index_17', compact("user", "petunjuk", "klasifikasi"));
             break;
 
             //login sebagai end user
             case 18:
-                return view('transaksi/surat_masuk/index_18', compact("user", "petunjuk"));
+                return view('transaksi/surat_masuk/index_18', compact("user", "petunjuk", "klasifikasi"));
             break;
             //login sebagai admin monitoring
             case 101:
-                return view('transaksi/surat_masuk/index_101');
+                return view('transaksi/surat_masuk/index_101', compact("klasifikasi"));
             break;
             //login sebagai admin tata usaha
             default :
@@ -99,7 +112,7 @@ class SuratMasukController extends Controller
 
     }
 
-    public function getData(){
+    public function getData(Request $request){
         $id_role = Auth::user()->getRole()->id_role;
         switch ($id_role){
             //login sebagai operator surat
@@ -125,8 +138,9 @@ class SuratMasukController extends Controller
                 )
                 ->orderBy("surat_masuk.created_at","DESC")
                 ->leftJoin("users", "surat_masuk.created_by","=","users.id")
-                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
-                ->get();
+                ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -169,8 +183,9 @@ class SuratMasukController extends Controller
                     "surat_masuk.is_internal",
                     "ref_klasifikasi.kode",
                     "ref_klasifikasi.deskripsi",
-                    )
-                ->get();
+                    );
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -199,8 +214,9 @@ class SuratMasukController extends Controller
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -228,8 +244,9 @@ class SuratMasukController extends Controller
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -259,8 +276,9 @@ class SuratMasukController extends Controller
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
                 ->leftJoin('permission', 'detail_surat_masuk.id_penerima', 'permission.id_user')
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -291,8 +309,9 @@ class SuratMasukController extends Controller
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
                 ->leftJoin('permission', 'detail_surat_masuk.id_penerima', 'permission.id_user')
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -321,8 +340,9 @@ class SuratMasukController extends Controller
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json($table);
             break;
@@ -330,8 +350,10 @@ class SuratMasukController extends Controller
             //login sebagai admin tata usaha
             default :
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
-                ->whereNull("surat_masuk.id_status")
-                ->orWhereIn("surat_masuk.id_status",[1,2, 4,5])
+                ->where(function($query){
+                    $query->whereNull("surat_masuk.id_status")
+                    ->orWhereIn("surat_masuk.id_status",[1,2,4,5]);
+                })
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
@@ -368,8 +390,9 @@ class SuratMasukController extends Controller
                     'ref_klasifikasi.kode',
                     'ref_klasifikasi.deskripsi',
                 )
-                ->orderBy("surat_masuk.created_at","DESC")
-                ->get();
+                ->orderBy("surat_masuk.created_at","DESC");
+
+                $table = $this->applyListFilters($request, $table, "surat_masuk", "klasifikasi_id")->get();
 
                 return response()->json(['table'=>$table]);
         }

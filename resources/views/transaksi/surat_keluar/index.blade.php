@@ -323,6 +323,7 @@
                 Mohon perhatian. Setelah dokumen dinyatakan lengkap JANGAN LUPA untuk segera di arsipkan. Terimakasih.
             </div></div>
             
+            @include('transaksi.partials.surat_filters')
             <table class="table table-hover align-middle table-row-dashed fs-6 gy-5" id="tb_surat_keluar">
                 <thead>
                     <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">

@@ -6821,6 +6821,81 @@ License: For each use you must have a valid license purchased only from above li
 				openDetailById(openId);
 			})();
 		</script>
+		<script>
+			(function(){
+				if (typeof $ === 'undefined') return;
+
+				const getFilterValue = function(id){
+					const element = document.getElementById(id);
+					return element ? element.value : '';
+				};
+
+				const buildFilterQuery = function(){
+					const params = new URLSearchParams();
+					const klasifikasi = getFilterValue('filter_klasifikasi');
+					const tahunSurat = getFilterValue('filter_tahun_surat');
+
+					if (klasifikasi) {
+						params.set('filter_klasifikasi', klasifikasi);
+					}
+
+					if (tahunSurat) {
+						params.set('filter_tahun_surat', tahunSurat);
+					}
+
+					return params.toString();
+				};
+
+				const reloadFilteredTables = function(){
+					if ($.fn.DataTable && $('#tb_surat_masuk').length && $.fn.DataTable.isDataTable('#tb_surat_masuk')) {
+						$('#tb_surat_masuk').DataTable().ajax.reload(null, false);
+					}
+
+					if ($.fn.DataTable && $('#tb_surat_keluar').length && $.fn.DataTable.isDataTable('#tb_surat_keluar')) {
+						$('#tb_surat_keluar').DataTable().ajax.reload(null, false);
+					}
+				};
+
+				$(document).on('change', '#filter_klasifikasi, #filter_tahun_surat', function(){
+					reloadFilteredTables();
+				});
+
+				$(document).on('click', '#reset_filter_surat', function(){
+					if ($('#filter_klasifikasi').length) {
+						$('#filter_klasifikasi').val('').trigger('change.select2');
+					}
+
+					if ($('#filter_tahun_surat').length) {
+						$('#filter_tahun_surat').val('').trigger('change.select2');
+					}
+
+					reloadFilteredTables();
+				});
+
+				$.ajaxPrefilter(function(options){
+					if (!options.url) return;
+					let url = String(options.url);
+					const isSuratMasuk = url.indexOf('transaksi/surat_masuk/get_data') !== -1;
+					const isSuratKeluar = url.indexOf('transaksi/surat_keluar/get_data') !== -1;
+
+					if (!isSuratMasuk && !isSuratKeluar) return;
+
+					url = url
+						.replace(/([?&])filter_klasifikasi=[^&]*&?/g, '$1')
+						.replace(/([?&])filter_tahun_surat=[^&]*&?/g, '$1')
+						.replace(/\?&/, '?')
+						.replace(/[?&]$/, '');
+
+					const filterQuery = buildFilterQuery();
+					if (!filterQuery) {
+						options.url = url;
+						return;
+					}
+
+					options.url = url + (url.indexOf('?') === -1 ? '?' : '&') + filterQuery;
+				});
+			})();
+		</script>
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 		@stack('scripts')
