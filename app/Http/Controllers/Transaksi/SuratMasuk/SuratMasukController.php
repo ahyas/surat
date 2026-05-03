@@ -118,8 +118,6 @@ class SuratMasukController extends Controller
             //login sebagai operator surat
             case 5:
                 $table=DB::table("transaksi_surat_masuk AS surat_masuk")
-                ->where("surat_masuk.created_by", Auth::user()->id)
-                ->where('surat_masuk.kerahasiaan', 0)
                 ->select(
                     "surat_masuk.id",
                     "surat_masuk.no_surat",
