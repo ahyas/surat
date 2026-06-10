@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Template\SuratKeluar;
 
+use App\Jobs\SendWhatsappNotification;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
@@ -401,6 +402,18 @@ class TemplateSuratKeluarController extends Controller
     public function updateSurat(Request $request, $id){  
         $errors = [];
         $data = [];
+        $existingSurat = DB::table("transaksi_surat_keluar")
+        ->where("id", $id)
+        ->select("file", "internal")
+        ->first();
+
+        $oldRecipients = DB::table("detail_transaksi_surat")
+        ->where("id_surat", $id)
+        ->pluck("id_penerima")
+        ->map(function ($value) {
+            return (int) $value;
+        })
+        ->toArray();
 
         if (empty($request["nomenklatur_jabatan"])) {
             $errors['nomenklatur_jabatan'] = 'Nomenklatur jabatan tidak boleh kosong';    
@@ -477,9 +490,11 @@ class TemplateSuratKeluarController extends Controller
             if($request["internal"] == 1){
                 $tujuan = $request["tujuan"];
                 $value = array();
+                $currentRecipients = array();
 
                 foreach($tujuan as $id_pegawai){
                     if(!empty($id_pegawai)){
+                        $currentRecipients[] = (int) $id_pegawai;
                         $value[] = [
                             "id_surat"=>$id,
                             "id_penerima"=>$id_pegawai
@@ -579,6 +594,15 @@ class TemplateSuratKeluarController extends Controller
             $templateProcessor->setValue('pageBreakHere', '</w:t></w:r>'.'<w:r><w:br w:type="page"/></w:r>'.'<w:r><w:t>');
             //$templateProcessor->saveAs(storage_path($filename));
             $templateProcessor->saveAs(public_path('/uploads/surat_keluar/'.$filename));
+
+            if($request["internal"] == 1){
+                if(!$existingSurat || empty($existingSurat->file)){
+                    $this->notifySuratKeluarRecipients($id, $currentRecipients, "Surat keluar telah tersedia");
+                }else{
+                    $newRecipients = array_values(array_diff(array_unique($currentRecipients), array_unique($oldRecipients)));
+                    $this->notifySuratKeluarRecipients($id, $newRecipients, "Surat keluar telah tersedia");
+                }
+            }
 
         }
 
@@ -876,5 +900,93 @@ class TemplateSuratKeluarController extends Controller
         ->delete();
 
         return response()->json();
+    }
+
+    protected function notifySuratKeluarRecipients($idSurat, array $userIds, string $title)
+    {
+        $message = $this->buildSuratKeluarMessage($title, $idSurat);
+
+        foreach (array_unique($userIds) as $userId) {
+            $this->notifySuratKeluarUser($userId, $message);
+        }
+    }
+
+    protected function notifySuratKeluarUser($userId, string $message)
+    {
+        if (!$userId || !env('WA_NOTIFY_ENABLED', true)) {
+            return;
+        }
+
+        $target = DB::table('daftar_pegawai')
+            ->where('id_user', $userId)
+            ->value('no_wa');
+
+        if (empty($target)) {
+            return;
+        }
+
+        $personalizedMessage = $this->prependSuratKeluarGreeting($userId, $message);
+
+        SendWhatsappNotification::dispatch($target, $personalizedMessage);
+    }
+
+    protected function prependSuratKeluarGreeting($userId, string $message): string
+    {
+        $name = DB::table('users')->where('id', $userId)->value('name');
+        $sapaan = $name ? "Yth. {$name}" : "Yth. Bapak/Ibu";
+
+        return "*[SIMISOL NOTIF]*\n".
+            "Assalamualaikum\n".
+            "{$sapaan}\n\n".
+            "{$message}\n\n".
+            "*- SIMISOL PTA Papua Barat*";
+    }
+
+    protected function buildSuratKeluarMessage(string $title, $idSurat): string
+    {
+        $surat = DB::table('transaksi_surat_keluar AS surat_keluar')
+            ->where('surat_keluar.id', $idSurat)
+            ->select(
+                'surat_keluar.no_surat',
+                'surat_keluar.perihal',
+                'surat_keluar.tgl_surat',
+                'surat_keluar.file',
+                'users.name AS dibuat_oleh'
+            )
+            ->leftJoin('users', 'surat_keluar.created_by', '=', 'users.id')
+            ->first();
+
+        if (!$surat) {
+            return $title;
+        }
+
+        $body = [];
+        $body[] = "*{$title}*";
+        $body[] = "*No Surat* : {$surat->no_surat}";
+        $body[] = "*Perihal* : {$surat->perihal}";
+        $body[] = "*Tanggal* : {$surat->tgl_surat}";
+        $body[] = "*Pembuat* : ".($surat->dibuat_oleh ?: '-');
+        $body[] = "*Berkas* : ".$this->buildSuratKeluarFileLink($surat->file);
+        $body[] = "*Buka Surat* : ".$this->buildSuratKeluarLink($idSurat);
+        $body[] = "";
+        $body[] = "Berkas surat keluar telah tersedia untuk Anda. Mohon diperiksa sesuai kewenangan.";
+
+        return implode("\n", $body);
+    }
+
+    protected function buildSuratKeluarLink($idSurat): string
+    {
+        $base = rtrim(config('app.url'), '/');
+
+        return $base.'/transaksi/surat_keluar?open='.$idSurat.'&action=detail';
+    }
+
+    protected function buildSuratKeluarFileLink($file): string
+    {
+        if (empty($file)) {
+            return '-';
+        }
+
+        return rtrim(config('app.url'), '/').'/uploads/surat_keluar/'.$file;
     }
 }
