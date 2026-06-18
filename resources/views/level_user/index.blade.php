@@ -119,6 +119,62 @@
     <!--end::Card-->
 </div>
 <!--end::Post-->
+
+<div class="modal fade" id="kt_modal_detail_level_user" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered mw-800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="fw-bold">Detail Level User</h2>
+                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+                </div>
+            </div>
+            <div class="modal-body px-8 py-7">
+                <div class="table-responsive">
+                    <table class="table table-row-bordered align-middle mb-0">
+                        <thead>
+                            <tr class="fw-bold text-muted">
+                                <th class="min-w-150px">Informasi</th>
+                                <th class="min-w-250px">Parent User</th>
+                                <th class="min-w-250px">Sub User</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="fw-semibold">Nama</td>
+                                <td id="detail_parent_name">-</td>
+                                <td id="detail_sub_name">-</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Email</td>
+                                <td id="detail_parent_email">-</td>
+                                <td id="detail_sub_email">-</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Role</td>
+                                <td id="detail_parent_role">-</td>
+                                <td id="detail_sub_role">-</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Bidang</td>
+                                <td id="detail_parent_bidang">-</td>
+                                <td id="detail_sub_bidang">-</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-semibold">Jabatan</td>
+                                <td id="detail_parent_jabatan">-</td>
+                                <td id="detail_sub_jabatan">-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-light-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 @push('scripts')
 
@@ -146,6 +202,11 @@ $(document).ready(function(){
                     return`<div class="dropdown">
                             <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 detail_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Detail</a>
+                                        </div>
+                                    </li>
                                     <li>
                                         <div class="menu-item px-3">
                                             <a href="javascript:void(0)" class="menu-link px-3 edit_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Edit</a>
@@ -186,6 +247,36 @@ $(document).ready(function(){
         $("#parent_user").val("").trigger('change');
         $("#sub_user").val("").trigger('change');
         $("#kt_modal_add_user").modal("show");
+    });
+
+    $("body").on("click", ".detail_user", function(){
+        var idParentUser = $(this).data("id_parent_user");
+        var idSubUser = $(this).data("id_sub_user");
+
+        loadingPage(true);
+        $.ajax({
+            type: "GET",
+            url: `{{url('/user/level')}}/${idParentUser}/${idSubUser}/detail`,
+            dataType: "JSON",
+            success: function(data){
+                $("#detail_parent_name").text(data.parent_name || "-");
+                $("#detail_parent_email").text(data.parent_email || "-");
+                $("#detail_parent_role").text(data.parent_role || "-");
+                $("#detail_parent_bidang").text(data.parent_bidang || "-");
+                $("#detail_parent_jabatan").text(data.parent_jabatan || "-");
+                $("#detail_sub_name").text(data.sub_name || "-");
+                $("#detail_sub_email").text(data.sub_email || "-");
+                $("#detail_sub_role").text(data.sub_role || "-");
+                $("#detail_sub_bidang").text(data.sub_bidang || "-");
+                $("#detail_sub_jabatan").text(data.sub_jabatan || "-");
+                $("#kt_modal_detail_level_user").modal("show");
+                loadingPage(false);
+            },
+            error: function(){
+                loadingPage(false);
+                alert("Data level user tidak ditemukan.");
+            }
+        });
     });
 
     $("body").on("click", ".edit_user", function(){
