@@ -10,8 +10,10 @@ class LevelUserController extends Controller
 {
     public function index(){
         $user = DB::table("users")
-        ->select("id","name AS nama_pegawai")
-        ->orderBy("name")
+        ->select("users.id","users.name AS nama_pegawai")
+        ->join("daftar_pegawai", "users.id", "=", "daftar_pegawai.id_user")
+        ->where("daftar_pegawai.status", 1)
+        ->orderBy("users.name")
         ->get();
 
         return view("level_user.index", compact("user"));
@@ -22,6 +24,10 @@ class LevelUserController extends Controller
         ->select("parent_user.id AS id_parent_user", "sub_user.id AS id_sub_user","parent_user.name AS parent_user","sub_user.name AS sub_user")
         ->join("users AS parent_user", "level_user.id_parent_user","=","parent_user.id")
         ->join("users AS sub_user", "level_user.id_sub_user","=","sub_user.id")
+        ->join("daftar_pegawai AS parent_pegawai", "parent_user.id", "=", "parent_pegawai.id_user")
+        ->join("daftar_pegawai AS sub_pegawai", "sub_user.id", "=", "sub_pegawai.id_user")
+        ->where("parent_pegawai.status", 1)
+        ->where("sub_pegawai.status", 1)
         ->get();
 
         return response()->json($table);
