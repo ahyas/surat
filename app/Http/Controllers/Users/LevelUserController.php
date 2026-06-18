@@ -9,7 +9,10 @@ use DB;
 class LevelUserController extends Controller
 {
     public function index(){
-        $user = DB::table("users")->select("id","name AS nama_pegawai")->get();
+        $user = DB::table("users")
+        ->select("id","name AS nama_pegawai")
+        ->orderBy("name")
+        ->get();
 
         return view("level_user.index", compact("user"));
     }
@@ -35,6 +38,21 @@ class LevelUserController extends Controller
             $error["err_sub_user"] = "Sub user tidak boleh kosong";
         }
 
+        if(!empty($request["parent_user"]) && $request["parent_user"] == $request["sub_user"]){
+            $error["err_sub_user"] = "Parent user dan sub user tidak boleh sama";
+        }
+
+        if(!empty($request["parent_user"]) && !empty($request["sub_user"])){
+            $exists = DB::table("level_user")
+            ->where("id_parent_user", $request["parent_user"])
+            ->where("id_sub_user", $request["sub_user"])
+            ->exists();
+
+            if($exists){
+                $error["err_sub_user"] = "Relasi level user sudah tersedia";
+            }
+        }
+
         if(!empty($error)){
             $data["success"] = false;
             $data["message"] = $error;
@@ -49,6 +67,78 @@ class LevelUserController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function edit($id_parent_user, $id_sub_user){
+        $table = DB::table("level_user")
+        ->where("id_parent_user", $id_parent_user)
+        ->where("id_sub_user", $id_sub_user)
+        ->select("id_parent_user", "id_sub_user")
+        ->first();
+
+        if(!$table){
+            return response()->json(["message" => "Data level user tidak ditemukan"], 404);
+        }
+
+        return response()->json($table);
+    }
+
+    public function update(Request $request, $id_parent_user, $id_sub_user){
+        $error = [];
+
+        if(empty($request["parent_user"])){
+            $error["err_parent_user"] = "Parent user tidak boleh kosong";
+        }
+
+        if(empty($request["sub_user"])){
+            $error["err_sub_user"] = "Sub user tidak boleh kosong";
+        }
+
+        if(!empty($request["parent_user"]) && $request["parent_user"] == $request["sub_user"]){
+            $error["err_sub_user"] = "Parent user dan sub user tidak boleh sama";
+        }
+
+        if(!empty($request["parent_user"]) && !empty($request["sub_user"])){
+            $duplicate = DB::table("level_user")
+            ->where("id_parent_user", $request["parent_user"])
+            ->where("id_sub_user", $request["sub_user"])
+            ->where(function($query) use ($id_parent_user, $id_sub_user){
+                $query->where("id_parent_user", "!=", $id_parent_user)
+                ->orWhere("id_sub_user", "!=", $id_sub_user);
+            })
+            ->exists();
+
+            if($duplicate){
+                $error["err_sub_user"] = "Relasi level user sudah tersedia";
+            }
+        }
+
+        if(!empty($error)){
+            return response()->json([
+                "success" => false,
+                "message" => $error
+            ]);
+        }
+
+        $updated = DB::table("level_user")
+        ->where("id_parent_user", $id_parent_user)
+        ->where("id_sub_user", $id_sub_user)
+        ->update([
+            "id_parent_user" => $request["parent_user"],
+            "id_sub_user" => $request["sub_user"]
+        ]);
+
+        if(!$updated && ($id_parent_user != $request["parent_user"] || $id_sub_user != $request["sub_user"])){
+            return response()->json([
+                "success" => false,
+                "message" => ["err_sub_user" => "Data level user gagal diperbarui"]
+            ]);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Succeed"
+        ]);
     }
 
     public function delete($id_parent_user, $id_sub_user){

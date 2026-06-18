@@ -50,7 +50,7 @@
                                             <label class="required fw-semibold fs-6 mb-2">Parent user</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <select name="parent_user" id="parent_user" data-close-on-select="true" class="form-select" data-control="select2" data-placeholder="Select an option">
+                                            <select name="parent_user" id="parent_user" class="form-select" data-placeholder="Ketik nama parent user">
                                                 <option></option>
                                                 @foreach($user as $row)
                                                 <option value="{{$row->id}}">{{$row->nama_pegawai}}</option>
@@ -64,7 +64,7 @@
                                             <label class="required fw-semibold fs-6 mb-2">Sub user</label>
                                             <!--end::Label-->
                                             <!--begin::Input-->
-                                            <select name="sub_user" id="sub_user" class="form-select" data-control="select2" data-placeholder="Select an option">
+                                            <select name="sub_user" id="sub_user" class="form-select" data-placeholder="Ketik nama sub user">
                                                 <option></option>
                                                 @foreach($user as $row)
                                                 <option value="{{$row->id}}">{{$row->nama_pegawai}}</option>
@@ -148,6 +148,11 @@ $(document).ready(function(){
                                 <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
                                     <li>
                                         <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 edit_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Edit</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
                                             <a href="javascript:void(0)" class="menu-link px-3 text-danger delete_user" data-id_parent_user='${id_parent_user}' data-id_sub_user='${data}'>Delete</a>
                                         </div>
                                     </li>
@@ -158,8 +163,22 @@ $(document).ready(function(){
         ]
     });
 
+    var formMode = "create";
+    var originalParentUser = null;
+    var originalSubUser = null;
+
+    $("#parent_user, #sub_user").select2({
+        dropdownParent: $("#kt_modal_add_user"),
+        width: "100%",
+        allowClear: true,
+        minimumResultsForSearch: 0
+    });
+
 
     $("body").on("click","#add_user", function(){
+        formMode = "create";
+        originalParentUser = null;
+        originalSubUser = null;
         document.getElementById("title").innerHTML = `<h2 class="fw-bold">Add Level</h2>`;
         document.getElementById("notification").innerHTML ='';
 
@@ -169,22 +188,51 @@ $(document).ready(function(){
         $("#kt_modal_add_user").modal("show");
     });
 
-    
+    $("body").on("click", ".edit_user", function(){
+        formMode = "edit";
+        originalParentUser = $(this).data("id_parent_user");
+        originalSubUser = $(this).data("id_sub_user");
+
+        document.getElementById("title").innerHTML = `<h2 class="fw-bold">Edit Level</h2>`;
+        document.getElementById("notification").innerHTML = '';
+
+        loadingPage(true);
+        $.ajax({
+            type: "GET",
+            url: `{{url('/user/level')}}/${originalParentUser}/${originalSubUser}/edit`,
+            dataType: "JSON",
+            success: function(data){
+                $("#parent_user").val(data.id_parent_user).trigger("change");
+                $("#sub_user").val(data.id_sub_user).trigger("change");
+                $("#kt_modal_add_user").modal("show");
+                loadingPage(false);
+            },
+            error: function(){
+                loadingPage(false);
+                alert("Data level user tidak ditemukan.");
+            }
+        });
+    });
 
     $("#save_user").click(function(e){
         e.preventDefault();
         setButtonSpinner(".save_user", "on");
 
+        var submitUrl = formMode === "edit"
+            ? `{{url('/user/level')}}/${originalParentUser}/${originalSubUser}/update`
+            : "{{route('user.level.save')}}";
+
         $.ajax({
             type    : "POST",
-            url     : "{{route('user.level.save')}}",
+            url     : submitUrl,
             data    : $("#kt_modal_add_user_form").serialize(),
             dataType: "JSON",
             success :function(data){
 
                 if (!data.success) {
-                    let err_parent_user = data.error.err_parent_user  ? `<li>${data.error.err_parent_user}</li>` : ``;
-                    let err_sub_user = data.error.err_sub_user  ? `<li>${data.error.err_sub_user}</li>` : ``;
+                    let errors = data.message || {};
+                    let err_parent_user = errors.err_parent_user  ? `<li>${errors.err_parent_user}</li>` : ``;
+                    let err_sub_user = errors.err_sub_user  ? `<li>${errors.err_sub_user}</li>` : ``;
 
                     document.getElementById("notification").innerHTML = "<div class='alert alert-danger d-flex align-items-center p-5' id='notification'><i class='ki-duotone ki-shield-tick fs-2hx text-danger me-4'><span class='path1'></span><span class='path2'></span></i><div class='d-flex flex-column'><h4 class='mb-1 text-danger'>Oops! Something went wrong!</h4>"+err_parent_user+err_sub_user+"</div></div>";
                     setButtonSpinner(".save_user", "off");

@@ -57,6 +57,8 @@ Route::post('/autologin', 'AutoLoginController@login')->name('autologin.login');
         Route::get('/user/level', 'Users\LevelUserController@index')->name('user.level.index');
         Route::get('/user/level/get_data', 'Users\LevelUserController@getData')->name('user.level.get_data');
         Route::post('/user/level/save', 'Users\LevelUserController@save')->name('user.level.save');
+        Route::get('/user/level/{id_parent_user}/{id_sub_user}/edit', 'Users\LevelUserController@edit')->name('user.level.edit');
+        Route::post('/user/level/{id_parent_user}/{id_sub_user}/update', 'Users\LevelUserController@update')->name('user.level.update');
         Route::get('/user/{id_parent_user}/{id_sub_user}/delete', 'Users\LevelUserController@delete');
         //END::level user
 
