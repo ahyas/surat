@@ -253,7 +253,48 @@
             </div>
         </div>
     </div>
+
+<div class="offcanvas offcanvas-end w-450px" tabindex="-1" id="kt_surat_monitoring_sidebar" aria-labelledby="kt_surat_monitoring_sidebar_label">
+    <div class="offcanvas-header border-bottom">
+        <div>
+            <h3 class="offcanvas-title fw-bold" id="kt_surat_monitoring_sidebar_label">Monitoring Surat</h3>
+            <div class="text-muted fs-7" id="monitoring-no_surat">-</div>
+        </div>
+        <button type="button" class="btn btn-icon btn-sm btn-active-light-primary" data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="mb-6">
+            <div class="fw-semibold text-gray-700 mb-2" id="monitoring-perihal">-</div>
+            <div class="d-flex flex-wrap gap-2">
+                <span class="badge badge-light-primary" id="monitoring-status">-</span>
+                <span class="badge badge-light-secondary" id="monitoring-jumlah">0 langkah</span>
+            </div>
+        </div>
+
+        <div class="separator separator-dashed mb-6"></div>
+
+        <div class="mb-6">
+            <div class="fw-bold text-gray-800 mb-2">Posisi Terakhir</div>
+            <div class="rounded border p-4">
+                <div class="fw-semibold text-gray-800" id="monitoring-posisi">Belum diteruskan</div>
+                <div class="text-muted fs-7" id="monitoring-jabatan">-</div>
+                <div class="text-muted fs-7" id="monitoring-waktu">-</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="fw-bold text-gray-800 mb-4">Timeline Disposisi</div>
+            <div id="monitoring-timeline">
+                <div class="text-muted">Belum ada alur disposisi.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+
 @push('scripts')
 
 <script type="text/javascript">
@@ -363,7 +404,7 @@ $(document).ready(function(){
                     }else{
                         return `
                             <span class="badge badge-light-danger">Unprocessed</span>                       
-                            `;
+                        `;
                     }
                 }
             },
@@ -373,10 +414,15 @@ $(document).ready(function(){
 
                     return`<div class="dropdown">
                             <button class="btn btn-light-success btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></button>
-                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4">
+                                <ul class="dropdown-menu menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4">
                                     <li>
                                         <div class="menu-item px-3">
                                             <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="detail_surat_masuk" data-id_surat_masuk='${data}' data-url="{{asset('/uploads/surat_masuk/${file}')}}">Detail</a>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 fs-7 btn" id="monitoring_surat_masuk" data-id_surat_masuk='${data}'>Monitoring</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -452,6 +498,29 @@ $(document).ready(function(){
         });
     });
 
+    $("body").on("click","#monitoring_surat_masuk", function(){
+        var id_surat = $(this).data("id_surat_masuk");
+        var row = getTableRowData($(this));
+
+        fillMonitoringSummary(row);
+        document.getElementById("monitoring-timeline").innerHTML = `<div class="text-muted">Memuat timeline...</div>`;
+
+        var sidebarEl = document.getElementById("kt_surat_monitoring_sidebar");
+        var sidebar = bootstrap.Offcanvas.getInstance(sidebarEl) || new bootstrap.Offcanvas(sidebarEl);
+        sidebar.show();
+
+        $.ajax({
+            url:`{{url('transaksi/surat_masuk/disposisi/${id_surat}/daftar_disposisi')}}`,
+            type:"GET",
+            success:function(data){
+                renderMonitoringTimeline(data);
+            },
+            error:function(){
+                document.getElementById("monitoring-timeline").innerHTML = `<div class="text-danger">Timeline disposisi gagal dimuat.</div>`;
+            }
+        });
+    });
+
     function showDaftarDisposisi(id_surat){
         $(".daftar_disposisi").DataTable().clear().destroy();
         $(".daftar_disposisi").DataTable({
@@ -472,8 +541,10 @@ $(document).ready(function(){
                         let penerima = full["jab_penerima"];
                         let tanggal = full['tanggal'];
                         let waktu = full["waktu"];
+                        let status = full["status"] ? full["status"] : '-';
                         return`<span style='white-space: nowrap'><b>Dari</b> : ${data}</span><br>
                         <span style='white-space: nowrap'><b>Ke</b> : ${penerima}</span><br>
+                        <span style='white-space: nowrap'><b>Status</b> : ${status}</span><br>
                         <span style='white-space: nowrap'>${tanggal} / ${waktu}</span>`;
                     }
                 },
@@ -497,6 +568,81 @@ $(document).ready(function(){
                 },
             ]
         });
+    }
+
+    function getTableRowData(element){
+        var table = $("#tb_surat_masuk").DataTable();
+        var tr = element.closest("tr");
+        var row = table.row(tr).data();
+
+        if(!row && tr.hasClass("child")){
+            row = table.row(tr.prev()).data();
+        }
+
+        return row || {};
+    }
+
+    function fillMonitoringSummary(row){
+        var total = row.jumlah_disposisi ? row.jumlah_disposisi : 0;
+        var status = row.status ? row.status : '-';
+        var posisi = row.posisi_terakhir ? row.posisi_terakhir : 'Belum diteruskan';
+        var jabatan = row.jabatan_posisi_terakhir ? row.jabatan_posisi_terakhir : '-';
+        var waktu = row.waktu_update_terakhir ? row.waktu_update_terakhir : '-';
+
+        document.getElementById("monitoring-no_surat").innerHTML = escapeHtml(row.no_surat || '-');
+        document.getElementById("monitoring-perihal").innerHTML = escapeHtml(row.perihal || '-');
+        document.getElementById("monitoring-status").innerHTML = escapeHtml(status);
+        document.getElementById("monitoring-jumlah").innerHTML = `${escapeHtml(String(total))} langkah`;
+        document.getElementById("monitoring-posisi").innerHTML = escapeHtml(posisi);
+        document.getElementById("monitoring-jabatan").innerHTML = escapeHtml(jabatan);
+        document.getElementById("monitoring-waktu").innerHTML = escapeHtml(waktu);
+    }
+
+    function renderMonitoringTimeline(items){
+        if(!items || items.length === 0){
+            document.getElementById("monitoring-timeline").innerHTML = `<div class="text-muted">Belum ada alur disposisi.</div>`;
+            return;
+        }
+
+        var html = items.map(function(item, index){
+            var catatan = item.catatan ? item.catatan : '-';
+            var petunjuk = item.petunjuk ? item.petunjuk : '-';
+            var status = item.status ? item.status : '-';
+            var tanggal = item.tanggal ? item.tanggal : '-';
+            var waktu = item.waktu ? item.waktu : '-';
+
+            return `<div class="d-flex mb-5">
+                        <div class="me-4">
+                            <div class="w-30px h-30px rounded-circle bg-light-primary text-primary fw-bold d-flex align-items-center justify-content-center">${index + 1}</div>
+                        </div>
+                        <div class="flex-grow-1 border-bottom pb-5">
+                            <div class="d-flex justify-content-between gap-3">
+                                <div>
+                                    <div class="fw-bold text-gray-800">${escapeHtml(status)}</div>
+                                    <div class="text-muted fs-7">${escapeHtml(tanggal)} / ${escapeHtml(waktu)}</div>
+                                </div>
+                                <span class="badge badge-light-primary h-25px">${escapeHtml(status)}</span>
+                            </div>
+                            <div class="mt-3 fs-7">
+                                <div><span class="fw-semibold">Dari</span> : ${escapeHtml(item.jab_pengirim || '-')}</div>
+                                <div><span class="fw-semibold">Ke</span> : ${escapeHtml(item.jab_penerima || '-')}</div>
+                                <div><span class="fw-semibold">Petunjuk</span> : ${escapeHtml(petunjuk)}</div>
+                                <div><span class="fw-semibold">Catatan</span> : ${escapeHtml(catatan)}</div>
+                            </div>
+                        </div>
+                    </div>`;
+        }).join("");
+
+        document.getElementById("monitoring-timeline").innerHTML = html;
+    }
+
+    function escapeHtml(value){
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
     }
 
     $("body").on("click","#add_surat_masuk", function(){

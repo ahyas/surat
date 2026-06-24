@@ -133,6 +133,11 @@ class SuratMasukController extends Controller
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS tanggal_input"),
                     "ref_klasifikasi.kode AS kode_klasifikasi",
                     "ref_klasifikasi.deskripsi AS klasifikasi",
+                    DB::raw("(SELECT penerima.name FROM detail_transaksi_surat_masuk AS detail_latest JOIN users AS penerima ON detail_latest.id_penerima = penerima.id WHERE detail_latest.id_surat = surat_masuk.id ORDER BY detail_latest.created_at DESC LIMIT 1) AS posisi_terakhir"),
+                    DB::raw("(SELECT jabatan_penerima.nama FROM detail_transaksi_surat_masuk AS detail_latest JOIN users AS penerima ON detail_latest.id_penerima = penerima.id LEFT JOIN daftar_pegawai AS pegawai_penerima ON penerima.id = pegawai_penerima.id_user LEFT JOIN ref_jabatan AS jabatan_penerima ON pegawai_penerima.id_jabatan = jabatan_penerima.id WHERE detail_latest.id_surat = surat_masuk.id ORDER BY detail_latest.created_at DESC LIMIT 1) AS jabatan_posisi_terakhir"),
+                    DB::raw("(SELECT CASE WHEN detail_latest.status = 1 THEN 'Disposisi' WHEN detail_latest.status = 2 THEN 'Diteruskan' WHEN detail_latest.status = 3 THEN 'Tindak lanjut' WHEN detail_latest.status = 4 THEN 'Dinaikan' WHEN detail_latest.status = 5 THEN 'Diturunkan' ELSE '-' END FROM detail_transaksi_surat_masuk AS detail_latest WHERE detail_latest.id_surat = surat_masuk.id ORDER BY detail_latest.created_at DESC LIMIT 1) AS status_terakhir"),
+                    DB::raw("(SELECT DATE_FORMAT(detail_latest.created_at, '%Y-%m-%d %H:%i') FROM detail_transaksi_surat_masuk AS detail_latest WHERE detail_latest.id_surat = surat_masuk.id ORDER BY detail_latest.created_at DESC LIMIT 1) AS waktu_update_terakhir"),
+                    DB::raw("(SELECT COUNT(*) FROM detail_transaksi_surat_masuk AS detail_count WHERE detail_count.id_surat = surat_masuk.id) AS jumlah_disposisi"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
                 )
                 ->orderBy("surat_masuk.created_at","DESC")
@@ -487,6 +492,8 @@ class SuratMasukController extends Controller
     public function daftarDisposisi($id_surat_masuk){
         $id_role = Auth::user()->getRole()->id_role;
         switch($id_role){
+            //operator surat monitoring
+            case 5:
             //admin surat
             case 6:
                 $table = DB::table("detail_transaksi_surat_masuk AS detail_surat_masuk")
