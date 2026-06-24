@@ -24,6 +24,9 @@ Route::get('/transaksi/surat_keluar/{id_surat}/verify', 'VerifyDocument@verify')
 Auth::routes();
 Route::get('/autologin', 'AutoLoginController@show')->name('autologin');
 Route::post('/autologin', 'AutoLoginController@login')->name('autologin.login');
+Route::get('/notification/autologin/{user}', 'NotificationAutoLoginController@login')
+    ->name('notification.autologin')
+    ->middleware('signed');
     Route::get("/test","TestController@index");
 
     Route::group(['middleware'=>'role:1, 5, 6, 8, 10, 13, 16, 17, 18, 101'], function(){

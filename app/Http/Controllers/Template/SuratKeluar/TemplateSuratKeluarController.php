@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Template\SuratKeluar;
 
 use App\Jobs\SendWhatsappNotification;
 use App\Http\Controllers\Controller;
+use App\Services\NotificationLinkService;
 use Illuminate\Http\Request;
 use Auth;
 use DB;
@@ -925,6 +926,7 @@ class TemplateSuratKeluarController extends Controller
             return;
         }
 
+        $message = app(NotificationLinkService::class)->replaceInternalLinks($userId, $message);
         $personalizedMessage = $this->prependSuratKeluarGreeting($userId, $message);
 
         SendWhatsappNotification::dispatch($target, $personalizedMessage);

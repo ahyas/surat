@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Transaksi\SuratMasuk;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendWhatsappNotification;
+use App\Services\NotificationLinkService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -1160,6 +1161,7 @@ class SuratMasukController extends Controller
             return;
         }
 
+        $message = app(NotificationLinkService::class)->replaceInternalLinks($userId, $message);
         $personalizedMessage = $this->prependGreeting($userId, $message);
 
         SendWhatsappNotification::dispatch($target, $personalizedMessage);
