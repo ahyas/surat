@@ -402,6 +402,9 @@ $(document).ready(function(){
         serverSide  : false,
         ordering    : false,
         responsive  : true,
+        createdRow  : function(row, data){
+            highlightPendingDisposisi(row, data);
+        },
         drawCallback:function(settings){
             loadingPage(false);
             document.body.style.overflow = 'visible';
@@ -543,6 +546,13 @@ $(document).ready(function(){
             }
         ]
     });
+
+    function highlightPendingDisposisi(row, data){
+        if(data.perlu_disposisi == 1 || data.perlu_disposisi === "1"){
+            $(row).addClass("table-danger");
+            $(row).attr("title", "Surat ini belum diproses disposisi");
+        }
+    }
 
     function showDaftarDisposisi(id_surat){
         $(".daftar_disposisi").DataTable().clear().destroy();

@@ -26,6 +26,14 @@ class SuratMasukController extends Controller
         return $query;
     }
 
+    protected function perluDisposisiSelect($userId, bool $aggregate = false)
+    {
+        $userId = (int) $userId;
+        $caseSql = "(CASE WHEN COALESCE(surat_masuk.id_status, 0) <> 3 AND (SELECT detail_latest.id_penerima FROM detail_transaksi_surat_masuk AS detail_latest WHERE detail_latest.id_surat = surat_masuk.id ORDER BY detail_latest.created_at DESC LIMIT 1) = {$userId} AND (SELECT COUNT(*) FROM detail_transaksi_surat_masuk AS detail_next WHERE detail_next.id_surat = surat_masuk.id AND detail_next.id_asal = {$userId} AND detail_next.status IN (1, 5)) = 0 THEN 1 ELSE 0 END)";
+
+        return DB::raw(($aggregate ? "MAX({$caseSql})" : $caseSql)." AS perlu_disposisi");
+    }
+
     public function index(){
         $id_role = Auth::user()->getRole()->id_role;
 
@@ -169,6 +177,7 @@ class SuratMasukController extends Controller
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    $this->perluDisposisiSelect(Auth::user()->id, true),
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
@@ -215,6 +224,7 @@ class SuratMasukController extends Controller
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    $this->perluDisposisiSelect($id_user),
                 )
                 ->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("ref_klasifikasi", "surat_masuk.klasifikasi_id", "=", "ref_klasifikasi.id")
@@ -275,6 +285,7 @@ class SuratMasukController extends Controller
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    $this->perluDisposisiSelect(Auth::user()->id),
                     "users.name AS dari"
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
@@ -308,6 +319,7 @@ class SuratMasukController extends Controller
                     "ref_klasifikasi.deskripsi AS klasifikasi",
                     DB::raw("DATE_FORMAT(surat_masuk.created_at, '%Y-%m-%d') AS diterima_tanggal"),
                     DB::raw("(CASE WHEN surat_masuk.id_status = 1 THEN 'Disposisi' WHEN surat_masuk.id_status = 2 THEN 'Diteruskan' WHEN surat_masuk.id_status = 3 THEN 'Tindak lanjut' WHEN surat_masuk.id_status = 4 THEN 'Dinaikan' WHEN surat_masuk.id_status = 5 THEN 'Diturunkan' ELSE '-' END) AS status"),
+                    $this->perluDisposisiSelect(Auth::user()->id),
                     "users.name AS dari"
                 )->leftJoin("detail_transaksi_surat_masuk AS detail_surat_masuk", "surat_masuk.id","=","detail_surat_masuk.id_surat")
                 ->leftJoin("users", "detail_surat_masuk.id_asal","=","users.id")
