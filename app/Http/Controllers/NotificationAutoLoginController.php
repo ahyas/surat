@@ -50,15 +50,22 @@ class NotificationAutoLoginController extends Controller
         }
 
         $appUrl = rtrim(config('app.url'), '/');
-        $appHost = parse_url($appUrl, PHP_URL_HOST);
+        $appHost = $this->normalizeHost((string) parse_url($appUrl, PHP_URL_HOST));
         $appScheme = parse_url($appUrl, PHP_URL_SCHEME);
         $redirectHost = parse_url($redirect, PHP_URL_HOST);
         $redirectScheme = parse_url($redirect, PHP_URL_SCHEME);
 
-        if ($redirectHost === $appHost && $redirectScheme === $appScheme) {
+        if ($this->normalizeHost((string) $redirectHost) === $appHost && $redirectScheme === $appScheme) {
             return $redirect;
         }
 
         return route('home');
+    }
+
+    private function normalizeHost(string $host): string
+    {
+        $host = strtolower($host);
+
+        return strpos($host, 'www.') === 0 ? substr($host, 4) : $host;
     }
 }

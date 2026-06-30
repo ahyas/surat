@@ -926,7 +926,7 @@ class TemplateSuratKeluarController extends Controller
             return;
         }
 
-        $message = app(NotificationLinkService::class)->replaceInternalLinks($userId, $message);
+        $message = app(NotificationLinkService::class)->replaceInternalLinksForPhone($target, $message, $userId);
         $personalizedMessage = $this->prependSuratKeluarGreeting($userId, $message);
 
         SendWhatsappNotification::dispatch($target, $personalizedMessage);
@@ -969,18 +969,10 @@ class TemplateSuratKeluarController extends Controller
         $body[] = "*Tanggal* : {$surat->tgl_surat}";
         $body[] = "*Pembuat* : ".($surat->dibuat_oleh ?: '-');
         $body[] = "*Berkas* : ".$this->buildSuratKeluarFileLink($surat->file);
-        $body[] = "*Buka Surat* : ".$this->buildSuratKeluarLink($idSurat);
         $body[] = "";
         $body[] = "Berkas surat keluar telah tersedia untuk Anda. Mohon diperiksa sesuai kewenangan.";
 
         return implode("\n", $body);
-    }
-
-    protected function buildSuratKeluarLink($idSurat): string
-    {
-        $base = rtrim(config('app.url'), '/');
-
-        return $base.'/transaksi/surat_keluar?open='.$idSurat.'&action=detail';
     }
 
     protected function buildSuratKeluarFileLink($file): string

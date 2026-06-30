@@ -1180,7 +1180,7 @@ class SuratMasukController extends Controller
             return;
         }
 
-        $message = app(NotificationLinkService::class)->replaceInternalLinks($userId, $message);
+        $message = app(NotificationLinkService::class)->replaceInternalLinksForPhone($target, $message, $userId);
         $personalizedMessage = $this->prependGreeting($userId, $message);
 
         SendWhatsappNotification::dispatch($target, $personalizedMessage);
